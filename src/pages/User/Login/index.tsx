@@ -4,13 +4,7 @@ import { BizType } from '@/constants/SystemConstant';
 import { IdentityType } from '@/constants/UserConstant';
 import { notifyCaptchaUsingPost } from '@/services/socialx/notificationController';
 import { loginUsingPost } from '@/services/socialx/userController';
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
+import { GithubOutlined, LockOutlined, QqOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, history, useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
@@ -31,17 +25,6 @@ const useStyles = createStyles(({ token }) => {
         color: token.colorPrimaryActive,
       },
     },
-    lang: {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    },
     container: {
       display: 'flex',
       flexDirection: 'column',
@@ -57,9 +40,8 @@ const ActionIcons = () => {
   const { styles } = useStyles();
   return (
     <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action} />
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action} />
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action} />
+      <GithubOutlined key="GithubOutlined" className={styles.action} />
+      <QqOutlined key="QqOutlined" className={styles.action} />
     </>
   );
 };
@@ -133,9 +115,6 @@ const Login: React.FC = () => {
           logo={<img alt="logo" src="/logo.svg" />}
           title="SocialX"
           subTitle={'SocialX 社交网络平台'}
-          initialValues={{
-            autoLogin: true,
-          }}
           actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
             await handleSubmit(values as API.UserAuthenticateRequest);
@@ -184,6 +163,7 @@ const Login: React.FC = () => {
                   return '获取验证码';
                 }}
                 name="credential"
+                phoneName="identifier"
                 rules={[
                   {
                     required: true,
@@ -217,7 +197,7 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <UserOutlined />,
                 }}
-                placeholder={'邮箱'}
+                placeholder={'请输入邮箱！'}
                 rules={[...emailCheckRule]}
               />
               <ProFormText.Password
@@ -226,15 +206,11 @@ const Login: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined />,
                 }}
-                placeholder={'密码'}
+                placeholder={'请输入密码！'}
                 rules={[
                   {
                     required: true,
                     message: '密码是必填项！',
-                  },
-                  {
-                    pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,20}$/,
-                    message: '密码不合法！',
                   },
                 ]}
               />
@@ -243,16 +219,18 @@ const Login: React.FC = () => {
 
           <div
             style={{
-              marginBottom: 24,
+              marginBottom: 36,
             }}
           >
-            <a
+            <span
               style={{
                 float: 'right',
+                color: '#1890ff',
+                textDecoration: 'underline',
               }}
             >
-              忘记密码 ? 使用邮箱验证码登录
-            </a>
+              没有账号？验证码登录自动注册
+            </span>
           </div>
         </LoginForm>
       </div>
