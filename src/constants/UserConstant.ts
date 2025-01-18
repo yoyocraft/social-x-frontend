@@ -1,0 +1,4 @@
+export enum IdentityType {
+    EMAIL_CAPTCHA = "EMAIL_CAPTCHA",
+    EMAIL_PASSWORD = "EMAIL_PASSWORD"
+}
