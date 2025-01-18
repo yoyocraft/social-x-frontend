@@ -1,4 +1,4 @@
-import { GithubOutlined } from '@ant-design/icons';
+import { BilibiliOutlined, GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 import React from 'react';
 
@@ -8,23 +8,26 @@ const Footer: React.FC = () => {
       style={{
         background: 'none',
       }}
+      copyright="2024 by yoyocraft"
       links={[
         {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
+          key: 'youyi',
+          title: (
+            <span>
+              <BilibiliOutlined /> 游艺Geek
+            </span>
+          ),
+          href: 'https://space.bilibili.com/266690556/',
           blankTarget: true,
         },
         {
           key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
-          blankTarget: true,
-        },
-        {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
+          title: (
+            <span>
+              <GithubOutlined /> yoyocraft
+            </span>
+          ),
+          href: 'https://github.com/yoyocraft',
           blankTarget: true,
         },
       ]}
