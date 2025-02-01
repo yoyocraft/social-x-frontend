@@ -55,6 +55,51 @@ export async function editUserInfoUsingPost(
   });
 }
 
+/** followUser POST /api/user/follow */
+export async function followUserUsingPost(
+  body: API.UserFollowRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultBoolean_>('/api/user/follow', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** queryFollowers GET /api/user/follower */
+export async function queryFollowersUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.queryFollowersUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringUserBasicInfoResponse_>('/api/user/follower', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** queryFollowingUsers GET /api/user/following */
+export async function queryFollowingUsersUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.queryFollowingUsersUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringUserBasicInfoResponse_>('/api/user/following', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** login POST /api/user/login */
 export async function loginUsingPost(
   body: API.UserAuthenticateRequest,

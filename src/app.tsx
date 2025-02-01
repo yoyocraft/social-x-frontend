@@ -4,6 +4,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
+import { md5 } from 'js-md5';
 import defaultSettings from '../config/defaultSettings';
 import { requestConfig } from './requestErrorConfig';
 import { getCurrentUserUsingGet } from './services/socialx/userController';
@@ -18,6 +19,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.UserBasicInfoResponse;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.UserBasicInfoResponse | undefined>;
+  encryptStr?: (str: string) => string;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -30,6 +32,9 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+  const encryptStr = (str: string) => {
+    return md5(str);
+  };
   // 如果不是登录页面，执行
   const { location } = history;
   if (location.pathname !== loginPath) {
@@ -37,11 +42,13 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       currentUser,
+      encryptStr,
       settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
   return {
     fetchUserInfo,
+    encryptStr,
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
