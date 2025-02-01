@@ -2,7 +2,7 @@ import { Footer } from '@/components';
 import { ResponseCode } from '@/constants/ResponseCode';
 import { BizType } from '@/constants/SystemConstant';
 import { IdentityType } from '@/constants/UserConstant';
-import { notifyCaptchaUsingPost } from '@/services/socialx/notificationController';
+import { notifyEmailCaptchaUsingPost } from '@/services/socialx/notificationController';
 import { loginUsingPost } from '@/services/socialx/userController';
 import { GithubOutlined, LockOutlined, QqOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
@@ -30,8 +30,7 @@ const useStyles = createStyles(({ token }) => {
       flexDirection: 'column',
       height: '100vh',
       overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
+      backgroundImage: "url('/media/bg/bg-login.png')",
       backgroundSize: '100% 100%',
     },
   };
@@ -73,6 +72,13 @@ const Login: React.FC = () => {
   };
   const handleSubmit = async (values: API.UserAuthenticateRequest) => {
     try {
+      if (type === IdentityType.EMAIL_PASSWORD) {
+        if (!values.credential) {
+          message.error('密码是必填项！');
+          return;
+        }
+        values.credential = initialState?.encryptStr?.(values.credential);
+      }
       // 登录
       const msg = await loginUsingPost({
         ...values,
@@ -127,15 +133,16 @@ const Login: React.FC = () => {
             items={[
               {
                 key: IdentityType.EMAIL_CAPTCHA,
-                label: '邮箱验证码登录',
+                label: '验证码登录 / 注册',
               },
               {
                 key: IdentityType.EMAIL_PASSWORD,
-                label: '邮箱密码登录',
+                label: '密码登录',
               },
             ]}
+            size="large"
           />
-
+          {/* 邮箱验证码登录 */}
           {type === IdentityType.EMAIL_CAPTCHA && (
             <>
               <ProFormText
@@ -175,7 +182,7 @@ const Login: React.FC = () => {
                   },
                 ]}
                 onGetCaptcha={async (email) => {
-                  const result = await notifyCaptchaUsingPost({
+                  const result = await notifyEmailCaptchaUsingPost({
                     bizType: BizType.LOGIN,
                     email,
                   });
@@ -188,7 +195,7 @@ const Login: React.FC = () => {
               />
             </>
           )}
-
+          {/* 邮箱密码登录 */}
           {type === IdentityType.EMAIL_PASSWORD && (
             <>
               <ProFormText
@@ -226,7 +233,8 @@ const Login: React.FC = () => {
               style={{
                 float: 'right',
                 color: '#1890ff',
-                textDecoration: 'underline',
+                textDecoration: 'none',
+                marginBottom: 8,
               }}
             >
               没有账号？验证码登录自动注册

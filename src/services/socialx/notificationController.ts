@@ -2,12 +2,12 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** notifyCaptcha POST /api/notification/captcha */
-export async function notifyCaptchaUsingPost(
+/** notifyEmailCaptcha POST /api/notification/email/captcha */
+export async function notifyEmailCaptchaUsingPost(
   body: API.CaptchaNotifyRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultBoolean_>('/api/notification/captcha', {
+  return request<API.ResultBoolean_>('/api/notification/email/captcha', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
