@@ -38,6 +38,7 @@ declare namespace API {
 
   type ConfigCreateRequest = {
     configKey?: string;
+    configType?: string;
     configValue?: string;
     extraData?: string;
     reqId?: string;
@@ -51,7 +52,10 @@ declare namespace API {
   type ConfigInfoResponse = {
     configId?: number;
     configKey?: string;
+    configType?: string;
     configValue?: string;
+    deleted?: boolean;
+    lastModified?: number;
     version?: number;
   };
 
@@ -64,6 +68,11 @@ declare namespace API {
 
   type ImageUploadResponse = {
     url?: string;
+  };
+
+  type PageCursorResultLongConfigInfoResponse_ = {
+    cursor?: number;
+    list?: ConfigInfoResponse[];
   };
 
   type PageCursorResultStringCommentaryResponse_ = {
@@ -130,9 +139,20 @@ declare namespace API {
     ugcType?: string;
   };
 
-  type queryConfigUsingGETParams = {
+  type queryConfigForMainPageUsingGETParams = {
+    cursor?: number;
     key?: string;
+    page?: number;
     reqId?: string;
+    size?: number;
+  };
+
+  type queryConfigUsingGETParams = {
+    cursor?: number;
+    key?: string;
+    page?: number;
+    reqId?: string;
+    size?: number;
   };
 
   type queryFollowersUsingGETParams = {
@@ -199,6 +219,14 @@ declare namespace API {
     bizState?: string;
     code?: string;
     data?: ImageUploadResponse;
+    message?: string;
+    timestamp?: number;
+  };
+
+  type ResultPageCursorResultLongConfigInfoResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: PageCursorResultLongConfigInfoResponse_;
     message?: string;
     timestamp?: number;
   };

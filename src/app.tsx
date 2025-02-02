@@ -1,4 +1,4 @@
-import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
+import { AvatarDropdown, AvatarName, Footer } from '@/components';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -6,6 +6,9 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import { md5 } from 'js-md5';
 import defaultSettings from '../config/defaultSettings';
+import NotifyBar from './components/NotifyBar';
+import TopSearch from './components/TopSearch';
+import UgcDropdown from './components/UgcDropdown';
 import { requestConfig } from './requestErrorConfig';
 import { getCurrentUserUsingGet } from './services/socialx/userController';
 const isDev = process.env.NODE_ENV === 'development';
@@ -56,7 +59,12 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />],
+    logo: '/logo.svg',
+    actionsRender: () => [
+      <TopSearch key="search" />,
+      <UgcDropdown key="ugc" />,
+      <NotifyBar key="notify" />,
+    ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
