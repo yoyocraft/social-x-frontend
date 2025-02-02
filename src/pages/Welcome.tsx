@@ -87,7 +87,7 @@ const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
   return (
-    <PageContainer>
+    <PageContainer title={false}>
       <Card
         style={{
           borderRadius: 8,

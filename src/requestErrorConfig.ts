@@ -1,6 +1,7 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
+import { ResponseCode } from './constants/ResponseCode';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -98,7 +99,18 @@ export const requestConfig: RequestConfig = {
   // 响应拦截器
   responseInterceptors: [
     (response) => {
-      // TODO 拦截响应，进行个性化处理
+      const data = response.data as { code: string; message: string; bizState?: string };
+      if (data.code !== ResponseCode.SUCCESS) {
+        const error: any = new Error(data.message);
+        error.name = 'BizError';
+        error.info = {
+          errorCode: data.code,
+          errorMessage: data.message,
+          bizState: data.bizState,
+          data: response.data,
+        };
+        throw error;
+      }
       return response;
     },
   ],

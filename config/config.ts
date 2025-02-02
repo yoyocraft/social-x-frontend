@@ -1,9 +1,11 @@
 // https://umijs.org/config/
 import { defineConfig } from '@umijs/max';
+import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 const { REACT_APP_ENV = 'dev' } = process.env;
+
 export default defineConfig({
   /**
    * @name 开启 hash 模式
@@ -90,11 +92,19 @@ export default defineConfig({
    * @name 国际化插件
    * @doc https://umijs.org/docs/max/i18n
    */ /**
-* @name antd 插件
-* @description 内置了 babel import 插件
-* @doc https://umijs.org/docs/max/antd#antd
-*/
-  antd: {},
+   * @name antd 插件
+   * @description 内置了 babel import 插件
+   * @doc https://umijs.org/docs/max/antd#antd
+   */
+  antd: {
+    theme: {
+      components: {
+        Menu: {
+          fontSize: 16,
+        },
+      },
+    },
+  },
   /**
    * @name 网络请求配置
    * @description 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
@@ -137,4 +147,39 @@ export default defineConfig({
   },
   esbuildMinifyIIFE: true,
   requestRecord: {},
+  chainWebpack(memo) {
+    memo.plugin('monaco-editor').use(MonacoEditorWebpackPlugin, [
+      {
+        languages: [
+          'json',
+          'go',
+          'css',
+          'html',
+          'java',
+          'javascript',
+          'less',
+          'markdown',
+          'mysql',
+          'php',
+          'python',
+          'scss',
+          'shell',
+          'redis',
+          'sql',
+          'typescript',
+          'xml',
+        ],
+        features: [
+          'format',
+          'find',
+          'contextmenu',
+          'gotoError',
+          'gotoLine',
+          'gotoSymbol',
+          'hover',
+          'documentSymbols',
+        ],
+      },
+    ]);
+  },
 });
