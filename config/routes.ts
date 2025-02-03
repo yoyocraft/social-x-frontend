@@ -4,15 +4,46 @@ export default [
     layout: false,
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
+
+  { path: '/', name: '首页', icon: 'home', component: './Welcome' },
+
   {
-    path: '/account',
+    name: '个人中心',
+    path: '/account/center',
+    icon: 'user',
+    hideInMenu: true,
+    component: './User/Center',
+  },
+  {
+    path: '/account/settings',
+    name: '个人设置',
+    icon: 'setting',
+    component: './User/Settings',
+    hideInMenu: true,
     routes: [
-      { name: '个人中心', path: '/account/center', component: './User/Center' },
-      { name: '个人设置', path: '/account/settings', component: './User/Settings' },
+      {
+        path: '/account/settings/profile',
+        name: '个人资料',
+        component: './User/Settings/ProfileSettings',
+      },
+      {
+        path: '/account/settings/account',
+        name: '账号资料',
+        component: './User/Settings/AccountSettings',
+      },
+      {
+        path: '/account/settings/general',
+        name: '通用设置',
+        component: './User/Settings/GeneralSettings',
+      },
+      {
+        path: '/account/settings/notification',
+        name: '消息设置',
+        component: './User/Settings/NotificationSettings',
+      },
     ],
   },
 
-  { path: '/', name: '首页', icon: 'home', component: './Welcome' },
   { path: '/article', name: '文章', icon: 'container', component: './Admin' },
   { path: '/post', name: '动态', icon: 'container', component: './Admin' },
   { path: '/question', name: '问答', icon: 'container', component: './Admin' },

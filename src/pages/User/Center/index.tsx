@@ -1,10 +1,10 @@
-import UgcTabSection from '@/components/UserCenter/UgcTabSection';
-import UserInfo from '@/components/UserCenter/UserInfo';
-import UserSiderBar from '@/components/UserCenter/UserSiderBar';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Col, Row } from 'antd';
 import React from 'react';
+import UgcTabSection from './UgcTabSection';
+import UserInfo from './UserInfo';
+import UserSiderBar from './UserSiderBar';
 
 const UserCenter: React.FC = () => {
   const { initialState } = useModel('@@initialState');
