@@ -11,7 +11,7 @@ import {
   updateConfigUsingPost,
 } from '@/services/socialx/configController';
 import { PlusOutlined } from '@ant-design/icons';
-import { ActionType, ProTable } from '@ant-design/pro-components';
+import { ActionType, PageContainer, ProTable } from '@ant-design/pro-components';
 import {
   Button,
   Col,
@@ -42,6 +42,7 @@ const ConfigCenter: React.FC = () => {
   const [newConfigKey, setNewConfigKey] = useState<string>('');
   const [newConfigType, setNewConfigType] = useState<string>(ConfigType.DEFAULT);
   const [newConfigValue, setNewConfigValue] = useState<string>('');
+  const [newConfigDesc, setNewConfigDesc] = useState<string>('');
 
   const fetchData = async () => {
     if (!hasMore || loading) return;
@@ -78,6 +79,7 @@ const ConfigCenter: React.FC = () => {
   const handleEdit = (record: API.ConfigInfoResponse) => {
     setCurrentConfig(record);
     setNewConfigValue(record.configValue || '');
+    setNewConfigDesc(record.configDesc || '');
     setEditModalVisible(true);
   };
 
@@ -87,6 +89,14 @@ const ConfigCenter: React.FC = () => {
     setViewModalVisible(true);
   };
 
+  const handleCreateConfig = () => {
+    setNewConfigKey('');
+    setNewConfigType(ConfigType.DEFAULT);
+    setNewConfigValue('');
+    setNewConfigDesc('');
+    setAddModalVisible(true);
+  };
+
   const doUpdateConfig = async () => {
     if (!currentConfig) return;
 
@@ -94,6 +104,7 @@ const ConfigCenter: React.FC = () => {
       configKey: currentConfig.configKey,
       currVersion: currentConfig.version,
       newConfigValue,
+      configDesc: newConfigDesc,
       reqId: `update-${Date.now()}`,
     };
 
@@ -104,7 +115,12 @@ const ConfigCenter: React.FC = () => {
       setDataSource((prev) =>
         prev.map((item) =>
           item.configId === currentConfig.configId
-            ? { ...item, configValue: newConfigValue, version: (currentConfig.version ?? 0) + 1 }
+            ? {
+                ...item,
+                configValue: newConfigValue,
+                version: (currentConfig.version ?? 0) + 1,
+                configDesc: newConfigDesc,
+              }
             : item,
         ),
       );
@@ -159,121 +175,139 @@ const ConfigCenter: React.FC = () => {
 
   return (
     <>
-      <ProTable<API.ConfigInfoResponse>
-        rowKey="configId"
-        actionRef={actionRef}
-        dataSource={dataSource}
-        request={async () => {
-          fetchData();
-          return { success: true };
+      <PageContainer
+        header={{
+          title: '配置中心',
+          breadcrumb: {},
         }}
-        columns={[
-          {
-            dataIndex: 'index',
-            valueType: 'indexBorder',
-            width: 48,
-          },
-          {
-            title: '配置 Key',
-            dataIndex: 'configKey',
-            key: 'configKey',
-            width: 400,
-            copyable: true,
-            ellipsis: true,
-            tooltip: '标题过长会自动收缩',
-          },
-          {
-            title: '类型',
-            dataIndex: 'configType',
-            key: 'configType',
-            width: 100,
-            search: false,
-            renderFormItem: (_, { defaultRender }) => {
-              return defaultRender(_);
-            },
-            render: (_, record) => (
-              <Space>
-                <Tag
-                  color={ConfigTypeTagColor[record?.configType || ConfigType.DEFAULT]}
-                  key={record.configId}
-                >
-                  {record.configType}
-                </Tag>
-              </Space>
-            ),
-          },
-          {
-            title: '最近修改',
-            dataIndex: 'lastModified',
-            key: 'lastModified',
-            valueType: 'dateTime',
-            search: false,
-          },
-          {
-            title: '状态',
-            dataIndex: 'deleted',
-            key: 'deleted',
-            width: 100,
-            search: false,
-            valueEnum: {
-              false: { text: '正常', status: 'Success' },
-              true: { text: '已删除', status: 'Error' },
-            },
-          },
-          {
-            title: '操作',
-            key: 'action',
-            search: false,
-            render: (_, record) => (
-              <>
-                <Button type="link" onClick={() => handleView(record)}>
-                  查看
-                </Button>
-                <Button type="link" onClick={() => handleEdit(record)}>
-                  编辑
-                </Button>
-                {!record.deleted && (
-                  <Popconfirm title="确定删除?" onConfirm={() => doDeleteConfig(record)}>
-                    <Button type="link" danger loading={loading}>
-                      删除
-                    </Button>
-                  </Popconfirm>
-                )}
-              </>
-            ),
-          },
-        ]}
-        toolbar={{
-          search: {
-            loading: loading,
-            onSearch: async (value: string) => {
-              await queryConfigByKey(value);
-            },
-            placeholder: '请输入配置 Key',
-            size: 'middle',
-          },
-          actions: [
-            <Button
-              key="button"
-              icon={<PlusOutlined />}
-              onClick={() => setAddModalVisible(true)}
-              type="primary"
-            >
-              新建
-            </Button>,
-          ],
-        }}
-        pagination={false}
-        search={false}
-        scroll={{ y: 500 }}
-        // @ts-ignore
-        onScroll={({ target }) => {
-          const element = target as HTMLElement;
-          if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      >
+        <ProTable<API.ConfigInfoResponse>
+          rowKey="configId"
+          actionRef={actionRef}
+          dataSource={dataSource}
+          request={async () => {
             fetchData();
-          }
-        }}
-      />
+            return { success: true };
+          }}
+          columns={[
+            {
+              dataIndex: 'index',
+              valueType: 'indexBorder',
+              width: 48,
+            },
+            {
+              title: '配置 Key',
+              dataIndex: 'configKey',
+              key: 'configKey',
+              width: 300,
+              copyable: true,
+              ellipsis: true,
+              tooltip: '标题过长会自动收缩',
+            },
+
+            {
+              title: '类型',
+              dataIndex: 'configType',
+              key: 'configType',
+              width: 100,
+              search: false,
+              renderFormItem: (_, { defaultRender }) => {
+                return defaultRender(_);
+              },
+              render: (_, record) => (
+                <Space>
+                  <Tag
+                    color={ConfigTypeTagColor[record?.configType || ConfigType.DEFAULT]}
+                    key={record.configId}
+                  >
+                    {record.configType}
+                  </Tag>
+                </Space>
+              ),
+            },
+            {
+              title: '描述',
+              dataIndex: 'configDesc',
+              key: 'configDesc',
+              ellipsis: true,
+              search: false,
+              tooltip: '描述过长会自动收缩',
+            },
+            {
+              title: '状态',
+              dataIndex: 'deleted',
+              key: 'deleted',
+              width: 100,
+              search: false,
+              valueEnum: {
+                false: { text: '正常', status: 'Success' },
+                true: { text: '已删除', status: 'Error' },
+              },
+            },
+            {
+              title: '最近修改',
+              dataIndex: 'lastModified',
+              key: 'lastModified',
+              valueType: 'dateTime',
+              search: false,
+            },
+            {
+              title: '操作',
+              key: 'action',
+              search: false,
+              render: (_, record) => (
+                <>
+                  <Button type="link" onClick={() => handleView(record)}>
+                    查看
+                  </Button>
+                  {!record.deleted && (
+                    <>
+                      <Button type="link" onClick={() => handleEdit(record)}>
+                        编辑
+                      </Button>
+                      <Popconfirm title="确定删除?" onConfirm={() => doDeleteConfig(record)}>
+                        <Button type="link" danger loading={loading}>
+                          删除
+                        </Button>
+                      </Popconfirm>
+                    </>
+                  )}
+                </>
+              ),
+            },
+          ]}
+          toolbar={{
+            search: {
+              loading: loading,
+              onSearch: async (value: string) => {
+                await queryConfigByKey(value);
+              },
+              placeholder: '请输入配置 Key',
+              size: 'middle',
+            },
+            actions: [
+              <Button
+                key="button"
+                icon={<PlusOutlined />}
+                onClick={handleCreateConfig}
+                type="primary"
+              >
+                新建
+              </Button>,
+            ],
+          }}
+          pagination={false}
+          search={false}
+          scroll={{ y: 500 }}
+          // @ts-ignore
+          onScroll={({ target }) => {
+            const element = target as HTMLElement;
+            if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+              fetchData();
+            }
+          }}
+        />
+      </PageContainer>
       {/* 新增配置 Drawer */}
       <Drawer
         title="新增配置"
@@ -298,6 +332,7 @@ const ConfigCenter: React.FC = () => {
                   value={newConfigKey}
                   onChange={(e) => setNewConfigKey(e.target.value)}
                   placeholder="请输入配置 Key"
+                  required
                 />
               </Form.Item>
             </Col>
@@ -310,6 +345,20 @@ const ConfigCenter: React.FC = () => {
                     label: type,
                     value: type,
                   }))}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item label="配置描述">
+                <Input.TextArea
+                  value={newConfigDesc}
+                  onChange={(e) => setNewConfigDesc(e.target.value)}
+                  rows={3}
+                  placeholder="请输入配置描述"
+                  maxLength={255}
+                  required
                 />
               </Form.Item>
             </Col>
@@ -359,12 +408,34 @@ const ConfigCenter: React.FC = () => {
           </Space>
         }
       >
-        <MonacoEditor
-          height="700"
-          language={ConfigMonacoEditorLanguage[currentConfig?.configType || ConfigType.DEFAULT]}
-          value={newConfigValue}
-          onChange={setNewConfigValue}
-        />
+        <Form layout="vertical" onFinish={doCreateConfig}>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item label="配置描述">
+                <Input.TextArea
+                  value={newConfigDesc}
+                  onChange={(e) => setNewConfigDesc(e.target.value)}
+                  rows={3}
+                  placeholder="请输入配置描述"
+                  maxLength={255}
+                  required
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item label="配置值">
+                <MonacoEditor
+                  height="500"
+                  language={ConfigMonacoEditorLanguage[newConfigType || ConfigType.DEFAULT]}
+                  value={newConfigValue}
+                  onChange={setNewConfigValue}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
       </Drawer>
     </>
   );

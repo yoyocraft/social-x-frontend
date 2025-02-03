@@ -37,10 +37,10 @@ declare namespace API {
   };
 
   type ConfigCreateRequest = {
+    configDesc?: string;
     configKey?: string;
     configType?: string;
     configValue?: string;
-    extraData?: string;
     reqId?: string;
   };
 
@@ -50,6 +50,7 @@ declare namespace API {
   };
 
   type ConfigInfoResponse = {
+    configDesc?: string;
     configId?: number;
     configKey?: string;
     configType?: string;
@@ -60,6 +61,7 @@ declare namespace API {
   };
 
   type ConfigUpdateRequest = {
+    configDesc?: string;
     configKey?: string;
     currVersion?: number;
     newConfigValue?: string;
