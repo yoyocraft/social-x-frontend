@@ -6,7 +6,6 @@ export default [
   },
   {
     path: '/account',
-    layout: false,
     routes: [
       { name: '个人中心', path: '/account/center', component: './User/Center' },
       { name: '个人设置', path: '/account/settings', component: './User/Settings' },
