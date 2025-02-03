@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
       copyright="2024 by yoyocraft"
       links={[
         {
-          key: 'youyi',
+          key: 'bilibili',
           title: (
             <span>
               <BilibiliOutlined /> 游艺Geek
