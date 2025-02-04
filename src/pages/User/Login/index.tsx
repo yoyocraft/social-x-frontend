@@ -1,7 +1,7 @@
 import { Footer } from '@/components';
 import { ResponseCode } from '@/constants/ResponseCode';
 import { BizType } from '@/constants/SystemConstant';
-import { IdentityType } from '@/constants/UserConstant';
+import { captchaCheckRule, emailCheckRule, IdentityType } from '@/constants/UserConstant';
 import { notifyEmailCaptchaUsingPost } from '@/services/socialx/notificationController';
 import { loginUsingPost } from '@/services/socialx/userController';
 import { GithubOutlined, LockOutlined, QqOutlined, UserOutlined } from '@ant-design/icons';
@@ -45,16 +45,6 @@ const ActionIcons = () => {
   );
 };
 
-const emailCheckRule = [
-  {
-    required: true,
-    message: '邮箱是必填项！',
-  },
-  {
-    pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-    message: '不合法的邮箱！',
-  },
-];
 const Login: React.FC = () => {
   const [type, setType] = useState<string>(IdentityType.EMAIL_CAPTCHA);
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -171,16 +161,7 @@ const Login: React.FC = () => {
                 }}
                 name="credential"
                 phoneName="identifier"
-                rules={[
-                  {
-                    required: true,
-                    message: '验证码是必填项！',
-                  },
-                  {
-                    pattern: /^\d{6}$/,
-                    message: '验证码不合法！',
-                  },
-                ]}
+                rules={[...captchaCheckRule]}
                 onGetCaptcha={async (email) => {
                   const result = await notifyEmailCaptchaUsingPost({
                     bizType: BizType.LOGIN,
