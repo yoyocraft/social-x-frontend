@@ -32,11 +32,6 @@ export default [
         component: './User/Settings/AccountSettings',
       },
       {
-        path: '/account/settings/general',
-        name: '通用设置',
-        component: './User/Settings/GeneralSettings',
-      },
-      {
         path: '/account/settings/notification',
         name: '消息设置',
         component: './User/Settings/NotificationSettings',

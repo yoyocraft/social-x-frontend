@@ -1,10 +1,4 @@
-import {
-  BellOutlined,
-  LeftOutlined,
-  LockOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { BellOutlined, LeftOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
 import type { MenuProps } from 'antd';
 import { Menu, Space } from 'antd';
@@ -33,11 +27,6 @@ const UserSettings: React.FC = () => {
       label: <Link to="/account/settings/account">账号设置</Link>,
     },
     {
-      key: 'general',
-      icon: <SettingOutlined />,
-      label: <Link to="/account/settings/general">通用设置</Link>,
-    },
-    {
       key: 'notification',
       icon: <BellOutlined />,
       label: <Link to="/account/settings/notification">消息设置</Link>,
@@ -63,17 +52,17 @@ const UserSettings: React.FC = () => {
         },
       }}
     >
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <ProCard style={{ width: 240 }} bordered={false}>
+      <div style={{ display: 'flex', gap: '8px', minHeight: '70vh' }}>
+        <ProCard style={{ width: 240, minHeight: '70vh', flex: '0 0 auto' }} bordered={false}>
           <Menu
             mode="vertical"
             selectedKeys={[location.pathname.split('/')[2]]}
             items={menuItems}
-            style={{ border: 'none' }}
+            style={{ border: 'none', height: '100%' }}
           />
         </ProCard>
 
-        <ProCard headerBordered style={{ flex: 1 }}>
+        <ProCard headerBordered style={{ flex: 1, minHeight: '70vh' }}>
           <Outlet />
         </ProCard>
       </div>
