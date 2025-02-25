@@ -51,8 +51,8 @@ const ConfigCenter: React.FC = () => {
     try {
       const res = await queryConfigForMainPageUsingGet({ cursor });
       if (res?.data) {
-        setDataSource((prev) => [...prev, ...(res?.data?.list || [])]);
-        setHasMore(!!(res?.data?.list && res?.data?.list.length > 0));
+        setDataSource((prev) => [...prev, ...(res?.data?.data || [])]);
+        setHasMore(!!(res?.data?.data && res?.data?.data.length > 0));
         setCursor(res?.data?.cursor || 0);
       }
     } catch (error) {
