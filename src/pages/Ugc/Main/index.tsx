@@ -1,6 +1,12 @@
-import { queryMainPageUgcUsingGet } from '@/services/socialx/ugcController';
+import { Footer } from '@/components';
+import {
+  queryFollowPageUgcUsingGet,
+  queryHotUgcUsingGet,
+  queryMainPageUgcUsingGet,
+  queryRecommendPageUgcUsingGet,
+} from '@/services/socialx/ugcController';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
-import { LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import {
   Affix,
   Avatar,
@@ -36,14 +42,6 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   </Space>
 );
 
-const rankings = [
-  { rank: 1, title: 'MobVue 开源啦！' },
-  { rank: 2, title: 'Tokens 是什么, 为什么大模型需要它?' },
-  { rank: 3, title: '不愧是阿里，DeepSeek满血复活！' },
-  { rank: 4, title: '10亿数据，如何还移?' },
-  { rank: 5, title: 'Next.js + tRPC + Auth.js + Drizzle ORM 全栈项目' },
-];
-
 const tabItems: TabsProps['items'] = [
   {
     key: 'recommended',
@@ -57,13 +55,23 @@ const tabItems: TabsProps['items'] = [
 
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
+  const [hotLoading, setHotLoading] = useState(false);
   const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
+  const [hotUgcList, setHotUgcList] = useState<API.UgcResponse[]>([]);
   const [cursor, setCursor] = useState('0');
   const [hasMore, setHasMore] = useState(true);
   const [sideMenu, setSideMenu] = useState(initSideMenuItems);
   const [categoryId, setCategoryId] = useState('');
+  const [activeTab, setActiveTab] = useState('recommended');
+  const [viewFollow, setViewFollow] = useState(false);
 
-  const loadMoreUgc = async () => {
+  const setUgcData = (res: API.ResultPageCursorResultStringUgcResponse_) => {
+    setUgcList((prev) => [...prev, ...(res.data?.data || [])]);
+    setCursor(res.data?.cursor || '0');
+    setHasMore(!!res.data?.data?.length);
+  };
+
+  const timeFeedUgc = async () => {
     if (loading) return;
 
     try {
@@ -73,13 +81,74 @@ export default function HomePage() {
         ugcType: 'ARTICLE',
         categoryId,
       });
-
-      setUgcList((prev) => [...prev, ...(res.data?.data || [])]);
-      setCursor(res.data?.cursor || '0');
-      setHasMore(!!res.data?.data?.length);
+      setUgcData(res);
     } finally {
       setLoading(false);
     }
+  };
+
+  const recommendFeedUgc = async () => {
+    if (loading) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await queryRecommendPageUgcUsingGet({
+        cursor,
+        ugcType: 'ARTICLE',
+        categoryId,
+        recommendFeed: true,
+      });
+      setUgcData(res);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const followFeedUgc = async () => {
+    if (loading) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await queryFollowPageUgcUsingGet({
+        cursor,
+        ugcType: 'ARTICLE',
+        followFeed: true,
+      });
+      setUgcData(res);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadUgcData = async () => {
+    if (viewFollow) {
+      await followFeedUgc();
+      return;
+    }
+
+    if (activeTab === 'recommended') {
+      await recommendFeedUgc();
+    } else {
+      await timeFeedUgc();
+    }
+  };
+
+  const loadHotUgc = () => {
+    if (hotLoading) {
+      return;
+    }
+    setHotLoading(true);
+    queryHotUgcUsingGet()
+      .then((res) => {
+        setHotUgcList(res.data || []);
+      })
+      .finally(() => {
+        setHotLoading(false);
+      });
   };
 
   const loadSideMenu = () => {
@@ -97,16 +166,15 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    loadSideMenu();
-    loadMoreUgc();
+    Promise.all([loadSideMenu(), timeFeedUgc(), loadHotUgc()]);
   }, []);
 
   useEffect(() => {
     setUgcList([]);
     setCursor('0');
     setHasMore(true);
-    loadMoreUgc();
-  }, [categoryId]);
+    Promise.all([loadUgcData()]);
+  }, [categoryId, viewFollow, activeTab]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -123,7 +191,7 @@ export default function HomePage() {
             style={{ height: '100%', borderRight: 0 }}
             onSelect={(item) => {
               if (item.key === 'follow') {
-                // TODO 跳转到关注页面
+                setViewFollow(true);
                 return;
               }
               if (item.key === 'comprehensive') {
@@ -131,21 +199,31 @@ export default function HomePage() {
               } else {
                 setCategoryId(item.key);
               }
+              setViewFollow(false);
             }}
           />
         </Sider>
       </Affix>
 
-      <Layout style={{ padding: '0 12px 24px' }}>
+      <Layout style={{ padding: '0 12px 12px' }}>
         <Content style={{ margin: 0, minHeight: 280 }}>
           <Row gutter={12}>
             <Col span={18}>
               <Card>
-                <Tabs defaultActiveKey="recommended" items={tabItems} />
+                {!viewFollow && (
+                  <Tabs
+                    size="large"
+                    defaultActiveKey="recommended"
+                    items={tabItems}
+                    onChange={(key) => {
+                      setActiveTab(key);
+                    }}
+                  />
+                )}
 
                 <InfiniteScroll
                   dataLength={ugcList.length}
-                  next={loadMoreUgc}
+                  next={loadUgcData}
                   hasMore={hasMore}
                   loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
                   endMessage={<Divider plain>没有更多啦～</Divider>}
@@ -159,8 +237,21 @@ export default function HomePage() {
                       <List.Item
                         key={item.title}
                         actions={[
-                          <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                          <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+                          <IconText
+                            icon={EyeOutlined}
+                            text={item.viewCount?.toString() || '0'}
+                            key="list-vertical-view-o"
+                          />,
+                          <IconText
+                            icon={LikeOutlined}
+                            text={item.likeCount?.toString() || '0'}
+                            key="list-vertical-like-o"
+                          />,
+                          <IconText
+                            icon={StarOutlined}
+                            text={item.collectCount?.toString() || '0'}
+                            key="list-vertical-star-o"
+                          />,
                         ]}
                         extra={item.cover && <img alt="logo" src={item.cover} />}
                       >
@@ -213,14 +304,16 @@ export default function HomePage() {
                         点亮在社区的每一天
                       </Typography.Text>
                     </div>
-                    <Button type="primary">去签到</Button>
+                    <Button type="primary" disabled>
+                      去签到（TODO）
+                    </Button>
                   </div>
                 </Card>
 
                 <Card title="📈 文章榜">
                   <List
                     size="small"
-                    dataSource={rankings}
+                    dataSource={hotUgcList}
                     renderItem={(item) => (
                       <List.Item>
                         <Typography.Link
@@ -240,6 +333,7 @@ export default function HomePage() {
                     )}
                   />
                 </Card>
+                <Footer />
               </div>
             </Col>
           </Row>
