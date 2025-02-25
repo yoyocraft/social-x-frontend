@@ -70,21 +70,6 @@ export async function interactUsingPost(
   });
 }
 
-/** queryMainPageUgc GET /api/ugc/main */
-export async function queryMainPageUgcUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryMainPageUgcUsingGETParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/main', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-
 /** querySelfUgc GET /api/ugc/me */
 export async function querySelfUgcUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -141,6 +126,21 @@ export async function setUgcStatusUsingPost(
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** queryMainPageUgc GET /api/ugc/time_feed */
+export async function queryMainPageUgcUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.queryMainPageUgcUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/time_feed', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

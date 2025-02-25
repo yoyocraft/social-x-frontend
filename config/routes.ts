@@ -5,7 +5,7 @@ export default [
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
 
-  { path: '/', name: '首页', icon: 'home', component: './Welcome' },
+  { path: '/', name: '首页', icon: 'home', component: './Ugc/Main' },
 
   {
     name: '个人中心',
@@ -39,7 +39,7 @@ export default [
     ],
   },
 
-  { path: '/article', name: '文章', icon: 'container', component: './Ugc/Main' },
+  // { path: '/article', name: '文章', icon: 'container', component: './Ugc/Main' },
   { path: '/post', name: '动态', icon: 'container', component: './Admin' },
   { path: '/question', name: '问答', icon: 'container', component: './Admin' },
 
