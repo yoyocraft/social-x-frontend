@@ -39,7 +39,7 @@ export default [
     ],
   },
 
-  { path: '/article', name: '文章', icon: 'container', component: './Admin' },
+  { path: '/article', name: '文章', icon: 'container', component: './Ugc/Main' },
   { path: '/post', name: '动态', icon: 'container', component: './Admin' },
   { path: '/question', name: '问答', icon: 'container', component: './Admin' },
 
