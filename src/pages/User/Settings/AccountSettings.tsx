@@ -1,8 +1,8 @@
 import { ResponseCode } from '@/constants/ResponseCode';
 import { BizType } from '@/constants/SystemConstant';
 import { captchaCheckRule, emailCheckRule, passwordCheckRule } from '@/constants/UserConstant';
-import { notifyEmailCaptchaUsingPost } from '@/services/socialx/notificationController';
 import { setPwdUsingPost, verifyCaptchaUsingPost } from '@/services/socialx/userController';
+import { notifyEmailCaptchaUsingPost } from '@/services/socialx/verificationController';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { ProCard, ProFormCaptcha, ProFormText, StepsForm } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';

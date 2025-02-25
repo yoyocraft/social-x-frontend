@@ -25,7 +25,7 @@ const ProfileSettings: React.FC = () => {
   const [avatarUrl, setAvatarUrl] = useState<string>(currentUser?.avatar || '');
 
   const [initialValue, setInitialValue] = useState<API.UserEditInfoRequest>({
-    nickName: currentUser?.nickName,
+    nickname: currentUser?.nickname,
     workStartTime: currentUser?.workStartTime,
     workDirection: currentUser?.workDirection,
     jobTitle: currentUser?.jobTitle,
@@ -93,7 +93,7 @@ const ProfileSettings: React.FC = () => {
           <ProCard title="基本信息" bordered={false}>
             <ProForm.Group>
               <ProFormText
-                name="nickName"
+                name="nickname"
                 label="用户名"
                 tooltip="2-20个字符"
                 placeholder="请输入用户名"

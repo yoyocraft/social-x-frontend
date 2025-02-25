@@ -2,12 +2,12 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** setPwd POST /api/user/auth/set-pwd */
-export async function setPwdUsingPost(
-  body: API.UserSetPwdRequest,
+/** verifyCaptcha POST /api/user/auth/captcha/verify */
+export async function verifyCaptchaUsingPost(
+  body: API.UserVerifyCaptchaRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultBoolean_>('/api/user/auth/set-pwd', {
+  return request<API.ResultVerifyCaptchaResponse_>('/api/user/auth/captcha/verify', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,12 +17,12 @@ export async function setPwdUsingPost(
   });
 }
 
-/** verifyCaptcha POST /api/user/auth/verify-captcha */
-export async function verifyCaptchaUsingPost(
-  body: API.UserVerifyCaptchaRequest,
+/** setPwd POST /api/user/auth/set_pwd */
+export async function setPwdUsingPost(
+  body: API.UserSetPwdRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultVerifyCaptchaResponse_>('/api/user/auth/verify-captcha', {
+  return request<API.ResultBoolean_>('/api/user/auth/set_pwd', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
