@@ -1,4 +1,5 @@
 import { queryMainPageUgcUsingGet } from '@/services/socialx/ugcController';
+import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { LikeOutlined, StarOutlined } from '@ant-design/icons';
 import {
   Affix,
@@ -14,6 +15,7 @@ import {
   Skeleton,
   Space,
   Tabs,
+  TabsProps,
   Tag,
   Typography,
 } from 'antd';
@@ -21,20 +23,10 @@ import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const { Sider, Content } = Layout;
-const { TabPane } = Tabs;
 
-const sideMenuItems = [
+const initSideMenuItems = [
   { key: 'follow', label: '关注', icon: '👥' },
   { key: 'comprehensive', label: '综合', icon: '📚' },
-  { key: 'backend', label: '后端', icon: '⚙️' },
-  { key: 'frontend', label: '前端', icon: '🎨' },
-  { key: 'android', label: 'Android', icon: '📱' },
-  { key: 'ios', label: 'iOS', icon: '🍎' },
-  { key: 'ai', label: '人工智能', icon: '🤖' },
-  { key: 'tools', label: '开发工具', icon: '🔧' },
-  { key: 'life', label: '代码人生', icon: '💻' },
-  { key: 'read', label: '阅读', icon: '📖' },
-  { key: 'rank', label: '排行榜', icon: '🏆' },
 ];
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -52,31 +44,70 @@ const rankings = [
   { rank: 5, title: 'Next.js + tRPC + Auth.js + Drizzle ORM 全栈项目' },
 ];
 
+const tabItems: TabsProps['items'] = [
+  {
+    key: 'recommended',
+    label: '推荐',
+  },
+  {
+    key: 'latest',
+    label: '最新',
+  },
+];
+
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
   const [cursor, setCursor] = useState('0');
   const [hasMore, setHasMore] = useState(true);
+  const [sideMenu, setSideMenu] = useState(initSideMenuItems);
+  const [categoryId, setCategoryId] = useState('');
 
-  const loadMoreUgc = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    queryMainPageUgcUsingGet({ cursor, ugcType: 'ARTICLE' })
-      .then((res) => {
-        setUgcList([...ugcList, ...(res.data?.data || [])]);
-        setCursor(res.data?.cursor || '0');
-        setHasMore(!!(res.data?.data && res.data.data.length > 0));
-      })
-      .finally(() => {
-        setLoading(false);
+  const loadMoreUgc = async () => {
+    if (loading) return;
+
+    try {
+      setLoading(true);
+      const res = await queryMainPageUgcUsingGet({
+        cursor,
+        ugcType: 'ARTICLE',
+        categoryId,
       });
+
+      setUgcList((prev) => [...prev, ...(res.data?.data || [])]);
+      setCursor(res.data?.cursor || '0');
+      setHasMore(!!res.data?.data?.length);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadSideMenu = () => {
+    queryUgcCategoryUsingGet().then((res) => {
+      const categories = res.data?.ugcCategoryList?.map((item) => {
+        return {
+          key: item.categoryId,
+          icon: item.icon,
+          label: item.categoryName,
+        };
+      });
+      // @ts-ignore
+      setSideMenu([...initSideMenuItems, ...(categories || [])]);
+    });
   };
 
   useEffect(() => {
+    loadSideMenu();
     loadMoreUgc();
   }, []);
+
+  useEffect(() => {
+    setUgcList([]);
+    setCursor('0');
+    setHasMore(true);
+    loadMoreUgc();
+  }, [categoryId]);
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Affix offsetTop={55}>
@@ -84,12 +115,23 @@ export default function HomePage() {
           <Menu
             mode="inline"
             defaultSelectedKeys={['comprehensive']}
-            items={sideMenuItems.map((item) => ({
+            items={sideMenu.map((item) => ({
               key: item.key,
               icon: <span>{item.icon}</span>,
               label: item.label,
             }))}
             style={{ height: '100%', borderRight: 0 }}
+            onSelect={(item) => {
+              if (item.key === 'follow') {
+                // TODO 跳转到关注页面
+                return;
+              }
+              if (item.key === 'comprehensive') {
+                setCategoryId('');
+              } else {
+                setCategoryId(item.key);
+              }
+            }}
           />
         </Sider>
       </Affix>
@@ -99,10 +141,7 @@ export default function HomePage() {
           <Row gutter={12}>
             <Col span={18}>
               <Card>
-                <Tabs defaultActiveKey="recommended">
-                  <TabPane tab="推荐" key="recommended" />
-                  <TabPane tab="最新" key="latest" />
-                </Tabs>
+                <Tabs defaultActiveKey="recommended" items={tabItems} />
 
                 <InfiniteScroll
                   dataLength={ugcList.length}

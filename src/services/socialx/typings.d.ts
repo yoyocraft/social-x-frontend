@@ -16,7 +16,7 @@ declare namespace API {
     commentaryId?: string;
     commentatorAvatar?: string;
     commentatorId?: string;
-    commentatornickname?: string;
+    commentatorNickname?: string;
     gmtCreate?: number;
     gmtModified?: number;
     likeCount?: number;
@@ -436,6 +436,7 @@ declare namespace API {
   type UgcCategoryInfoResponse = {
     categoryId?: string;
     categoryName?: string;
+    icon?: string;
     priority?: number;
   };
 
