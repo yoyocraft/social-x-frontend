@@ -2,21 +2,6 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** queryByCursorForUserPage GET /api/ugc/cursor */
-export async function queryByCursorForUserPageUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryByCursorForUserPageUsingGETParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/cursor', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-
 /** delete POST /api/ugc/delete */
 export async function deleteUsingPost1(
   body: API.UgcDeleteRequest,
@@ -32,10 +17,10 @@ export async function deleteUsingPost1(
   });
 }
 
-/** queryByUgcId GET /api/ugc/detail */
-export async function queryByUgcIdUsingGet(
+/** queryUgcDetail GET /api/ugc/detail */
+export async function queryUgcDetailUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryByUgcIdUsingGETParams,
+  params: API.queryUgcDetailUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultUgcResponse_>('/api/ugc/detail', {
@@ -43,6 +28,29 @@ export async function queryByUgcIdUsingGet(
     params: {
       ...params,
     },
+    ...(options || {}),
+  });
+}
+
+/** queryFollowPageUgc GET /api/ugc/follow_feed */
+export async function queryFollowPageUgcUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.queryFollowPageUgcUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/follow_feed', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** queryHotUgc GET /api/ugc/hot */
+export async function queryHotUgcUsingGet(options?: { [key: string]: any }) {
+  return request<API.ResultListUgcResponse_>('/api/ugc/hot', {
+    method: 'GET',
     ...(options || {}),
   });
 }
@@ -62,10 +70,10 @@ export async function interactUsingPost(
   });
 }
 
-/** queryByCursorForMainPage GET /api/ugc/main */
-export async function queryByCursorForMainPageUsingGet(
+/** queryMainPageUgc GET /api/ugc/main */
+export async function queryMainPageUgcUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryByCursorForMainPageUsingGETParams,
+  params: API.queryMainPageUgcUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/main', {
@@ -107,17 +115,47 @@ export async function publishUsingPost1(
   });
 }
 
-/** setStatus POST /api/ugc/set-status */
-export async function setStatusUsingPost(
+/** queryRecommendPageUgc GET /api/ugc/recommend_feed */
+export async function queryRecommendPageUgcUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.queryRecommendPageUgcUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/recommend_feed', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** setUgcStatus POST /api/ugc/set_status */
+export async function setUgcStatusUsingPost(
   body: API.UgcSetStatusRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultBoolean_>('/api/ugc/set-status', {
+  return request<API.ResultBoolean_>('/api/ugc/set_status', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** queryUserPageUgc GET /api/ugc/user */
+export async function queryUserPageUgcUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.queryUserPageUgcUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/user', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

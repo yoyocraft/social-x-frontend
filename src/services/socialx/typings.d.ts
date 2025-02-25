@@ -1,5 +1,5 @@
 declare namespace API {
-  type CaptchaNotifyRequest = {
+  type CaptchaVerifyRequest = {
     bizType?: string;
     email?: string;
     reqId?: string;
@@ -11,11 +11,12 @@ declare namespace API {
   };
 
   type CommentaryInfo = {
+    adopted?: boolean;
     commentary?: string;
     commentaryId?: string;
     commentatorAvatar?: string;
     commentatorId?: string;
-    commentatorNickName?: string;
+    commentatornickname?: string;
     gmtCreate?: number;
     gmtModified?: number;
     likeCount?: number;
@@ -72,29 +73,61 @@ declare namespace API {
     url?: string;
   };
 
+  type NotificationReadRequest = {
+    notificationId?: string;
+    notificationType?: string;
+    reqId?: string;
+  };
+
+  type NotificationResponse = {
+    content?: string;
+    notificationGroup?: string;
+    notificationId?: string;
+    notificationType?: string;
+    read?: boolean;
+    receiverId?: string;
+    receiverName?: string;
+    senderId?: string;
+    senderName?: string;
+  };
+
+  type NotificationUnreadInfo = {
+    notificationType?: string;
+    unreadCount?: number;
+  };
+
+  type NotificationUnreadResponse = {
+    unreadInfoList?: NotificationUnreadInfo[];
+  };
+
   type PageCursorResultLongConfigInfoResponse_ = {
     cursor?: number;
-    list?: ConfigInfoResponse[];
+    data?: ConfigInfoResponse[];
   };
 
   type PageCursorResultStringCommentaryResponse_ = {
     cursor?: string;
-    list?: CommentaryResponse[];
+    data?: CommentaryResponse[];
+  };
+
+  type PageCursorResultStringNotificationResponse_ = {
+    cursor?: string;
+    data?: NotificationResponse[];
   };
 
   type PageCursorResultStringUgcResponse_ = {
     cursor?: string;
-    list?: UgcResponse[];
+    data?: UgcResponse[];
   };
 
   type PageCursorResultStringUgcTagInfoResponse_ = {
     cursor?: string;
-    list?: UgcTagInfoResponse[];
+    data?: UgcTagInfoResponse[];
   };
 
   type PageCursorResultStringUserBasicInfoResponse_ = {
     cursor?: string;
-    list?: UserBasicInfoResponse[];
+    data?: UserBasicInfoResponse[];
   };
 
   type PermissionAddRequest = {
@@ -102,43 +135,12 @@ declare namespace API {
     reqId?: string;
   };
 
-  type queryByCursorForMainPageUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
+  type queryCommentaryCountUsingGETParams = {
     cursor?: string;
-    keyword?: string;
     page?: number;
     reqId?: string;
     size?: number;
     ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
-  type queryByCursorForUserPageUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
-  type queryByUgcIdUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
   };
 
   type queryConfigForMainPageUsingGETParams = {
@@ -173,12 +175,67 @@ declare namespace API {
     userId?: string;
   };
 
+  type queryFollowPageUgcUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
+  type queryMainPageUgcUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
+  type queryNotificationUsingGETParams = {
+    cursor?: string;
+    notificationType?: string;
+    page?: number;
+    reqId?: string;
+    size?: number;
+  };
+
+  type queryRecommendPageUgcUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
   type querySelfUgcUsingGETParams = {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
+    followFeed?: boolean;
     keyword?: string;
     page?: number;
+    recommendFeed?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -199,6 +256,41 @@ declare namespace API {
     reqId?: string;
     size?: number;
     ugcId?: string;
+  };
+
+  type queryUgcDetailUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
+  type queryUnreadCountUsingGETParams = {
+    queryAll?: boolean;
+    reqId?: string;
+  };
+
+  type queryUserPageUgcUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
   };
 
   type ResultBoolean_ = {
@@ -225,6 +317,30 @@ declare namespace API {
     timestamp?: number;
   };
 
+  type ResultListUgcResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: UgcResponse[];
+    message?: string;
+    timestamp?: number;
+  };
+
+  type ResultLong_ = {
+    bizState?: string;
+    code?: string;
+    data?: number;
+    message?: string;
+    timestamp?: number;
+  };
+
+  type ResultNotificationUnreadResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: NotificationUnreadResponse;
+    message?: string;
+    timestamp?: number;
+  };
+
   type ResultPageCursorResultLongConfigInfoResponse_ = {
     bizState?: string;
     code?: string;
@@ -237,6 +353,14 @@ declare namespace API {
     bizState?: string;
     code?: string;
     data?: PageCursorResultStringCommentaryResponse_;
+    message?: string;
+    timestamp?: number;
+  };
+
+  type ResultPageCursorResultStringNotificationResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: PageCursorResultStringNotificationResponse_;
     message?: string;
     timestamp?: number;
   };
@@ -359,6 +483,7 @@ declare namespace API {
     cover?: string;
     gmtCreate?: number;
     gmtModified?: number;
+    hasSolved?: boolean;
     likeCount?: number;
     status?: string;
     summary?: string;
@@ -406,7 +531,7 @@ declare namespace API {
     hasFollowed?: boolean;
     jobTitle?: string;
     joinTime?: number;
-    nickName?: string;
+    nickname?: string;
     personalizedTags?: string[];
     role?: string;
     userId?: string;
@@ -419,7 +544,7 @@ declare namespace API {
     bio?: string;
     company?: string;
     jobTitle?: string;
-    nickName?: string;
+    nickname?: string;
     personalizedTags?: string[];
     reqId?: string;
     userId?: string;
@@ -429,7 +554,7 @@ declare namespace API {
 
   type UserFollowRequest = {
     follow?: boolean;
-    followingUserId?: string;
+    followUserId?: string;
     reqId?: string;
   };
 

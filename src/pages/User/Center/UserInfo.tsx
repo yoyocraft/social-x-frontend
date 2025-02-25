@@ -20,7 +20,7 @@ const UserInfo: React.FC<API.UserBasicInfoResponse> = (userInfo) => {
         <div style={{ flex: 1, marginLeft: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
             <Title level={3} style={{ margin: 0, marginRight: 12 }}>
-              {userInfo.nickName}
+              {userInfo.nickname}
             </Title>
           </div>
 

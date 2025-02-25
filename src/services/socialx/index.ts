@@ -10,6 +10,7 @@ import * as permissionController from './permissionController';
 import * as ugcController from './ugcController';
 import * as ugcMetadataController from './ugcMetadataController';
 import * as userController from './userController';
+import * as verificationController from './verificationController';
 export default {
   commentaryController,
   configController,
@@ -19,4 +20,5 @@ export default {
   ugcController,
   ugcMetadataController,
   userController,
+  verificationController,
 };
