@@ -43,11 +43,11 @@ export default [
   { path: '/post', name: '动态', icon: 'container', component: './Admin' },
   { path: '/question', name: '问答', icon: 'container', component: './Admin' },
   {
-    path: '/ugc/:ugcId',
-    name: '详情',
+    path: '/article/:ugcId',
+    name: '文章详情',
     hideInMenu: true,
     icon: 'container',
-    component: './Ugc/Detail',
+    component: './Ugc/Article',
   },
 
   {
