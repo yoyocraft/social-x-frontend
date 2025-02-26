@@ -70,24 +70,19 @@ const Login: React.FC = () => {
         values.credential = initialState?.encryptStr?.(values.credential);
       }
       // 登录
-      const msg = await loginUsingPost({
+      await loginUsingPost({
         ...values,
         identityType: type,
       });
-      if (msg.code === ResponseCode.SUCCESS) {
-        const defaultLoginSuccessMessage = '登录成功！';
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        return;
-      } else {
-        message.error(msg.message);
-      }
-    } catch (error) {
+      const defaultLoginSuccessMessage = '登录成功！';
+      message.success(defaultLoginSuccessMessage);
+      await fetchUserInfo();
+      const urlParams = new URL(window.location.href).searchParams;
+      history.push(urlParams.get('redirect') || '/');
+      return;
+    } catch (error: any) {
       const defaultLoginFailureMessage = '登录失败，请重试！';
-      console.log(error);
-      message.error(defaultLoginFailureMessage);
+      message.error(error.message || defaultLoginFailureMessage);
     }
   };
   return (
