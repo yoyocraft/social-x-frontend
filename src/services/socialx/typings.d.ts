@@ -474,9 +474,7 @@ declare namespace API {
 
   type UgcResponse = {
     attachmentUrls?: string[];
-    authorAvatar?: string;
-    authorId?: string;
-    authorName?: string;
+    author?: UserBasicInfoResponse;
     categoryId?: string;
     categoryName?: string;
     collectCount?: number;
