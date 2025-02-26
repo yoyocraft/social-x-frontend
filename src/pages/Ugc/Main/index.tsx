@@ -1,4 +1,6 @@
 import { Footer } from '@/components';
+import IconText from '@/components/IconText';
+import TagList from '@/components/TagList';
 import {
   listFollowUgcFeedUsingGet,
   listHotUgcUsingGet,
@@ -6,6 +8,7 @@ import {
   listTimelineUgcFeedUsingGet,
 } from '@/services/socialx/ugcController';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
+import { dateTimeFormat } from '@/services/utils/time';
 import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import {
   Affix,
@@ -20,12 +23,11 @@ import {
   Skeleton,
   Space,
   Tabs,
-  Tag,
   Typography,
 } from 'antd';
-import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Link } from 'react-router-dom';
 
 const { Sider, Content } = Layout;
 
@@ -33,13 +35,6 @@ const initSideMenuItems = [
   { key: 'follow', label: '关注', icon: '👥' },
   { key: 'comprehensive', label: '综合', icon: '📚' },
 ];
-
-const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
-  <Space>
-    {React.createElement(icon)}
-    {text}
-  </Space>
-);
 
 const tabItems = [
   {
@@ -261,6 +256,7 @@ export default function HomePage() {
                         style={{
                           padding: '24px 0',
                           borderBottom: '1px solid rgba(0,0,0,0.06)',
+                          transition: 'background-color 0.3s',
                         }}
                         actions={[
                           <IconText
@@ -298,7 +294,7 @@ export default function HomePage() {
                         <List.Item.Meta
                           title={
                             <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
-                              <a href={item.ugcId} style={{ color: 'inherit' }}>
+                              <a href={`/ugc/${item.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
                                 {item.title}
                               </a>
                             </Typography.Title>
@@ -317,19 +313,16 @@ export default function HomePage() {
                           }
                         />
                         <Space size={8} align="center">
-                          <Typography.Text>{item.authorName}</Typography.Text>
+                          <Typography.Text>{item.author?.nickname}</Typography.Text>
                           <Divider type="vertical" />
                           <Typography.Text style={{ fontSize: 12 }}>
-                            {dayjs(item.gmtCreate).format('YYYY-MM-DD HH:mm')}
+                            {item.gmtCreate
+                              ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm')
+                              : 'N/A'}
                           </Typography.Text>
                           <Divider type="vertical" />
                           <Space size={4}>
-                            {item.tags &&
-                              item.tags.map((tag) => (
-                                <Tag key={tag} bordered={false}>
-                                  {tag}
-                                </Tag>
-                              ))}
+                            <TagList tags={item.tags} />
                           </Space>
                         </Space>
                       </List.Item>
@@ -376,8 +369,8 @@ export default function HomePage() {
                     dataSource={hotUgcList}
                     renderItem={(item) => (
                       <List.Item>
-                        <Typography.Link
-                          href="#"
+                        <Link
+                          to={`/ugc/${item.ugcId}`}
                           style={{
                             display: 'inline-block',
                             maxWidth: 'calc(100% - 38px)',
@@ -386,9 +379,10 @@ export default function HomePage() {
                             textOverflow: 'ellipsis',
                             verticalAlign: 'middle',
                           }}
+                          key={item.ugcId}
                         >
                           {item.title}
-                        </Typography.Link>
+                        </Link>
                       </List.Item>
                     )}
                   />
