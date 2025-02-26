@@ -1,9 +1,10 @@
 import { Footer } from '@/components';
+import CheckInCard from '@/components/CheckInCard';
 import IconText from '@/components/IconText';
 import TagList from '@/components/TagList';
+import UgcHotRank from '@/components/UgcHotRank';
 import {
   listFollowUgcFeedUsingGet,
-  listHotUgcUsingGet,
   listRecommendUgcFeedUsingGet,
   listTimelineUgcFeedUsingGet,
 } from '@/services/socialx/ugcController';
@@ -12,7 +13,6 @@ import { dateTimeFormat } from '@/services/utils/time';
 import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import {
   Affix,
-  Button,
   Card,
   Col,
   Divider,
@@ -27,7 +27,6 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Link } from 'react-router-dom';
 
 const { Sider, Content } = Layout;
 
@@ -49,9 +48,7 @@ const tabItems = [
 
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
-  const [hotLoading, setHotLoading] = useState(false);
   const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
-  const [hotUgcList, setHotUgcList] = useState<API.UgcResponse[]>([]);
   const [cursor, setCursor] = useState('0');
   const [hasMore, setHasMore] = useState(true);
   const [sideMenu, setSideMenu] = useState(initSideMenuItems);
@@ -131,20 +128,6 @@ export default function HomePage() {
     }
   };
 
-  const loadHotUgc = () => {
-    if (hotLoading) {
-      return;
-    }
-    setHotLoading(true);
-    listHotUgcUsingGet()
-      .then((res) => {
-        setHotUgcList(res.data || []);
-      })
-      .finally(() => {
-        setHotLoading(false);
-      });
-  };
-
   const loadSideMenu = () => {
     queryUgcCategoryUsingGet().then((res) => {
       const categories = res.data?.ugcCategoryList?.map((item) => {
@@ -160,7 +143,7 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    Promise.all([loadSideMenu(), timeFeedUgc(), loadHotUgc()]);
+    Promise.all([loadSideMenu(), timeFeedUgc()]);
   }, []);
 
   useEffect(() => {
@@ -171,7 +154,13 @@ export default function HomePage() {
   }, [categoryId, viewFollow, activeTab]);
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout
+      style={{
+        padding: '12px',
+        transition: 'margin 0.2s',
+        height: '100vh',
+      }}
+    >
       <Affix offsetTop={55}>
         <Sider
           theme="light"
@@ -180,7 +169,6 @@ export default function HomePage() {
             background: '#fff',
             boxShadow: '2px 0 8px rgba(0,0,0,0.06)',
             overflow: 'auto',
-            position: 'fixed',
           }}
         >
           <Menu
@@ -208,191 +196,132 @@ export default function HomePage() {
         </Sider>
       </Affix>
 
-      <Layout
-        style={{
-          marginLeft: 200,
-          padding: '20px',
-          transition: 'margin 0.2s',
-          height: '100vh',
-        }}
-      >
-        <Content style={{ margin: 0, minHeight: '100%' }}>
-          <Row gutter={[16, 16]}>
-            <Col xl={18} lg={16} md={24}>
-              <Card
-                bordered={false}
-                style={{
-                  borderRadius: 8,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                  padding: '0 12px',
-                }}
+      <Content style={{ marginLeft: 16, minHeight: '100%' }}>
+        <Row gutter={16}>
+          <Col span={18}>
+            <Card
+              bordered={false}
+              style={{
+                borderRadius: 8,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                padding: '0 12px',
+              }}
+            >
+              {!viewFollow && (
+                <Tabs
+                  size="large"
+                  defaultActiveKey="recommended"
+                  items={tabItems}
+                  onChange={(key) => {
+                    setActiveTab(key);
+                  }}
+                />
+              )}
+
+              <InfiniteScroll
+                dataLength={ugcList.length}
+                next={loadUgcData}
+                hasMore={hasMore}
+                loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                endMessage={<Divider plain>没有更多啦～</Divider>}
+                scrollableTarget="scrollableDiv"
               >
-                {!viewFollow && (
-                  <Tabs
-                    size="large"
-                    defaultActiveKey="recommended"
-                    items={tabItems}
-                    onChange={(key) => {
-                      setActiveTab(key);
-                    }}
-                  />
-                )}
-
-                <InfiniteScroll
-                  dataLength={ugcList.length}
-                  next={loadUgcData}
-                  hasMore={hasMore}
-                  loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-                  endMessage={<Divider plain>没有更多啦～</Divider>}
-                  scrollableTarget="scrollableDiv"
-                >
-                  <List
-                    itemLayout="vertical"
-                    size="large"
-                    dataSource={ugcList}
-                    renderItem={(item) => (
-                      <List.Item
-                        key={item.title}
-                        style={{
-                          padding: '24px 0',
-                          borderBottom: '1px solid rgba(0,0,0,0.06)',
-                          transition: 'background-color 0.3s',
-                        }}
-                        actions={[
-                          <IconText
-                            icon={EyeOutlined}
-                            text={item.viewCount?.toString() || '0'}
-                            key="list-vertical-view-o"
-                          />,
-                          <IconText
-                            icon={LikeOutlined}
-                            text={item.likeCount?.toString() || '0'}
-                            key="list-vertical-like-o"
-                          />,
-                          <IconText
-                            icon={StarOutlined}
-                            text={item.collectCount?.toString() || '0'}
-                            key="list-vertical-star-o"
-                          />,
-                        ]}
-                        extra={
-                          item.cover && (
-                            <img
-                              alt="cover"
-                              src={item.cover}
-                              style={{
-                                width: 200,
-                                height: 120,
-                                objectFit: 'cover',
-                                borderRadius: 4,
-                                marginLeft: 24,
-                              }}
-                            />
-                          )
-                        }
-                      >
-                        <List.Item.Meta
-                          title={
-                            <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
-                              <a href={`/ugc/${item.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
-                                {item.title}
-                              </a>
-                            </Typography.Title>
-                          }
-                          description={
-                            <Typography.Paragraph
-                              ellipsis={{ rows: 2 }}
-                              style={{
-                                color: 'rgba(0,0,0,0.65)',
-                                marginBottom: 4,
-                                fontSize: 14,
-                              }}
-                            >
-                              {item.summary}
-                            </Typography.Paragraph>
-                          }
-                        />
-                        <Space size={8} align="center">
-                          <Typography.Text>{item.author?.nickname}</Typography.Text>
-                          <Divider type="vertical" />
-                          <Typography.Text style={{ fontSize: 12 }}>
-                            {item.gmtCreate
-                              ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm')
-                              : 'N/A'}
-                          </Typography.Text>
-                          <Divider type="vertical" />
-                          <Space size={4}>
-                            <TagList tags={item.tags} />
-                          </Space>
-                        </Space>
-                      </List.Item>
-                    )}
-                  />
-                </InfiniteScroll>
-              </Card>
-            </Col>
-
-            <Col xl={6} lg={8} md={24}>
-              <div>
-                <Card style={{ marginBottom: 16 }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <div
+                <List
+                  itemLayout="vertical"
+                  size="large"
+                  dataSource={ugcList}
+                  renderItem={(item) => (
+                    <List.Item
+                      key={item.title}
                       style={{
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        flexDirection: 'column',
-                        gap: 4,
+                        padding: '24px 0',
+                        borderBottom: '1px solid rgba(0,0,0,0.06)',
+                        transition: 'background-color 0.3s',
                       }}
+                      actions={[
+                        <IconText
+                          icon={EyeOutlined}
+                          text={item.viewCount?.toString() || '0'}
+                          key="list-vertical-view-o"
+                        />,
+                        <IconText
+                          icon={LikeOutlined}
+                          text={item.likeCount?.toString() || '0'}
+                          key="list-vertical-like-o"
+                        />,
+                        <IconText
+                          icon={StarOutlined}
+                          text={item.collectCount?.toString() || '0'}
+                          key="list-vertical-star-o"
+                        />,
+                      ]}
+                      extra={
+                        item.cover && (
+                          <img
+                            alt="cover"
+                            src={item.cover}
+                            style={{
+                              width: 200,
+                              height: 120,
+                              objectFit: 'cover',
+                              borderRadius: 4,
+                              marginLeft: 24,
+                            }}
+                          />
+                        )
+                      }
                     >
-                      <Typography.Text strong style={{ fontSize: 20 }}>
-                        中午好！
-                      </Typography.Text>
-                      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                        点亮在社区的每一天
-                      </Typography.Text>
-                    </div>
-                    <Button type="primary" disabled>
-                      去签到（TODO）
-                    </Button>
-                  </div>
-                </Card>
+                      <List.Item.Meta
+                        title={
+                          <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
+                            <a
+                              href={`/article/${item.ugcId}`}
+                              style={{ color: 'rgba(0,0,0,0.85)' }}
+                            >
+                              {item.title}
+                            </a>
+                          </Typography.Title>
+                        }
+                        description={
+                          <Typography.Paragraph
+                            ellipsis={{ rows: 2 }}
+                            style={{
+                              color: 'rgba(0,0,0,0.65)',
+                              marginBottom: 4,
+                              fontSize: 14,
+                            }}
+                          >
+                            {item.summary}
+                          </Typography.Paragraph>
+                        }
+                      />
+                      <Space size={8} align="center">
+                        <Typography.Text>{item.author?.nickname}</Typography.Text>
+                        <Divider type="vertical" />
+                        <Typography.Text style={{ fontSize: 12 }}>
+                          {item.gmtCreate
+                            ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm')
+                            : 'N/A'}
+                        </Typography.Text>
+                        <Divider type="vertical" />
+                        <Space size={4}>
+                          <TagList tags={item.tags} />
+                        </Space>
+                      </Space>
+                    </List.Item>
+                  )}
+                />
+              </InfiniteScroll>
+            </Card>
+          </Col>
 
-                <Card title="📈 文章榜">
-                  <List
-                    size="small"
-                    dataSource={hotUgcList}
-                    renderItem={(item) => (
-                      <List.Item>
-                        <Link
-                          to={`/ugc/${item.ugcId}`}
-                          style={{
-                            display: 'inline-block',
-                            maxWidth: 'calc(100% - 38px)',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis',
-                            verticalAlign: 'middle',
-                          }}
-                          key={item.ugcId}
-                        >
-                          {item.title}
-                        </Link>
-                      </List.Item>
-                    )}
-                  />
-                </Card>
-                <Footer />
-              </div>
-            </Col>
-          </Row>
-        </Content>
-      </Layout>
+          <Col span={6}>
+            <CheckInCard />
+            <UgcHotRank />
+            <Footer />
+          </Col>
+        </Row>
+      </Content>
     </Layout>
   );
 }

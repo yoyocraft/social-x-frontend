@@ -1,8 +1,9 @@
+import MdNavbar from '@/components/MdNavbar';
 import UgcCard from '@/components/UgcCard';
 import UserCard from '@/components/UserCard';
 import { queryUgcDetailUsingGet } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
-import { Col, Row, Skeleton, Space } from 'antd';
+import { Affix, Col, Row, Skeleton, Space } from 'antd';
 import { useEffect, useState } from 'react';
 
 const UgcDetail: React.FC = () => {
@@ -44,6 +45,11 @@ const UgcDetail: React.FC = () => {
         <Col span={6}>
           <Space direction="vertical">
             {ugcDetail.author && <UserCard user={ugcDetail.author} />}
+            {ugcDetail.content && (
+              <Affix offsetTop={56}>
+                <MdNavbar content={ugcDetail.content} />
+              </Affix>
+            )}
           </Space>
         </Col>
       </Row>

@@ -53,7 +53,12 @@ const UgcCard = (props: Props) => {
             key="list-vertical-star-o"
             onClick={handleCollect}
           />,
-          <ShareAltOutlined key="share" />,
+          <IconText
+            icon={ShareAltOutlined}
+            text="分享"
+            key="list-vertical-share-o"
+            onClick={() => {}}
+          />,
         ]}
       >
         <Title level={1} style={{ fontSize: 24 }}>
