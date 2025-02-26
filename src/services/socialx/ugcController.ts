@@ -32,10 +32,10 @@ export async function queryUgcDetailUsingGet(
   });
 }
 
-/** queryFollowPageUgc GET /api/ugc/follow_feed */
-export async function queryFollowPageUgcUsingGet(
+/** listFollowUgcFeed GET /api/ugc/follow_feed */
+export async function listFollowUgcFeedUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryFollowPageUgcUsingGETParams,
+  params: API.listFollowUgcFeedUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/follow_feed', {
@@ -47,16 +47,16 @@ export async function queryFollowPageUgcUsingGet(
   });
 }
 
-/** queryHotUgc GET /api/ugc/hot */
-export async function queryHotUgcUsingGet(options?: { [key: string]: any }) {
+/** listHotUgc GET /api/ugc/hot */
+export async function listHotUgcUsingGet(options?: { [key: string]: any }) {
   return request<API.ResultListUgcResponse_>('/api/ugc/hot', {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-/** interact POST /api/ugc/interact */
-export async function interactUsingPost(
+/** interactUgc POST /api/ugc/interact */
+export async function interactUgcUsingPost(
   body: API.UgcInteractionRequest,
   options?: { [key: string]: any },
 ) {
@@ -70,10 +70,10 @@ export async function interactUsingPost(
   });
 }
 
-/** querySelfUgc GET /api/ugc/me */
-export async function querySelfUgcUsingGet(
+/** listSelfUgc GET /api/ugc/me */
+export async function listSelfUgcUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.querySelfUgcUsingGETParams,
+  params: API.listSelfUgcUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/me', {
@@ -100,10 +100,10 @@ export async function publishUsingPost1(
   });
 }
 
-/** queryRecommendPageUgc GET /api/ugc/recommend_feed */
-export async function queryRecommendPageUgcUsingGet(
+/** listRecommendUgcFeed GET /api/ugc/recommend_feed */
+export async function listRecommendUgcFeedUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryRecommendPageUgcUsingGETParams,
+  params: API.listRecommendUgcFeedUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/recommend_feed', {
@@ -130,10 +130,10 @@ export async function setUgcStatusUsingPost(
   });
 }
 
-/** queryMainPageUgc GET /api/ugc/time_feed */
-export async function queryMainPageUgcUsingGet(
+/** listTimelineUgcFeed GET /api/ugc/time_feed */
+export async function listTimelineUgcFeedUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryMainPageUgcUsingGETParams,
+  params: API.listTimelineUgcFeedUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/time_feed', {

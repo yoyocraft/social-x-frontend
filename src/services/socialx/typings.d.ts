@@ -73,6 +73,66 @@ declare namespace API {
     url?: string;
   };
 
+  type listFollowUgcFeedUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
+  type listRecommendUgcFeedUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
+  type listSelfUgcUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
+  type listTimelineUgcFeedUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    followFeed?: boolean;
+    keyword?: string;
+    page?: number;
+    recommendFeed?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
   type NotificationReadRequest = {
     notificationId?: string;
     notificationType?: string;
@@ -175,72 +235,12 @@ declare namespace API {
     userId?: string;
   };
 
-  type queryFollowPageUgcUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    followFeed?: boolean;
-    keyword?: string;
-    page?: number;
-    recommendFeed?: boolean;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
-  type queryMainPageUgcUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    followFeed?: boolean;
-    keyword?: string;
-    page?: number;
-    recommendFeed?: boolean;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
   type queryNotificationUsingGETParams = {
     cursor?: string;
     notificationType?: string;
     page?: number;
     reqId?: string;
     size?: number;
-  };
-
-  type queryRecommendPageUgcUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    followFeed?: boolean;
-    keyword?: string;
-    page?: number;
-    recommendFeed?: boolean;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
-  type querySelfUgcUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    followFeed?: boolean;
-    keyword?: string;
-    page?: number;
-    recommendFeed?: boolean;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
   };
 
   type queryUgcArticleTagWithCursorUsingGETParams = {

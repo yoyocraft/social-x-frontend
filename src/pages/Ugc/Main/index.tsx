@@ -1,15 +1,14 @@
 import { Footer } from '@/components';
 import {
-  queryFollowPageUgcUsingGet,
-  queryHotUgcUsingGet,
-  queryMainPageUgcUsingGet,
-  queryRecommendPageUgcUsingGet,
+  listFollowUgcFeedUsingGet,
+  listHotUgcUsingGet,
+  listRecommendUgcFeedUsingGet,
+  listTimelineUgcFeedUsingGet,
 } from '@/services/socialx/ugcController';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import {
   Affix,
-  Avatar,
   Button,
   Card,
   Col,
@@ -21,10 +20,10 @@ import {
   Skeleton,
   Space,
   Tabs,
-  TabsProps,
   Tag,
   Typography,
 } from 'antd';
+import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -42,7 +41,7 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   </Space>
 );
 
-const tabItems: TabsProps['items'] = [
+const tabItems = [
   {
     key: 'recommended',
     label: '推荐',
@@ -76,7 +75,7 @@ export default function HomePage() {
 
     try {
       setLoading(true);
-      const res = await queryMainPageUgcUsingGet({
+      const res = await listTimelineUgcFeedUsingGet({
         cursor,
         ugcType: 'ARTICLE',
         categoryId,
@@ -94,7 +93,7 @@ export default function HomePage() {
 
     try {
       setLoading(true);
-      const res = await queryRecommendPageUgcUsingGet({
+      const res = await listRecommendUgcFeedUsingGet({
         cursor,
         ugcType: 'ARTICLE',
         categoryId,
@@ -113,7 +112,7 @@ export default function HomePage() {
 
     try {
       setLoading(true);
-      const res = await queryFollowPageUgcUsingGet({
+      const res = await listFollowUgcFeedUsingGet({
         cursor,
         ugcType: 'ARTICLE',
         followFeed: true,
@@ -142,7 +141,7 @@ export default function HomePage() {
       return;
     }
     setHotLoading(true);
-    queryHotUgcUsingGet()
+    listHotUgcUsingGet()
       .then((res) => {
         setHotUgcList(res.data || []);
       })
@@ -173,13 +172,22 @@ export default function HomePage() {
     setUgcList([]);
     setCursor('0');
     setHasMore(true);
-    Promise.all([loadUgcData()]);
+    loadUgcData();
   }, [categoryId, viewFollow, activeTab]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Affix offsetTop={55}>
-        <Sider theme="light" width={200} style={{ background: '#fff' }}>
+        <Sider
+          theme="light"
+          width={200}
+          style={{
+            background: '#fff',
+            boxShadow: '2px 0 8px rgba(0,0,0,0.06)',
+            overflow: 'auto',
+            position: 'fixed',
+          }}
+        >
           <Menu
             mode="inline"
             defaultSelectedKeys={['comprehensive']}
@@ -205,11 +213,25 @@ export default function HomePage() {
         </Sider>
       </Affix>
 
-      <Layout style={{ padding: '0 12px 12px' }}>
-        <Content style={{ margin: 0, minHeight: 280 }}>
-          <Row gutter={12}>
-            <Col span={18}>
-              <Card>
+      <Layout
+        style={{
+          marginLeft: 200,
+          padding: '20px',
+          transition: 'margin 0.2s',
+          height: '100vh',
+        }}
+      >
+        <Content style={{ margin: 0, minHeight: '100%' }}>
+          <Row gutter={[16, 16]}>
+            <Col xl={18} lg={16} md={24}>
+              <Card
+                bordered={false}
+                style={{
+                  borderRadius: 8,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                  padding: '0 12px',
+                }}
+              >
                 {!viewFollow && (
                   <Tabs
                     size="large"
@@ -236,6 +258,10 @@ export default function HomePage() {
                     renderItem={(item) => (
                       <List.Item
                         key={item.title}
+                        style={{
+                          padding: '24px 0',
+                          borderBottom: '1px solid rgba(0,0,0,0.06)',
+                        }}
                         actions={[
                           <IconText
                             icon={EyeOutlined}
@@ -253,25 +279,59 @@ export default function HomePage() {
                             key="list-vertical-star-o"
                           />,
                         ]}
-                        extra={item.cover && <img alt="logo" src={item.cover} />}
+                        extra={
+                          item.cover && (
+                            <img
+                              alt="cover"
+                              src={item.cover}
+                              style={{
+                                width: 200,
+                                height: 120,
+                                objectFit: 'cover',
+                                borderRadius: 4,
+                                marginLeft: 24,
+                              }}
+                            />
+                          )
+                        }
                       >
                         <List.Item.Meta
-                          title={<a href={item.ugcId}>{item.title}</a>}
-                          description={item.summary}
+                          title={
+                            <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
+                              <a href={item.ugcId} style={{ color: 'inherit' }}>
+                                {item.title}
+                              </a>
+                            </Typography.Title>
+                          }
+                          description={
+                            <Typography.Paragraph
+                              ellipsis={{ rows: 2 }}
+                              style={{
+                                color: 'rgba(0,0,0,0.65)',
+                                marginBottom: 4,
+                                fontSize: 14,
+                              }}
+                            >
+                              {item.summary}
+                            </Typography.Paragraph>
+                          }
                         />
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar
-                              size="small"
-                              style={{ marginRight: 8 }}
-                              src={item.authorAvatar}
-                            />
-                            <span>{item.authorName}</span>
-                          </div>
-                          <div>
-                            {item.tags && item.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
-                          </div>
-                        </div>
+                        <Space size={8} align="center">
+                          <Typography.Text>{item.authorName}</Typography.Text>
+                          <Divider type="vertical" />
+                          <Typography.Text style={{ fontSize: 12 }}>
+                            {dayjs(item.gmtCreate).format('YYYY-MM-DD HH:mm')}
+                          </Typography.Text>
+                          <Divider type="vertical" />
+                          <Space size={4}>
+                            {item.tags &&
+                              item.tags.map((tag) => (
+                                <Tag key={tag} bordered={false}>
+                                  {tag}
+                                </Tag>
+                              ))}
+                          </Space>
+                        </Space>
                       </List.Item>
                     )}
                   />
@@ -279,7 +339,7 @@ export default function HomePage() {
               </Card>
             </Col>
 
-            <Col span={6}>
+            <Col xl={6} lg={8} md={24}>
               <div>
                 <Card style={{ marginBottom: 16 }}>
                   <div
