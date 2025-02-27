@@ -1,60 +1,34 @@
 import { Footer } from '@/components';
-import CheckInCard from '@/components/CheckInCard';
 import IconText from '@/components/IconText';
 import TagList from '@/components/TagList';
-import UgcHotRank from '@/components/UgcHotRank';
+import UserCard from '@/components/UserCard';
 import { UgcType } from '@/constants/UgcConstant';
-import {
-  listFollowUgcFeedUsingGet,
-  listRecommendUgcFeedUsingGet,
-  listTimelineUgcFeedUsingGet,
-} from '@/services/socialx/ugcController';
-import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
+import { listTimelineUgcFeedUsingGet } from '@/services/socialx/ugcController';
+import { queryUgcTopicUsingGet } from '@/services/socialx/ugcMetadataController';
 import { dateTimeFormat } from '@/services/utils/time';
-import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
-import {
-  Affix,
-  Card,
-  Col,
-  Divider,
-  Layout,
-  List,
-  Menu,
-  Row,
-  Skeleton,
-  Space,
-  Tabs,
-  Typography,
-} from 'antd';
+import { CommentOutlined, EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { useModel } from '@umijs/max';
+import { Card, Col, Divider, Layout, List, Row, Skeleton, Space, Tabs, Typography } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import PostPublisher from '../components/PostPublisher';
 
-const { Sider, Content } = Layout;
+const { Content } = Layout;
 
-const initSideMenuItems = [
-  { key: 'follow', label: '关注', icon: '👥' },
-  { key: 'comprehensive', label: '综合', icon: '📚' },
-];
-
-const tabItems = [
+const initTabItems = [
   {
-    key: 'recommended',
-    label: '推荐',
-  },
-  {
-    key: 'latest',
-    label: '最新',
+    key: 'all',
+    label: '综合',
   },
 ];
 
-export default function HomePage() {
+export default function PostPage() {
+  const { initialState } = useModel('@@initialState');
   const [loading, setLoading] = useState(false);
-  const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
+  const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]); // Use the imported API type
   const [hasMore, setHasMore] = useState(true);
-  const [sideMenu, setSideMenu] = useState(initSideMenuItems);
   const [categoryId, setCategoryId] = useState('');
-  const [activeTab, setActiveTab] = useState('recommended');
-  const [viewFollow, setViewFollow] = useState(false);
+  const [tabItems, setTabItems] = useState([]);
 
   // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
@@ -72,43 +46,8 @@ export default function HomePage() {
       setLoading(true);
       const res = await listTimelineUgcFeedUsingGet({
         cursor: cursorRef.current,
-        ugcType: 'ARTICLE',
+        ugcType: UgcType.POST,
         categoryId,
-      });
-      setUgcData(res);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const recommendFeedUgc = async () => {
-    if (loading) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const res = await listRecommendUgcFeedUsingGet({
-        cursor: cursorRef.current,
-        ugcType: UgcType.ARTICLE,
-        categoryId,
-      });
-      setUgcData(res);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const followFeedUgc = async () => {
-    if (loading) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const res = await listFollowUgcFeedUsingGet({
-        cursor: cursorRef.current,
-        ugcType: UgcType.ARTICLE,
       });
       setUgcData(res);
     } finally {
@@ -117,34 +56,34 @@ export default function HomePage() {
   };
 
   const loadUgcData = async () => {
-    if (viewFollow) {
-      await followFeedUgc();
-      return;
-    }
-
-    if (activeTab === 'recommended') {
-      await recommendFeedUgc();
-    } else {
-      await timeFeedUgc();
-    }
+    await timeFeedUgc();
   };
 
-  const loadSideMenu = () => {
-    queryUgcCategoryUsingGet().then((res) => {
+  const loadPostTopics = () => {
+    queryUgcTopicUsingGet().then((res) => {
       const categories = res.data?.ugcCategoryList?.map((item) => {
         return {
           key: item.categoryId,
-          icon: item.icon,
           label: item.categoryName,
         };
       });
       // @ts-ignore
-      setSideMenu([...initSideMenuItems, ...(categories || [])]);
+      setTabItems([...initTabItems, ...(categories || [])]);
     });
   };
 
+  const handlePublishPost = (content: string, attachments: any[]) => {
+    // Here you would typically call an API to publish the post
+    console.log('Publishing post:', { content, attachments });
+
+    // Refresh the feed after publishing
+    setUgcList([]);
+    cursorRef.current = '0';
+    loadUgcData();
+  };
+
   useEffect(() => {
-    Promise.all([loadSideMenu(), timeFeedUgc()]);
+    Promise.all([loadUgcData(), loadPostTopics()]);
   }, []);
 
   useEffect(() => {
@@ -155,54 +94,21 @@ export default function HomePage() {
     // 切换 tab 时，重置 cursor
     cursorRef.current = '0';
     loadUgcData();
-  }, [categoryId, viewFollow, activeTab]);
+  }, [categoryId]);
 
   return (
     <Layout
       style={{
-        padding: '12px',
+        padding: '24px',
         transition: 'margin 0.2s',
         height: '100vh',
+        margin: '0 24px',
       }}
     >
-      <Affix offsetTop={55}>
-        <Sider
-          theme="light"
-          width={200}
-          style={{
-            background: '#fff',
-            boxShadow: '2px 0 8px rgba(0,0,0,0.06)',
-            overflow: 'auto',
-          }}
-        >
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['comprehensive']}
-            items={sideMenu.map((item) => ({
-              key: item.key,
-              icon: <span>{item.icon}</span>,
-              label: item.label,
-            }))}
-            style={{ height: '100%', borderRight: 0 }}
-            onSelect={(item) => {
-              if (item.key === 'follow') {
-                setViewFollow(true);
-                return;
-              }
-              if (item.key === 'comprehensive') {
-                setCategoryId('');
-              } else {
-                setCategoryId(item.key);
-              }
-              setViewFollow(false);
-            }}
-          />
-        </Sider>
-      </Affix>
-
       <Content style={{ marginLeft: 16, minHeight: '100%' }}>
         <Row gutter={16}>
           <Col span={18}>
+            {initialState?.currentUser && <PostPublisher onPublish={handlePublishPost} />}
             <Card
               bordered={false}
               style={{
@@ -211,18 +117,12 @@ export default function HomePage() {
                 padding: '0 12px',
               }}
             >
-              {!viewFollow && (
-                <Tabs
-                  size="large"
-                  defaultActiveKey="recommended"
-                  items={tabItems}
-                  onChange={(key) => {
-                    setActiveTab(key);
-                    setUgcList([]); // 清空当前列表数据
-                  }}
-                />
-              )}
-
+              <Tabs
+                size="large"
+                defaultActiveKey="all"
+                items={tabItems}
+                onTabClick={setCategoryId}
+              />
               <InfiniteScroll
                 dataLength={ugcList.length}
                 next={loadUgcData}
@@ -259,12 +159,17 @@ export default function HomePage() {
                           text={item.collectCount?.toString() || '0'}
                           key="list-vertical-star-o"
                         />,
+                        <IconText
+                          icon={CommentOutlined}
+                          text={item.commentaryCount?.toString() || '0'}
+                          key="list-vertical-commentary-o"
+                        />,
                       ]}
                       extra={
                         item.cover && (
                           <img
                             alt="cover"
-                            src={item.cover}
+                            src={item.cover || '/placeholder.svg'}
                             style={{
                               width: 200,
                               height: 120,
@@ -321,8 +226,7 @@ export default function HomePage() {
           </Col>
 
           <Col span={6}>
-            <CheckInCard />
-            <UgcHotRank />
+            {initialState?.currentUser && <UserCard user={initialState.currentUser} self />}
             <Footer />
           </Col>
         </Row>

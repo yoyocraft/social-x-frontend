@@ -25,3 +25,11 @@ export async function queryUgcInterestTagUsingGet(options?: { [key: string]: any
     ...(options || {}),
   });
 }
+
+/** queryUgcTopic GET /api/ugc/metadata/topic */
+export async function queryUgcTopicUsingGet(options?: { [key: string]: any }) {
+  return request<API.ResultUgcMetadataResponse_>('/api/ugc/metadata/topic', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

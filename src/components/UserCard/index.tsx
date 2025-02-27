@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Space, Typography } from 'antd';
+import { Avatar, Button, Card, Divider, Space, Typography } from 'antd';
 import { useState } from 'react';
 
 const { Meta } = Card;
@@ -6,6 +6,7 @@ const { Text } = Typography;
 
 interface Props {
   user: API.UserBasicInfoResponse;
+  self?: boolean;
 }
 
 const UserCard = (props: Props) => {
@@ -23,6 +24,7 @@ const UserCard = (props: Props) => {
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
         padding: '8px',
       }}
+      hoverable
     >
       <Meta
         avatar={<Avatar src={user.avatar} size={64} />}
@@ -34,20 +36,44 @@ const UserCard = (props: Props) => {
         }
         style={{ marginBottom: 16 }}
       />
-      <Space size="large" style={{ width: '100%', justifyContent: 'center' }}>
-        <Button
-          type={hasFollowed ? 'default' : 'primary'}
-          onClick={toggleFollow}
-          style={{
-            width: '100%',
-            borderRadius: 20,
-            fontWeight: 'bold',
-            transition: 'all 0.3s',
-          }}
-        >
-          {hasFollowed ? '取关' : '关注'}
-        </Button>
-      </Space>
+      {self ? (
+        <Card bordered={false} style={{ borderRadius: 8 }}>
+          <div style={{ display: 'flex', textAlign: 'center' }}>
+            <div style={{ flex: 1 }}>
+              <div>
+                <Text strong style={{ fontSize: 16 }}>
+                  {user.followingCount}
+                </Text>
+              </div>
+              <Text type="secondary">关注了</Text>
+            </div>
+            <Divider type="vertical" style={{ height: 'auto', margin: '0 16px' }} />
+            <div style={{ flex: 1 }}>
+              <div>
+                <Text strong style={{ fontSize: 16 }}>
+                  {user.followerCount}
+                </Text>
+              </div>
+              <Text type="secondary">关注者</Text>
+            </div>
+          </div>
+        </Card>
+      ) : (
+        <Space size="large" style={{ width: '100%', justifyContent: 'center' }}>
+          <Button
+            type={hasFollowed ? 'default' : 'primary'}
+            onClick={toggleFollow}
+            style={{
+              width: '100%',
+              borderRadius: 20,
+              fontWeight: 'bold',
+              transition: 'all 0.3s',
+            }}
+          >
+            {hasFollowed ? '取关' : '关注'}
+          </Button>
+        </Space>
+      )}
     </Card>
   );
 };
