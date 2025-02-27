@@ -1,4 +1,5 @@
 import PictureUploader from '@/components/PictureUpload';
+import { MediaSource } from '@/constants/MediaConstant';
 import { ResponseCode } from '@/constants/ResponseCode';
 import { queryUgcInterestTagUsingGet } from '@/services/socialx/ugcMetadataController';
 import { editUserInfoUsingPost } from '@/services/socialx/userController';
@@ -165,7 +166,7 @@ const ProfileSettings: React.FC = () => {
         </div>
 
         <ProCard style={{ width: 280 }} bordered={false}>
-          <PictureUploader source="AVATAR" value={avatarUrl} onChange={setAvatarUrl} />
+          <PictureUploader source={MediaSource.AVATAR} value={avatarUrl} onChange={setAvatarUrl} />
           <Text type="secondary" style={{ fontSize: 12 }}>
             格式：支持JPG、PNG、JPEG
             <br />

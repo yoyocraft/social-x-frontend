@@ -1,5 +1,6 @@
 import MdEditor from '@/components/MdEditor';
 import PictureUploader from '@/components/PictureUpload';
+import { MediaSource } from '@/constants/MediaConstant';
 import { publishUgcUsingPost } from '@/services/socialx/ugcController';
 import {
   queryUgcArticleTagUsingGet,
@@ -51,7 +52,7 @@ const MarkdownEditor: React.FC = () => {
     setTagOptions(opts);
   };
 
-  const showModal = () => {
+  const showPublishModal = () => {
     if (!title) {
       message.error('请输入文章标题');
       return;
@@ -64,7 +65,7 @@ const MarkdownEditor: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = async () => {
+  const doPublishArticle = async (drafting = false) => {
     if (!category) {
       message.error('请选择分类');
       return;
@@ -85,10 +86,11 @@ const MarkdownEditor: React.FC = () => {
         categoryId: category,
         tags: selectedTags,
         cover: coverImage,
-        drafting: false,
+        drafting,
         reqId,
       });
-      message.success('发布成功');
+      const successMesssage = drafting ? '保存草稿成功' : '发布成功';
+      message.success(successMesssage);
       navigate('/');
     } catch (error: any) {
       message.error(error.message || '发布失败，请重试');
@@ -129,8 +131,8 @@ const MarkdownEditor: React.FC = () => {
           size="large"
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Button>草稿箱</Button>
-          <Button type="primary" onClick={showModal}>
+          <Button onClick={() => doPublishArticle(true)}>草稿箱</Button>
+          <Button type="primary" onClick={showPublishModal}>
             发布
           </Button>
         </div>
@@ -145,7 +147,7 @@ const MarkdownEditor: React.FC = () => {
           <Button key="back" onClick={handleCancel}>
             取消
           </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+          <Button key="submit" type="primary" loading={loading} onClick={() => doPublishArticle()}>
             确认并发布
           </Button>,
         ]}
@@ -171,7 +173,11 @@ const MarkdownEditor: React.FC = () => {
           </Form.Item>
 
           <Form.Item label="文章封面">
-            <PictureUploader source="ARTICLE" value={coverImage} onChange={setCoverImage} />
+            <PictureUploader
+              source={MediaSource.ARTICLE}
+              value={coverImage}
+              onChange={setCoverImage}
+            />
             <Typography.Text type="secondary" style={{ fontSize: 12 }}>
               格式：支持JPG、PNG、JPEG（大小：5MB以内）
             </Typography.Text>

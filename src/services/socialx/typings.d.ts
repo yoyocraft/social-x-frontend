@@ -77,10 +77,8 @@ declare namespace API {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
-    followFeed?: boolean;
     keyword?: string;
     page?: number;
-    recommendFeed?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -92,10 +90,8 @@ declare namespace API {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
-    followFeed?: boolean;
     keyword?: string;
     page?: number;
-    recommendFeed?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -107,10 +103,8 @@ declare namespace API {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
-    followFeed?: boolean;
     keyword?: string;
     page?: number;
-    recommendFeed?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -122,10 +116,8 @@ declare namespace API {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
-    followFeed?: boolean;
     keyword?: string;
     page?: number;
-    recommendFeed?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -255,10 +247,8 @@ declare namespace API {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
-    followFeed?: boolean;
     keyword?: string;
     page?: number;
-    recommendFeed?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -275,10 +265,8 @@ declare namespace API {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
-    followFeed?: boolean;
     keyword?: string;
     page?: number;
-    recommendFeed?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -462,6 +450,7 @@ declare namespace API {
     categoryId?: string;
     categoryName?: string;
     collectCount?: number;
+    commentaryCount?: number;
     content?: string;
     cover?: string;
     gmtCreate?: number;
