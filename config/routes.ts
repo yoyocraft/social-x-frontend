@@ -46,8 +46,13 @@ export default [
     path: '/article/:ugcId',
     name: '文章详情',
     hideInMenu: true,
-    icon: 'container',
-    component: './Ugc/Article',
+    component: './Ugc/Article/Detail',
+  },
+  {
+    path: '/article/publish',
+    name: '发布文章',
+    hideInMenu: true,
+    component: './Ugc/Article/Publish',
   },
 
   {

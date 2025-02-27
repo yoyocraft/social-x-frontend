@@ -6,7 +6,7 @@ import { useParams } from '@umijs/max';
 import { Affix, Col, Row, Skeleton, Space } from 'antd';
 import { useEffect, useState } from 'react';
 
-const UgcDetail: React.FC = () => {
+const ArticleDetail: React.FC = () => {
   const params = useParams();
   const { ugcId } = params;
 
@@ -57,4 +57,4 @@ const UgcDetail: React.FC = () => {
   );
 };
 
-export default UgcDetail;
+export default ArticleDetail;

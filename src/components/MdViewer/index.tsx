@@ -11,11 +11,6 @@ interface Props {
 
 const plugins = [gfm(), highlight()];
 
-/**
- * Markdown 浏览器
- * @param props
- * @constructor
- */
 const MdViewer = (props: Props) => {
   const { value = '' } = props;
 

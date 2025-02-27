@@ -1,3 +1,4 @@
+import { uploadImageUsingPost } from '@/services/socialx/mediaResourceController';
 import gfm from '@bytemd/plugin-gfm';
 import highlight from '@bytemd/plugin-highlight';
 import { Editor } from '@bytemd/react';
@@ -10,17 +11,27 @@ interface Props {
   value?: string;
   onChange?: (v: string) => void;
   placeholder?: string;
+  source: string;
 }
 
 const plugins = [gfm(), highlight()];
 
-/**
- * Markdown 编辑器
- * @param props
- * @constructor
- */
 const MdEditor = (props: Props) => {
-  const { value = '', onChange, placeholder } = props;
+  const { value = '', onChange, placeholder, source } = props;
+
+  const onUploadImagesHandle = async (files: File[]): Promise<Pick<any, 'title' | 'url'>[]> => {
+    const list: { title: string; url: string }[] = [];
+    const res = await uploadImageUsingPost(
+      {
+        source,
+      },
+      {},
+      files[0],
+    );
+    const fullPath = res.data?.url ?? '';
+    list.push({ title: files[0].name, url: fullPath });
+    return Promise.resolve(list);
+  };
 
   return (
     <div className="md-editor">
@@ -30,6 +41,7 @@ const MdEditor = (props: Props) => {
         mode="split"
         plugins={plugins}
         onChange={onChange}
+        uploadImages={onUploadImagesHandle}
       />
     </div>
   );

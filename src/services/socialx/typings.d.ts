@@ -163,31 +163,31 @@ declare namespace API {
   type PageCursorResultLongConfigInfoResponse_ = {
     cursor?: number;
     data?: ConfigInfoResponse[];
+    hasMore?: boolean;
   };
 
   type PageCursorResultStringCommentaryResponse_ = {
     cursor?: string;
     data?: CommentaryResponse[];
+    hasMore?: boolean;
   };
 
   type PageCursorResultStringNotificationResponse_ = {
     cursor?: string;
     data?: NotificationResponse[];
+    hasMore?: boolean;
   };
 
   type PageCursorResultStringUgcResponse_ = {
     cursor?: string;
     data?: UgcResponse[];
-  };
-
-  type PageCursorResultStringUgcTagInfoResponse_ = {
-    cursor?: string;
-    data?: UgcTagInfoResponse[];
+    hasMore?: boolean;
   };
 
   type PageCursorResultStringUserBasicInfoResponse_ = {
     cursor?: string;
     data?: UserBasicInfoResponse[];
+    hasMore?: boolean;
   };
 
   type PermissionAddRequest = {
@@ -238,13 +238,6 @@ declare namespace API {
   type queryNotificationUsingGETParams = {
     cursor?: string;
     notificationType?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-  };
-
-  type queryUgcArticleTagWithCursorUsingGETParams = {
-    cursor?: string;
     page?: number;
     reqId?: string;
     size?: number;
@@ -373,14 +366,6 @@ declare namespace API {
     timestamp?: number;
   };
 
-  type ResultPageCursorResultStringUgcTagInfoResponse_ = {
-    bizState?: string;
-    code?: string;
-    data?: PageCursorResultStringUgcTagInfoResponse_;
-    message?: string;
-    timestamp?: number;
-  };
-
   type ResultPageCursorResultStringUserBasicInfoResponse_ = {
     bizState?: string;
     code?: string;
@@ -460,7 +445,6 @@ declare namespace API {
   type UgcPublishRequest = {
     attachmentUrls?: string[];
     categoryId?: string;
-    categoryName?: string;
     content?: string;
     cover?: string;
     drafting?: boolean;

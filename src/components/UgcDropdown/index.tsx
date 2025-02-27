@@ -4,18 +4,19 @@ import {
   FireOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { Dropdown, MenuProps, message } from 'antd';
+import { useNavigate } from '@umijs/max';
+import { Dropdown, MenuProps } from 'antd';
 
 const items: MenuProps['items'] = [
-  {
-    label: '写文章',
-    key: 'article',
-    icon: <BookOutlined />,
-  },
   {
     label: '发动态',
     key: 'post',
     icon: <FireOutlined />,
+  },
+  {
+    label: '写文章',
+    key: 'article',
+    icon: <BookOutlined />,
   },
   {
     label: '问问题',
@@ -25,11 +26,12 @@ const items: MenuProps['items'] = [
 ];
 
 const UgcDropdown: React.FC = () => {
+  const navigate = useNavigate();
   const onBtnClick = () => {
-    message.info('Click on left button.');
+    navigate('/article/publish');
   };
   const onItemClick: MenuProps['onClick'] = ({ key }) => {
-    message.info(`Click on item ${key}`);
+    navigate(`/${key}/publish`);
   };
 
   return (
@@ -40,7 +42,7 @@ const UgcDropdown: React.FC = () => {
         menu={{ items, onClick: onItemClick }}
         onClick={onBtnClick}
       >
-        创作者中心
+        发布
       </Dropdown.Button>
     </>
   );
