@@ -85,8 +85,8 @@ export async function listSelfUgcUsingGet(
   });
 }
 
-/** publish POST /api/ugc/publish */
-export async function publishUsingPost1(
+/** publishUgc POST /api/ugc/publish */
+export async function publishUgcUsingPost(
   body: API.UgcPublishRequest,
   options?: { [key: string]: any },
 ) {

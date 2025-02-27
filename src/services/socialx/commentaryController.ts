@@ -62,8 +62,8 @@ export async function likeUsingPost(
   });
 }
 
-/** publish POST /api/commentary/publish */
-export async function publishUsingPost(
+/** publishCommentary POST /api/commentary/publish */
+export async function publishCommentaryUsingPost(
   body: API.CommentaryPublishRequest,
   options?: { [key: string]: any },
 ) {

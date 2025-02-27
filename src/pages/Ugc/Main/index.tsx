@@ -25,7 +25,7 @@ import {
   Tabs,
   Typography,
 } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const { Sider, Content } = Layout;
@@ -49,17 +49,19 @@ const tabItems = [
 export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
-  const [cursor, setCursor] = useState('0');
   const [hasMore, setHasMore] = useState(true);
   const [sideMenu, setSideMenu] = useState(initSideMenuItems);
   const [categoryId, setCategoryId] = useState('');
   const [activeTab, setActiveTab] = useState('recommended');
   const [viewFollow, setViewFollow] = useState(false);
 
+  // 使用 useRef 管理 cursor
+  const cursorRef = useRef('0');
+
   const setUgcData = (res: API.ResultPageCursorResultStringUgcResponse_) => {
     setUgcList((prev) => [...prev, ...(res.data?.data || [])]);
-    setCursor(res.data?.cursor || '0');
-    setHasMore(!!res.data?.data?.length);
+    cursorRef.current = res.data?.cursor || '0';
+    setHasMore(res.data?.hasMore || false);
   };
 
   const timeFeedUgc = async () => {
@@ -68,7 +70,7 @@ export default function HomePage() {
     try {
       setLoading(true);
       const res = await listTimelineUgcFeedUsingGet({
-        cursor,
+        cursor: cursorRef.current, // 使用 useRef 的值
         ugcType: 'ARTICLE',
         categoryId,
       });
@@ -86,7 +88,7 @@ export default function HomePage() {
     try {
       setLoading(true);
       const res = await listRecommendUgcFeedUsingGet({
-        cursor,
+        cursor: cursorRef.current,
         ugcType: 'ARTICLE',
         categoryId,
         recommendFeed: true,
@@ -105,7 +107,7 @@ export default function HomePage() {
     try {
       setLoading(true);
       const res = await listFollowUgcFeedUsingGet({
-        cursor,
+        cursor: cursorRef.current,
         ugcType: 'ARTICLE',
         followFeed: true,
       });
@@ -147,9 +149,12 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    // 重置列表数据
     setUgcList([]);
-    setCursor('0');
     setHasMore(true);
+
+    // 切换 tab 时，重置 cursor
+    cursorRef.current = '0';
     loadUgcData();
   }, [categoryId, viewFollow, activeTab]);
 
@@ -214,6 +219,7 @@ export default function HomePage() {
                   items={tabItems}
                   onChange={(key) => {
                     setActiveTab(key);
+                    setUgcList([]); // 清空当前列表数据
                   }}
                 />
               )}
