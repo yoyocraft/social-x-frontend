@@ -1,19 +1,44 @@
 import { Footer } from '@/components';
 import IconText from '@/components/IconText';
-import TagList from '@/components/TagList';
 import UserCard from '@/components/UserCard';
-import { UgcType } from '@/constants/UgcConstant';
-import { listTimelineUgcFeedUsingGet } from '@/services/socialx/ugcController';
+import { InteractType, UgcType } from '@/constants/UgcConstant';
+import {
+  interactUgcUsingPost,
+  listTimelineUgcFeedUsingGet,
+  publishUgcUsingPost,
+} from '@/services/socialx/ugcController';
 import { queryUgcTopicUsingGet } from '@/services/socialx/ugcMetadataController';
 import { dateTimeFormat } from '@/services/utils/time';
-import { CommentOutlined, EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import {
+  CommentOutlined,
+  LikeFilled,
+  LikeOutlined,
+  ShareAltOutlined,
+  StarFilled,
+  StarOutlined,
+} from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Card, Col, Divider, Layout, List, Row, Skeleton, Space, Tabs, Typography } from 'antd';
+import {
+  Avatar,
+  Card,
+  Col,
+  Divider,
+  Image,
+  Layout,
+  List,
+  message,
+  Row,
+  Skeleton,
+  Space,
+  Tabs,
+  Typography,
+} from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import PostPublisher from '../components/PostPublisher';
 
 const { Content } = Layout;
+const { Text, Link, Paragraph } = Typography;
 
 const initTabItems = [
   {
@@ -25,10 +50,11 @@ const initTabItems = [
 export default function PostPage() {
   const { initialState } = useModel('@@initialState');
   const [loading, setLoading] = useState(false);
-  const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]); // Use the imported API type
+  const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [categoryId, setCategoryId] = useState('');
   const [tabItems, setTabItems] = useState([]);
+  const isFirstLoad = useRef(true);
 
   // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
@@ -72,29 +98,109 @@ export default function PostPage() {
     });
   };
 
-  const handlePublishPost = (content: string, attachments: any[]) => {
-    // Here you would typically call an API to publish the post
-    console.log('Publishing post:', { content, attachments });
+  const handlePublishPost = async (content: string, topic: string, attachmentUrls: string[]) => {
+    try {
+      const reqId = initialState?.currentUser?.userId + '_' + content;
+      await publishUgcUsingPost({
+        ugcType: UgcType.POST,
+        content,
+        categoryId: topic,
+        attachmentUrls,
+        reqId,
+      });
+      message.success('发布成功');
 
-    // Refresh the feed after publishing
-    setUgcList([]);
-    cursorRef.current = '0';
-    loadUgcData();
+      // Refresh the list
+      setUgcList([]);
+      cursorRef.current = '0';
+      loadUgcData();
+    } catch (error: any) {
+      message.error(error.message || '发布失败，请重试');
+    }
   };
 
+  const handleInteraction = (item: API.UgcResponse, interactionType: InteractType) => {
+    const ugcId = item.ugcId;
+    const interactionField = interactionType === InteractType.LIKE ? 'likeCount' : 'collectCount';
+    const hasInteractionField = interactionType === InteractType.LIKE ? 'hasLike' : 'hasCollect';
+
+    interactUgcUsingPost({
+      targetId: ugcId,
+      interactionType: interactionType,
+      interact: !item[hasInteractionField],
+      reqId: ugcId,
+    })
+      .then(() => {
+        setUgcList((prev) => {
+          return prev.map((prevItem) => {
+            if (prevItem.ugcId === ugcId) {
+              return {
+                ...prevItem,
+                [interactionField]:
+                  prevItem[interactionField] || 0 + (item[hasInteractionField] ? -1 : 1),
+                [hasInteractionField]: !item[hasInteractionField],
+              };
+            }
+            return prevItem;
+          });
+        });
+        message.success(`${interactionType === InteractType.LIKE ? '点赞' : '收藏'}成功`);
+      })
+      .catch(() => {
+        message.error(`${interactionType === InteractType.LIKE ? '点赞' : '收藏'}失败，请重试`);
+      });
+  };
+
+  const handleLike = (item: API.UgcResponse) => {
+    handleInteraction(item, InteractType.LIKE);
+  };
+
+  const handleCollect = (item: API.UgcResponse) => {
+    handleInteraction(item, InteractType.COLLECT);
+  };
   useEffect(() => {
-    Promise.all([loadUgcData(), loadPostTopics()]);
+    Promise.all([loadUgcData(), loadPostTopics()]).then(() => {
+      isFirstLoad.current = false;
+    });
   }, []);
 
   useEffect(() => {
-    // 重置列表数据
+    if (isFirstLoad.current) {
+      return;
+    }
     setUgcList([]);
     setHasMore(true);
-
-    // 切换 tab 时，重置 cursor
     cursorRef.current = '0';
     loadUgcData();
   }, [categoryId]);
+
+  const renderPostContent = (item: API.UgcResponse) => {
+    const hasLink = item.content?.includes('http');
+
+    // 处理换行符，将 \n 转换为 <br />，保持原始格式
+    const contentWithLineBreaks = item.content?.split('\n');
+
+    // 如果没有链接，直接渲染内容并保留换行
+    if (!hasLink) {
+      return contentWithLineBreaks?.map((line, index) => <Paragraph key={index}>{line}</Paragraph>);
+    }
+
+    return (
+      <>
+        {contentWithLineBreaks?.map((line, index) => {
+          if (line.startsWith('http')) {
+            return (
+              <Link key={index} href={line} target="_blank">
+                {line}
+              </Link>
+            );
+          }
+          // 渲染其他文本内容
+          return <Paragraph key={index}>{line}</Paragraph>;
+        })}
+      </>
+    );
+  };
 
   return (
     <Layout
@@ -121,13 +227,19 @@ export default function PostPage() {
                 size="large"
                 defaultActiveKey="all"
                 items={tabItems}
-                onTabClick={setCategoryId}
+                onTabClick={(key) => {
+                  if (key === 'all') {
+                    setCategoryId('');
+                    return;
+                  }
+                  setCategoryId(key);
+                }}
               />
               <InfiniteScroll
                 dataLength={ugcList.length}
                 next={loadUgcData}
                 hasMore={hasMore}
-                loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+                loader={<Skeleton avatar active />}
                 endMessage={<Divider plain>没有更多啦～</Divider>}
                 scrollableTarget="scrollableDiv"
               >
@@ -137,87 +249,62 @@ export default function PostPage() {
                   dataSource={ugcList}
                   renderItem={(item) => (
                     <List.Item
-                      key={item.title}
+                      key={item.ugcId}
                       style={{
                         padding: '24px 0',
                         borderBottom: '1px solid rgba(0,0,0,0.06)',
-                        transition: 'background-color 0.3s',
                       }}
                       actions={[
                         <IconText
-                          icon={EyeOutlined}
-                          text={item.viewCount?.toString() || '0'}
-                          key="list-vertical-view-o"
-                        />,
-                        <IconText
-                          icon={LikeOutlined}
+                          icon={item.hasLike ? LikeFilled : LikeOutlined}
                           text={item.likeCount?.toString() || '0'}
                           key="list-vertical-like-o"
-                        />,
-                        <IconText
-                          icon={StarOutlined}
-                          text={item.collectCount?.toString() || '0'}
-                          key="list-vertical-star-o"
+                          onClick={() => handleLike(item)}
                         />,
                         <IconText
                           icon={CommentOutlined}
                           text={item.commentaryCount?.toString() || '0'}
-                          key="list-vertical-commentary-o"
+                          key="list-vertical-comment-o"
+                        />,
+                        <IconText
+                          icon={item.hasCollect ? StarFilled : StarOutlined}
+                          text={item.collectCount?.toString() || '0'}
+                          key="list-vertical-star-o"
+                          onClick={() => handleCollect(item)}
+                        />,
+                        <IconText
+                          icon={ShareAltOutlined}
+                          text="分享"
+                          key="list-vertical-share-o"
                         />,
                       ]}
-                      extra={
-                        item.cover && (
-                          <img
-                            alt="cover"
-                            src={item.cover || '/placeholder.svg'}
-                            style={{
-                              width: 200,
-                              height: 120,
-                              objectFit: 'cover',
-                              borderRadius: 4,
-                              marginLeft: 24,
-                            }}
-                          />
-                        )
-                      }
                     >
                       <List.Item.Meta
+                        avatar={<Avatar src={item.author?.avatar} size={40} />}
                         title={
-                          <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
-                            <a
-                              href={`/article/${item.ugcId}`}
-                              style={{ color: 'rgba(0,0,0,0.85)' }}
-                            >
-                              {item.title}
-                            </a>
-                          </Typography.Title>
-                        }
-                        description={
-                          <Typography.Paragraph
-                            ellipsis={{ rows: 2 }}
-                            style={{
-                              color: 'rgba(0,0,0,0.65)',
-                              marginBottom: 4,
-                              fontSize: 14,
-                            }}
-                          >
-                            {item.summary}
-                          </Typography.Paragraph>
+                          <Space size={2} direction="vertical">
+                            <Text strong>{item.author?.nickname}</Text>
+                            <Text type="secondary" style={{ fontSize: 12 }}>
+                              {item.gmtCreate
+                                ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm')
+                                : 'N/A'}
+                            </Text>
+                          </Space>
                         }
                       />
-                      <Space size={8} align="center">
-                        <Typography.Text>{item.author?.nickname}</Typography.Text>
-                        <Divider type="vertical" />
-                        <Typography.Text style={{ fontSize: 12 }}>
-                          {item.gmtCreate
-                            ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm')
-                            : 'N/A'}
-                        </Typography.Text>
-                        <Divider type="vertical" />
-                        <Space size={4}>
-                          <TagList tags={item.tags} />
+                      <div style={{ margin: '8px 0' }}>{renderPostContent(item)}</div>
+                      {item.attachmentUrls && item.attachmentUrls.length > 0 && (
+                        <Space size={[8, 8]} wrap style={{ marginTop: 16 }}>
+                          {item.attachmentUrls.map((url, index) => (
+                            <Image
+                              key={index}
+                              width={100}
+                              src={url}
+                              fallback="/media/fallback/1.png"
+                            />
+                          ))}
                         </Space>
-                      </Space>
+                      )}
                     </List.Item>
                   )}
                 />

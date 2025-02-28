@@ -3,3 +3,9 @@ export enum UgcType {
   POST = 'POST',
   QUESTION = 'QUESTION',
 }
+
+export enum InteractType {
+  LIKE = 'LIKE',
+  COLLECT = 'COLLECT',
+  COMMENT = 'COMMENT',
+}
