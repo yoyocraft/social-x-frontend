@@ -414,6 +414,8 @@ declare namespace API {
     categoryName?: string;
     icon?: string;
     priority?: number;
+    qaSuggestion?: string;
+    qaTemplate?: string;
   };
 
   type UgcDeleteRequest = {

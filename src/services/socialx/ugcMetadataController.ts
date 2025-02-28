@@ -26,6 +26,14 @@ export async function queryUgcInterestTagUsingGet(options?: { [key: string]: any
   });
 }
 
+/** queryUgcQuestionCategory GET /api/ugc/metadata/qa_category */
+export async function queryUgcQuestionCategoryUsingGet(options?: { [key: string]: any }) {
+  return request<API.ResultUgcMetadataResponse_>('/api/ugc/metadata/qa_category', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** queryUgcTopic GET /api/ugc/metadata/topic */
 export async function queryUgcTopicUsingGet(options?: { [key: string]: any }) {
   return request<API.ResultUgcMetadataResponse_>('/api/ugc/metadata/topic', {
