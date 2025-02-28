@@ -40,7 +40,7 @@ export default [
   },
 
   { path: '/post', name: '动态', icon: 'container', component: './Ugc/Post/Main' },
-  { path: '/question', name: '问答', icon: 'container', component: './Admin' },
+  { path: '/question', name: '问答', icon: 'container', component: './Ugc/Question/Main' },
   {
     path: '/article/:ugcId',
     name: '文章详情',
@@ -58,6 +58,12 @@ export default [
     name: '发布帖子',
     hideInMenu: true,
     redirect: '/post',
+  },
+  {
+    path: '/question/publish',
+    name: '提问题',
+    hideInMenu: true,
+    component: './Ugc/Question/Publish',
   },
 
   {

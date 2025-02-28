@@ -53,6 +53,7 @@
     "@bytemd/react": "^1.22.0",
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
+    "@uiw/react-markdown-preview": "^5.1.3",
     "@umijs/route-utils": "^2.2.2",
     "antd": "^5.13.2",
     "antd-style": "^3.6.1",
