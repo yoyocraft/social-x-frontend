@@ -1,3 +1,4 @@
+import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
 import UgcCard from '@/components/UgcCard';
 import UserCard from '@/components/UserCard';
@@ -40,16 +41,15 @@ const ArticleDetail: React.FC = () => {
           }}
         >
           <UgcCard ugc={ugcDetail} />
+          <CommentaryCard />
         </Col>
 
         <Col span={6}>
           <Space direction="vertical">
             {ugcDetail.author && <UserCard user={ugcDetail.author} />}
-            {ugcDetail.content && (
-              <Affix offsetTop={56}>
-                <MdNavbar content={ugcDetail.content} />
-              </Affix>
-            )}
+            <Affix offsetTop={56}>
+              {ugcDetail.content && <MdNavbar content={ugcDetail.content} />}
+            </Affix>
           </Space>
         </Col>
       </Row>
