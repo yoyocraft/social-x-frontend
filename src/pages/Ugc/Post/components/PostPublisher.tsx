@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface PostPublisherProps {
   onPublish?: (content: string, topic: string, categories: string[]) => void;
@@ -46,6 +46,8 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
   const [selectedTopic, setSelectedTopic] = useState<Pair | null>();
 
   const [topicList, setTopicList] = useState<Pair[]>([]);
+
+  const textAreaRef = useRef(null);
   const maxLength = 2000;
 
   const loadPostTopics = () => {
@@ -131,6 +133,11 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
   );
 
   useEffect(() => {
+    // focus textarea
+    if (textAreaRef.current) {
+      // @ts-ignore
+      textAreaRef.current.focus();
+    }
     loadPostTopics();
   }, []);
 
@@ -144,6 +151,7 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
       }}
     >
       <Input.TextArea
+        ref={textAreaRef}
         placeholder="说点和大家讨论吧..."
         value={content}
         onChange={handleContentChange}

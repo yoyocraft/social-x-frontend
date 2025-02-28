@@ -2,8 +2,8 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** delete POST /api/ugc/delete */
-export async function deleteUsingPost(
+/** deleteUgc POST /api/ugc/delete */
+export async function deleteUgcUsingPost(
   body: API.UgcDeleteRequest,
   options?: { [key: string]: any },
 ) {

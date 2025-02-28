@@ -53,6 +53,12 @@ export default [
     hideInMenu: true,
     component: './Ugc/Article/Publish',
   },
+  {
+    path: '/post/publish',
+    name: '发布帖子',
+    hideInMenu: true,
+    redirect: '/post',
+  },
 
   {
     path: '/admin',
