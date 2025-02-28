@@ -3,5 +3,6 @@ export enum MediaSource {
   AVATAR = 'AVATAR',
   ARTICLE = 'ARTICLE',
   POST = 'POST',
+  QUESTION = 'QUESTION',
   REPLY = 'REPLY',
 }
