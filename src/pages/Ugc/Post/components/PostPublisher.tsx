@@ -1,3 +1,5 @@
+import { MediaSource } from '@/constants/MediaConstant';
+import { uploadImageUsingPost } from '@/services/socialx/mediaResourceController';
 import { queryUgcTopicUsingGet } from '@/services/socialx/ugcMetadataController';
 import { CloseCircleFilled, LinkOutlined, PictureOutlined, SmileOutlined } from '@ant-design/icons';
 import data from '@emoji-mart/data';
@@ -19,7 +21,7 @@ import type { UploadFile, UploadProps } from 'antd/es/upload/interface';
 import React, { useEffect, useState } from 'react';
 
 interface PostPublisherProps {
-  onPublish?: (content: string, attachments: any[]) => void;
+  onPublish?: (content: string, topic: string, categories: string[]) => void;
 }
 
 interface Pair {
@@ -42,10 +44,9 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [selectedTopic, setSelectedTopic] = useState<Pair | null>();
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
 
   const [topicList, setTopicList] = useState<Pair[]>([]);
-  const maxLength = 5000;
+  const maxLength = 2000;
 
   const loadPostTopics = () => {
     queryUgcTopicUsingGet().then((res) => {
@@ -82,24 +83,17 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
   };
 
   const handlePublish = () => {
-    if (!content.trim() && fileList.length === 0) {
-      message.warning('请输入内容或上传图片');
+    if (!content.trim()) {
+      message.warning('请输入内容');
       return;
     }
 
-    const attachments = {
-      images: fileList.map((file) => ({
-        uid: file.uid,
-        name: file.name,
-        status: file.status,
-        url: file.url || file.preview,
-      })),
-      topic: selectedTopic,
-      location: selectedLocation,
-    };
+    const attachmentUrls = fileList.map((uploadFile) => {
+      return uploadFile.uid;
+    });
 
     if (onPublish) {
-      onPublish(content, [attachments]);
+      onPublish(content, selectedTopic?.key || '', attachmentUrls);
     }
 
     // Reset form
@@ -107,7 +101,6 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
     setFileList([]);
     setInputCount(0);
     setSelectedTopic(null);
-    setSelectedLocation(null);
 
     message.success('发布成功');
   };
@@ -149,7 +142,6 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
         boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
         marginBottom: 16,
       }}
-      hoverable
     >
       <Input.TextArea
         placeholder="说点和大家讨论吧..."
@@ -210,17 +202,36 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
           <Upload
             accept="image/*"
             showUploadList={false}
-            beforeUpload={(file) => {
+            beforeUpload={async (file) => {
+              if (fileList.length >= 9) {
+                message.warning('最多上传9张图片');
+                return false;
+              }
+              console.log('file:', file);
+
+              const res = await uploadImageUsingPost(
+                {
+                  source: MediaSource.ARTICLE,
+                },
+                {},
+                file,
+              );
+              const fullPath = res.data?.url;
+              if (!fullPath) {
+                message.error('上传失败');
+                return false;
+              }
               setFileList([
                 ...fileList,
                 {
-                  uid: file.uid,
+                  uid: fullPath,
                   name: file.name,
                   status: 'done',
                   originFileObj: file,
                 } as UploadFile,
               ]);
-              return false;
+
+              return true;
             }}
           >
             <Button type="text" icon={<PictureOutlined />}>
@@ -238,7 +249,7 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
           <Typography.Text type="secondary" style={{ fontSize: 12 }}>
             {inputCount}/{maxLength}
           </Typography.Text>
-          <Button type="primary" onClick={handlePublish}>
+          <Button type="primary" shape="round" size="large" onClick={handlePublish}>
             发布
           </Button>
         </Space>

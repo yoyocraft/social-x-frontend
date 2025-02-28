@@ -455,6 +455,8 @@ declare namespace API {
     cover?: string;
     gmtCreate?: number;
     gmtModified?: number;
+    hasCollect?: boolean;
+    hasLike?: boolean;
     hasSolved?: boolean;
     likeCount?: number;
     status?: string;

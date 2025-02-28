@@ -176,6 +176,7 @@ const Login: React.FC = () => {
             <>
               <ProFormText
                 name="identifier"
+                initialValue={'codejuzi@163.com'}
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined />,
@@ -185,6 +186,7 @@ const Login: React.FC = () => {
               />
               <ProFormText.Password
                 name="credential"
+                initialValue={'SocialX12138@'}
                 fieldProps={{
                   size: 'large',
                   prefix: <LockOutlined />,
