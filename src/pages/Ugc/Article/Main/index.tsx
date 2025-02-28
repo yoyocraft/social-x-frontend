@@ -55,6 +55,7 @@ export default function HomePage() {
   const [categoryId, setCategoryId] = useState('');
   const [activeTab, setActiveTab] = useState('recommended');
   const [viewFollow, setViewFollow] = useState(false);
+  const isFirstLoad = useRef(true);
 
   // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
@@ -121,7 +122,6 @@ export default function HomePage() {
       await followFeedUgc();
       return;
     }
-
     if (activeTab === 'recommended') {
       await recommendFeedUgc();
     } else {
@@ -144,10 +144,15 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    Promise.all([loadSideMenu(), timeFeedUgc()]);
+    Promise.all([loadSideMenu(), loadUgcData()]).then(() => {
+      isFirstLoad.current = false;
+    });
   }, []);
 
   useEffect(() => {
+    if (isFirstLoad.current) {
+      return;
+    }
     // 重置列表数据
     setUgcList([]);
     setHasMore(true);
@@ -218,7 +223,7 @@ export default function HomePage() {
                   items={tabItems}
                   onChange={(key) => {
                     setActiveTab(key);
-                    setUgcList([]); // 清空当前列表数据
+                    setUgcList([]);
                   }}
                 />
               )}

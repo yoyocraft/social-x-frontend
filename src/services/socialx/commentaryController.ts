@@ -2,8 +2,8 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** adopt POST /api/commentary/adopt */
-export async function adoptUsingPost(
+/** adoptCommentary POST /api/commentary/adopt */
+export async function adoptCommentaryUsingPost(
   body: API.UgcInteractionRequest,
   options?: { [key: string]: any },
 ) {
@@ -32,8 +32,8 @@ export async function queryCommentaryCountUsingGet(
   });
 }
 
-/** delete POST /api/commentary/delete */
-export async function deleteUsingPost(
+/** deleteCommentary POST /api/commentary/delete */
+export async function deleteCommentaryUsingPost(
   body: API.CommentaryDeleteRequest,
   options?: { [key: string]: any },
 ) {
@@ -47,8 +47,8 @@ export async function deleteUsingPost(
   });
 }
 
-/** like POST /api/commentary/like */
-export async function likeUsingPost(
+/** likeCommentary POST /api/commentary/like */
+export async function likeCommentaryUsingPost(
   body: API.UgcInteractionRequest,
   options?: { [key: string]: any },
 ) {

@@ -122,7 +122,7 @@ export default function PostPage() {
   const handleInteraction = (item: API.UgcResponse, interactionType: InteractType) => {
     const ugcId = item.ugcId;
     const interactionField = interactionType === InteractType.LIKE ? 'likeCount' : 'collectCount';
-    const hasInteractionField = interactionType === InteractType.LIKE ? 'hasLike' : 'hasCollect';
+    const hasInteractionField = interactionType === InteractType.LIKE ? 'liked' : 'collected';
 
     interactUgcUsingPost({
       targetId: ugcId,
@@ -256,7 +256,7 @@ export default function PostPage() {
                       }}
                       actions={[
                         <IconText
-                          icon={item.hasLike ? LikeFilled : LikeOutlined}
+                          icon={item.liked ? LikeFilled : LikeOutlined}
                           text={item.likeCount?.toString() || '0'}
                           key="list-vertical-like-o"
                           onClick={() => handleLike(item)}
@@ -267,7 +267,7 @@ export default function PostPage() {
                           key="list-vertical-comment-o"
                         />,
                         <IconText
-                          icon={item.hasCollect ? StarFilled : StarOutlined}
+                          icon={item.collected ? StarFilled : StarOutlined}
                           text={item.collectCount?.toString() || '0'}
                           key="list-vertical-star-o"
                           onClick={() => handleCollect(item)}
@@ -294,7 +294,7 @@ export default function PostPage() {
                       />
                       <div style={{ margin: '8px 0' }}>{renderPostContent(item)}</div>
                       {item.attachmentUrls && item.attachmentUrls.length > 0 && (
-                        <Space size={[8, 8]} wrap style={{ marginTop: 16 }}>
+                        <Space size={[16, 8]} wrap style={{ marginTop: 16 }}>
                           {item.attachmentUrls.map((url, index) => (
                             <Image
                               key={index}

@@ -12,6 +12,7 @@ declare namespace API {
 
   type CommentaryInfo = {
     adopted?: boolean;
+    attachmentUrls?: string[];
     commentary?: string;
     commentaryId?: string;
     commentatorAvatar?: string;
@@ -20,12 +21,14 @@ declare namespace API {
     gmtCreate?: number;
     gmtModified?: number;
     likeCount?: number;
+    liked?: boolean;
     parentId?: string;
     status?: string;
     ugcId?: string;
   };
 
   type CommentaryPublishRequest = {
+    attachmentUrls?: string[];
     commentary?: string;
     parentId?: string;
     reqId?: string;
@@ -450,15 +453,15 @@ declare namespace API {
     categoryId?: string;
     categoryName?: string;
     collectCount?: number;
+    collected?: boolean;
     commentaryCount?: number;
     content?: string;
     cover?: string;
     gmtCreate?: number;
     gmtModified?: number;
-    hasCollect?: boolean;
-    hasLike?: boolean;
     hasSolved?: boolean;
     likeCount?: number;
+    liked?: boolean;
     status?: string;
     summary?: string;
     tags?: string[];

@@ -3,7 +3,7 @@
 import { request } from '@umijs/max';
 
 /** delete POST /api/ugc/delete */
-export async function deleteUsingPost1(
+export async function deleteUsingPost(
   body: API.UgcDeleteRequest,
   options?: { [key: string]: any },
 ) {

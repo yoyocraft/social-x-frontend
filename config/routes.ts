@@ -5,7 +5,7 @@ export default [
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
 
-  { path: '/', name: '首页', icon: 'home', component: './Ugc/Main' },
+  { path: '/', name: '首页', icon: 'home', component: './Ugc/Article/Main' },
 
   {
     name: '个人中心',
