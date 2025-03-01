@@ -1,6 +1,8 @@
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
 import TagList from '@/components/TagList';
+import { InteractType } from '@/constants/UgcConstant';
+import { interactUgcUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   EyeOutlined,
@@ -10,7 +12,7 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Card, Divider, Space, Typography } from 'antd';
+import { Card, Divider, message, Space, Typography } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useState } from 'react';
 
@@ -22,17 +24,41 @@ const UgcCard = (props: Props) => {
   const { ugc } = props;
   const [likeCount, setLikeCount] = useState(ugc.likeCount || 0);
   const [collectCount, setCollectCount] = useState(ugc.collectCount || 0);
-  const [liked, setLiked] = useState(false);
-  const [collected, setCollected] = useState(false);
+  const [liked, setLiked] = useState(ugc.liked);
+  const [collected, setCollected] = useState(ugc.collected);
 
   const handleLike = () => {
-    setLiked(!liked);
-    setLikeCount(likeCount + (liked ? -1 : 1));
+    const interact = !ugc.liked;
+    interactUgcUsingPost({
+      targetId: ugc.ugcId,
+      interactionType: InteractType.LIKE,
+      interact,
+      reqId: ugc.ugcId,
+    })
+      .then(() => {
+        setLikeCount((prev) => (prev || 0) + (liked ? -1 : 1));
+        setLiked(interact);
+      })
+      .catch(() => {
+        message.error('失败，请重试');
+      });
   };
 
   const handleCollect = () => {
-    setCollected(!collected);
-    setCollectCount(collectCount + (collected ? -1 : 1));
+    const interact = !ugc.collected;
+    interactUgcUsingPost({
+      targetId: ugc.ugcId,
+      interactionType: InteractType.COLLECT,
+      interact,
+      reqId: ugc.ugcId,
+    })
+      .then(() => {
+        setCollectCount((prev) => (prev || 0) + (collected ? -1 : 1));
+        setCollected(interact);
+      })
+      .catch(() => {
+        message.error('失败，请重试');
+      });
   };
 
   return (
