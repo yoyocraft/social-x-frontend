@@ -8,4 +8,5 @@ export enum InteractType {
   LIKE = 'LIKE',
   COLLECT = 'COLLECT',
   COMMENT = 'COMMENT',
+  ADOPT = 'ADOPT',
 }

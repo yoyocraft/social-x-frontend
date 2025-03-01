@@ -4,7 +4,12 @@ import { useRef } from 'react';
 import CommentPublisher from './CommentPublisher';
 import CommentSection from './CommentSection';
 
-const CommentaryCard = () => {
+interface CommentaryCardProps {
+  isQuestion?: boolean;
+}
+
+const CommentaryCard = (props: CommentaryCardProps) => {
+  const { isQuestion = false } = props;
   const commentSectionRef = useRef<{ refreshComments: () => void } | null>(null);
 
   const params = useParams();
@@ -19,7 +24,7 @@ const CommentaryCard = () => {
   return (
     <Card title="评论区" bordered={false} style={{ marginTop: 16 }}>
       <CommentPublisher refreshComments={refreshAll} ugcId={ugcId} />
-      <CommentSection ref={commentSectionRef} />
+      <CommentSection isQuestion={isQuestion} ref={commentSectionRef} />
     </Card>
   );
 };

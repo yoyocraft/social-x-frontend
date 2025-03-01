@@ -8,10 +8,11 @@ import ReplyList from './ReplyList';
 
 interface CommentSectionProps {
   onRefresh?: () => void;
+  isQuestion?: boolean;
 }
 
 const CommentSection = forwardRef<{ refreshComments: () => void }, CommentSectionProps>(
-  ({ onRefresh }, ref) => {
+  ({ onRefresh, isQuestion = false }, ref) => {
     const [ugcCommentary, setUgcCommentary] = useState<API.CommentaryResponse[]>([]);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const cursorRef = useRef<string>('0');
@@ -68,7 +69,11 @@ const CommentSection = forwardRef<{ refreshComments: () => void }, CommentSectio
             renderItem={(item) => (
               <List.Item style={{ padding: 0, border: 'none' }}>
                 {item.topCommentary && (
-                  <CommentItem refreshComments={refreshComments} comment={item.topCommentary} />
+                  <CommentItem
+                    isQuestion={isQuestion}
+                    refreshComments={refreshComments}
+                    comment={item.topCommentary}
+                  />
                 )}
                 {item.replyList && item.replyList.length > 0 && (
                   <ReplyList

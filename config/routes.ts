@@ -45,7 +45,7 @@ export default [
     path: '/article/:ugcId',
     name: '文章详情',
     hideInMenu: true,
-    component: './Ugc/Detail',
+    component: './Ugc/Article/Detail',
   },
   {
     path: '/article/publish',
@@ -75,7 +75,7 @@ export default [
     path: '/question/:ugcId',
     name: '问题详情',
     hideInMenu: true,
-    component: './Ugc/Detail',
+    component: './Ugc/Question/Detail',
   },
 
   {
