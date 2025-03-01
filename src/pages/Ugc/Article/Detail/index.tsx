@@ -1,5 +1,6 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
+import RelatedContentCard from '@/components/RelatedContentCard';
 import UgcCard from '@/components/UgcCard';
 import UserCard from '@/pages/User/components/UserCard';
 import { queryUgcDetailUsingGet } from '@/services/socialx/ugcController';
@@ -49,6 +50,13 @@ const UgcDetail: React.FC = () => {
             {ugcDetail.author && <UserCard user={ugcDetail.author} />}
             <Affix offsetTop={56}>
               {ugcDetail.content && <MdNavbar content={ugcDetail.content} />}
+              <RelatedContentCard
+                style={{ marginTop: 16 }}
+                ugcId={ugcDetail.ugcId || ''}
+                ugcType={ugcDetail.type || ''}
+                tags={ugcDetail.tags || []}
+                categoryId={ugcDetail.categoryId || ''}
+              />
             </Affix>
           </Space>
         </Col>

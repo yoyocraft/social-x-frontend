@@ -3,8 +3,8 @@ import IconText from '@/components/IconText';
 import { InteractType, UgcType } from '@/constants/UgcConstant';
 import {
   interactUgcUsingPost,
-  listQuestionsUsingGet,
-  listTimelineUgcFeedUsingGet,
+  listQuestionsUsingPost,
+  listTimelineUgcFeedUsingPost,
 } from '@/services/socialx/ugcController';
 import { queryUgcQuestionCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { dateTimeFormat } from '@/services/utils/time';
@@ -66,7 +66,7 @@ const QuestionPage: React.FC = () => {
 
   const timelineQuestionFeed = async () => {
     try {
-      const res = await listTimelineUgcFeedUsingGet({
+      const res = await listTimelineUgcFeedUsingPost({
         ugcType: UgcType.QUESTION,
         cursor: cursorRef.current,
         categoryId: selectedTag?.categoryId,
@@ -79,7 +79,7 @@ const QuestionPage: React.FC = () => {
 
   const listQuestionsWithQaStatusAndCursor = async () => {
     try {
-      const res = await listQuestionsUsingGet({
+      const res = await listQuestionsUsingPost({
         ugcType: UgcType.QUESTION,
         cursor: cursorRef.current,
         categoryId: selectedTag?.categoryId,

@@ -1,6 +1,7 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
+import RelatedContentCard from '@/components/RelatedContentCard';
 import { InteractType } from '@/constants/UgcConstant';
 import UserCard from '@/pages/User/components/UserCard';
 import { interactUgcUsingPost, queryUgcDetailUsingGet } from '@/services/socialx/ugcController';
@@ -149,12 +150,12 @@ const PostDetail: React.FC = () => {
   const params = useParams();
   const { ugcId } = params;
 
-  const [ugcDetail, setUgcDetail] = useState<API.UgcResponse | null>(null);
+  const [postDetail, setPostDetail] = useState<API.UgcResponse | null>(null);
 
   const loadUgcDetail = async () => {
     const res = await queryUgcDetailUsingGet({ ugcId });
     if (res.data) {
-      setUgcDetail(res.data);
+      setPostDetail(res.data);
     }
   };
 
@@ -162,7 +163,7 @@ const PostDetail: React.FC = () => {
     loadUgcDetail();
   }, []);
 
-  if (!ugcDetail) {
+  if (!postDetail) {
     return <Skeleton active />;
   }
 
@@ -185,7 +186,7 @@ const PostDetail: React.FC = () => {
               boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}
           >
-            <PostCard ugc={ugcDetail} />
+            <PostCard ugc={postDetail} />
           </div>
 
           <div
@@ -209,7 +210,13 @@ const PostDetail: React.FC = () => {
               boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}
           >
-            {ugcDetail.author && <UserCard user={ugcDetail.author} />}
+            {postDetail.author && <UserCard user={postDetail.author} />}
+            <RelatedContentCard
+              style={{ marginTop: 16 }}
+              ugcId={postDetail.ugcId || ''}
+              ugcType={postDetail.type || ''}
+              categoryId={postDetail.categoryId || ''}
+            />
           </div>
         </Col>
       </Row>
