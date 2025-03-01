@@ -2,8 +2,8 @@ import { Footer } from '@/components';
 import CheckInCard from '@/components/CheckInCard';
 import IconText from '@/components/IconText';
 import TagList from '@/components/TagList';
-import UgcHotRank from '@/components/UgcHotRank';
 import { UgcType } from '@/constants/UgcConstant';
+import UgcHotRank from '@/pages/Ugc/components/UgcHotRank';
 import {
   listFollowUgcFeedUsingGet,
   listRecommendUgcFeedUsingGet,

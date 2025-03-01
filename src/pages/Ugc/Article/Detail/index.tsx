@@ -1,11 +1,11 @@
-import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
-import UgcCard from '@/components/UgcCard';
-import UserCard from '@/components/UserCard';
+import UserCard from '@/pages/User/components/UserCard';
 import { queryUgcDetailUsingGet } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
 import { Affix, Col, Row, Skeleton, Space } from 'antd';
 import { useEffect, useState } from 'react';
+import CommentaryCard from '../../components/Commentary/CommentaryCard';
+import UgcCard from '../../components/UgcCard';
 
 const ArticleDetail: React.FC = () => {
   const params = useParams();
