@@ -5,6 +5,7 @@ import { InteractType } from '@/constants/UgcConstant';
 import { interactUgcUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
+  CheckCircleFilled,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
@@ -12,7 +13,7 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Card, Divider, message, Space, Typography } from 'antd';
+import { Card, Divider, message, Space, Tag, Typography } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useState } from 'react';
 
@@ -103,6 +104,24 @@ const UgcCard = (props: Props) => {
               key="list-vertical-view-o"
             />
           </Space>
+          {ugc.hasSolved && (
+            <>
+              <Divider type="vertical" />
+              <Tag
+                icon={<CheckCircleFilled />}
+                color="success"
+                style={{
+                  padding: '0 8px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  lineHeight: '18px',
+                  margin: 0,
+                }}
+              >
+                已解决
+              </Tag>
+            </>
+          )}
         </Space>
         <div style={{ marginBottom: 16 }} />
         <MdViewer value={ugc.content} />

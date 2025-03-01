@@ -82,6 +82,21 @@ declare namespace API {
     cursor?: string;
     keyword?: string;
     page?: number;
+    qaStatus?: boolean;
+    reqId?: string;
+    size?: number;
+    ugcId?: string;
+    ugcStatus?: string;
+    ugcType?: string;
+  };
+
+  type listQuestionsUsingGETParams = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    keyword?: string;
+    page?: number;
+    qaStatus?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -95,6 +110,7 @@ declare namespace API {
     cursor?: string;
     keyword?: string;
     page?: number;
+    qaStatus?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -108,6 +124,7 @@ declare namespace API {
     cursor?: string;
     keyword?: string;
     page?: number;
+    qaStatus?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -121,6 +138,7 @@ declare namespace API {
     cursor?: string;
     keyword?: string;
     page?: number;
+    qaStatus?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -252,6 +270,7 @@ declare namespace API {
     cursor?: string;
     keyword?: string;
     page?: number;
+    qaStatus?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;
@@ -270,6 +289,7 @@ declare namespace API {
     cursor?: string;
     keyword?: string;
     page?: number;
+    qaStatus?: boolean;
     reqId?: string;
     size?: number;
     ugcId?: string;

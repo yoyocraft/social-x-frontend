@@ -100,6 +100,21 @@ export async function publishUgcUsingPost(
   });
 }
 
+/** listQuestions GET /api/ugc/qa */
+export async function listQuestionsUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listQuestionsUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/qa', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** listRecommendUgcFeed GET /api/ugc/recommend_feed */
 export async function listRecommendUgcFeedUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

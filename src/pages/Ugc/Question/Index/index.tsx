@@ -3,11 +3,13 @@ import IconText from '@/components/IconText';
 import { InteractType, UgcType } from '@/constants/UgcConstant';
 import {
   interactUgcUsingPost,
+  listQuestionsUsingGet,
   listTimelineUgcFeedUsingGet,
 } from '@/services/socialx/ugcController';
 import { queryUgcQuestionCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
+  CheckCircleFilled,
   CommentOutlined,
   LikeFilled,
   LikeOutlined,
@@ -38,15 +40,31 @@ import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const { Text } = Typography;
+
+const items = [
+  {
+    label: '全部',
+    key: 'all',
+  },
+  {
+    label: '待解决',
+    key: 'unadopted',
+  },
+  {
+    label: '采纳',
+    key: 'adopted',
+  },
+];
 const QuestionPage: React.FC = () => {
   const [questionList, setQuestionList] = useState<API.UgcResponse[]>([]);
   const [questionTags, setQuestionTags] = useState<API.UgcCategoryInfoResponse[]>([]);
   const [selectedTag, setSelectedTag] = useState<API.UgcCategoryInfoResponse>();
+  const [qaStatus, setQaStatus] = useState<string>('all');
   const [hasMore, setHasMore] = useState(false);
   const cursorRef = useRef('0');
   const firstLoad = useRef(true);
 
-  const loadUgcData = async () => {
+  const timelineQuestionFeed = async () => {
     try {
       const res = await listTimelineUgcFeedUsingGet({
         ugcType: UgcType.QUESTION,
@@ -57,6 +75,28 @@ const QuestionPage: React.FC = () => {
       cursorRef.current = res.data?.cursor || '0';
       setHasMore(res.data?.hasMore || false);
     } catch {}
+  };
+
+  const listQuestionsWithQaStatusAndCursor = async () => {
+    try {
+      const res = await listQuestionsUsingGet({
+        ugcType: UgcType.QUESTION,
+        cursor: cursorRef.current,
+        categoryId: selectedTag?.categoryId,
+        qaStatus: qaStatus === 'adopted',
+      });
+      setQuestionList((prev) => [...prev, ...(res.data?.data || [])]);
+      cursorRef.current = res.data?.cursor || '0';
+      setHasMore(res.data?.hasMore || false);
+    } catch {}
+  };
+
+  const loadQuestions = async () => {
+    if (qaStatus === 'all') {
+      await timelineQuestionFeed();
+    } else {
+      await listQuestionsWithQaStatusAndCursor();
+    }
   };
 
   const loadQuestionTags = async () => {
@@ -110,6 +150,15 @@ const QuestionPage: React.FC = () => {
     setSelectedTag(tag);
   };
 
+  const handleQaStatusChange = (key: string) => {
+    if (qaStatus === 'all') {
+      setQaStatus('');
+      return;
+    }
+
+    setQaStatus(key);
+  };
+
   const operations = (
     <Button icon={<QuestionOutlined />} type="primary">
       提问题
@@ -117,9 +166,15 @@ const QuestionPage: React.FC = () => {
   );
 
   useEffect(() => {
-    Promise.all([loadUgcData(), loadQuestionTags()]).then(() => {
-      firstLoad.current = false;
-    });
+    const fetchData = async () => {
+      try {
+        await loadQuestionTags();
+        await loadQuestions();
+        firstLoad.current = false;
+      } catch (error) {}
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -128,23 +183,9 @@ const QuestionPage: React.FC = () => {
     }
     cursorRef.current = '0';
     setQuestionList([]);
-    loadUgcData();
-  }, [selectedTag]);
+    loadQuestions();
+  }, [selectedTag, qaStatus]);
 
-  const items = [
-    {
-      label: '全部',
-      key: 'all',
-    },
-    {
-      label: '待解决',
-      key: 'unadopted',
-    },
-    {
-      label: '采纳',
-      key: 'adopted',
-    },
-  ];
   return (
     <Card style={{ margin: '0 24px', padding: '16px' }}>
       <Row gutter={[33, 16]}>
@@ -175,10 +216,16 @@ const QuestionPage: React.FC = () => {
             </Form.Item>
           </Form>
           <Divider />
-          <Tabs tabBarExtraContent={operations} items={items} size="middle" />
+          <Tabs
+            tabBarExtraContent={operations}
+            items={items}
+            activeKey={qaStatus}
+            onChange={handleQaStatusChange}
+            size="middle"
+          />
           <InfiniteScroll
             dataLength={questionList.length}
-            next={loadUgcData}
+            next={timelineQuestionFeed}
             hasMore={hasMore}
             loader={<Skeleton avatar active />}
             endMessage={<Divider plain>没有更多啦～</Divider>}
@@ -224,6 +271,21 @@ const QuestionPage: React.FC = () => {
                         <Avatar size={32} src={item.author?.avatar} />
                         <Text>{item.author?.nickname}</Text>
                       </Space>
+                      {item.hasSolved && (
+                        <Tag
+                          icon={<CheckCircleFilled />}
+                          color="success"
+                          style={{
+                            padding: '0 8px',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            lineHeight: '18px',
+                            margin: 0,
+                          }}
+                        >
+                          已解决
+                        </Tag>
+                      )}
                     </Space>,
                   ]}
                 >
