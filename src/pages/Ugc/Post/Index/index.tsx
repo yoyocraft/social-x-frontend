@@ -5,7 +5,7 @@ import { InteractType, UgcType } from '@/constants/UgcConstant';
 import UserCard from '@/pages/User/components/UserCard';
 import {
   interactUgcUsingPost,
-  listTimelineUgcFeedUsingGet,
+  listTimelineUgcFeedUsingPost,
   publishUgcUsingPost,
 } from '@/services/socialx/ugcController';
 import { queryUgcTopicUsingGet } from '@/services/socialx/ugcMetadataController';
@@ -70,7 +70,7 @@ export default function PostPage() {
 
     try {
       setLoading(true);
-      const res = await listTimelineUgcFeedUsingGet({
+      const res = await listTimelineUgcFeedUsingPost({
         cursor: cursorRef.current,
         ugcType: UgcType.POST,
         categoryId,

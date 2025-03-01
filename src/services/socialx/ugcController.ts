@@ -32,17 +32,17 @@ export async function queryUgcDetailUsingGet(
   });
 }
 
-/** listFollowUgcFeed GET /api/ugc/follow_feed */
-export async function listFollowUgcFeedUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.listFollowUgcFeedUsingGETParams,
+/** listFollowUgcFeed POST /api/ugc/follow_feed */
+export async function listFollowUgcFeedUsingPost(
+  body: API.UgcQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/follow_feed', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }
@@ -100,32 +100,32 @@ export async function publishUgcUsingPost(
   });
 }
 
-/** listQuestions GET /api/ugc/qa */
-export async function listQuestionsUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.listQuestionsUsingGETParams,
+/** listQuestions POST /api/ugc/qa */
+export async function listQuestionsUsingPost(
+  body: API.UgcQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/qa', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }
 
-/** listRecommendUgcFeed GET /api/ugc/recommend_feed */
-export async function listRecommendUgcFeedUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.listRecommendUgcFeedUsingGETParams,
+/** listRecommendUgcFeed POST /api/ugc/recommend_feed */
+export async function listRecommendUgcFeedUsingPost(
+  body: API.UgcQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/recommend_feed', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }
@@ -145,17 +145,17 @@ export async function setUgcStatusUsingPost(
   });
 }
 
-/** listTimelineUgcFeed GET /api/ugc/time_feed */
-export async function listTimelineUgcFeedUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.listTimelineUgcFeedUsingGETParams,
+/** listTimelineUgcFeed POST /api/ugc/time_feed */
+export async function listTimelineUgcFeedUsingPost(
+  body: API.UgcQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/time_feed', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }

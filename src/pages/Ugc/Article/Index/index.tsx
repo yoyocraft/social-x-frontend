@@ -5,9 +5,9 @@ import TagList from '@/components/TagList';
 import UgcHotRank from '@/components/UgcHotRank';
 import { UgcType } from '@/constants/UgcConstant';
 import {
-  listFollowUgcFeedUsingGet,
-  listRecommendUgcFeedUsingGet,
-  listTimelineUgcFeedUsingGet,
+  listFollowUgcFeedUsingPost,
+  listRecommendUgcFeedUsingPost,
+  listTimelineUgcFeedUsingPost,
 } from '@/services/socialx/ugcController';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { dateTimeFormat } from '@/services/utils/time';
@@ -71,7 +71,7 @@ export default function HomePage() {
 
     try {
       setLoading(true);
-      const res = await listTimelineUgcFeedUsingGet({
+      const res = await listTimelineUgcFeedUsingPost({
         cursor: cursorRef.current,
         ugcType: 'ARTICLE',
         categoryId,
@@ -89,7 +89,7 @@ export default function HomePage() {
 
     try {
       setLoading(true);
-      const res = await listRecommendUgcFeedUsingGet({
+      const res = await listRecommendUgcFeedUsingPost({
         cursor: cursorRef.current,
         ugcType: UgcType.ARTICLE,
         categoryId,
@@ -107,7 +107,7 @@ export default function HomePage() {
 
     try {
       setLoading(true);
-      const res = await listFollowUgcFeedUsingGet({
+      const res = await listFollowUgcFeedUsingPost({
         cursor: cursorRef.current,
         ugcType: UgcType.ARTICLE,
       });

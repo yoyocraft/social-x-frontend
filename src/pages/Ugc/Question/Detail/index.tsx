@@ -1,5 +1,6 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
+import RelatedContentCard from '@/components/RelatedContentCard';
 import UgcCard from '@/components/UgcCard';
 import UserCard from '@/pages/User/components/UserCard';
 import { queryUgcDetailUsingGet } from '@/services/socialx/ugcController';
@@ -34,7 +35,6 @@ const QuestionDetail: React.FC = () => {
         <Col
           span={18}
           style={{
-            backgroundColor: '#fff',
             padding: '16px',
             borderRadius: 8,
             boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
@@ -49,6 +49,12 @@ const QuestionDetail: React.FC = () => {
             {questionDetail.author && <UserCard user={questionDetail.author} />}
             <Affix offsetTop={56}>
               {questionDetail.content && <MdNavbar content={questionDetail.content} />}
+              <RelatedContentCard
+                style={{ marginTop: 16 }}
+                ugcId={questionDetail.ugcId || ''}
+                ugcType={questionDetail.type || ''}
+                categoryId={questionDetail.categoryId || ''}
+              />
             </Affix>
           </Space>
         </Col>

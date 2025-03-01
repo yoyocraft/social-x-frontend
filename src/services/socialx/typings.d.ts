@@ -76,48 +76,6 @@ declare namespace API {
     url?: string;
   };
 
-  type listFollowUgcFeedUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    qaStatus?: boolean;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
-  type listQuestionsUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    qaStatus?: boolean;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
-  type listRecommendUgcFeedUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    qaStatus?: boolean;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
   type listSelfUgcUsingGETParams = {
     authorId?: string;
     categoryId?: string;
@@ -127,20 +85,7 @@ declare namespace API {
     qaStatus?: boolean;
     reqId?: string;
     size?: number;
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
-  type listTimelineUgcFeedUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    qaStatus?: boolean;
-    reqId?: string;
-    size?: number;
+    tags?: string[];
     ugcId?: string;
     ugcStatus?: string;
     ugcType?: string;
@@ -273,6 +218,7 @@ declare namespace API {
     qaStatus?: boolean;
     reqId?: string;
     size?: number;
+    tags?: string[];
     ugcId?: string;
     ugcStatus?: string;
     ugcType?: string;
@@ -292,6 +238,7 @@ declare namespace API {
     qaStatus?: boolean;
     reqId?: string;
     size?: number;
+    tags?: string[];
     ugcId?: string;
     ugcStatus?: string;
     ugcType?: string;
@@ -466,6 +413,21 @@ declare namespace API {
     tags?: string[];
     title?: string;
     ugcId?: string;
+    ugcType?: string;
+  };
+
+  type UgcQueryRequest = {
+    authorId?: string;
+    categoryId?: string;
+    cursor?: string;
+    keyword?: string;
+    page?: number;
+    qaStatus?: boolean;
+    reqId?: string;
+    size?: number;
+    tags?: string[];
+    ugcId?: string;
+    ugcStatus?: string;
     ugcType?: string;
   };
 
