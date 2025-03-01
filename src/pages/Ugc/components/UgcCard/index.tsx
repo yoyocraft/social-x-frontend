@@ -1,4 +1,6 @@
-// UgcCard.tsx
+import IconText from '@/components/IconText';
+import MdViewer from '@/components/MdViewer';
+import TagList from '@/components/TagList';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   EyeOutlined,
@@ -11,9 +13,6 @@ import {
 import { Card, Divider, Space, Typography } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useState } from 'react';
-import IconText from '../IconText';
-import MdViewer from '../MdViewer';
-import TagList from '../TagList';
 
 interface Props {
   ugc: API.UgcResponse;

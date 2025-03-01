@@ -1,7 +1,7 @@
 import { Footer } from '@/components';
 import IconText from '@/components/IconText';
-import UserCard from '@/components/UserCard';
 import { InteractType, UgcType } from '@/constants/UgcConstant';
+import UserCard from '@/pages/User/components/UserCard';
 import {
   interactUgcUsingPost,
   listTimelineUgcFeedUsingGet,

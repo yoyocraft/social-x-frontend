@@ -1,5 +1,6 @@
 import type React from 'react';
 
+import IconText from '@/components/IconText';
 import { InteractType } from '@/constants/UgcConstant';
 import {
   deleteCommentaryUsingPost,
@@ -27,7 +28,6 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import IconText from '../IconText';
 import CommentPublisher from './CommentPublisher';
 
 const { Text, Paragraph } = Typography;
