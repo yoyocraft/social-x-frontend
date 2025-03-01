@@ -10,7 +10,7 @@ interface Props {
 }
 
 const UserCard = (props: Props) => {
-  const { user } = props;
+  const { user, self = false } = props;
   const [hasFollowed, setHasFollowed] = useState(user.hasFollowed);
 
   const toggleFollow = () => {

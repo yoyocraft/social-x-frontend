@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import IconText from '@/components/IconText';
 import { InteractType, UgcType } from '@/constants/UgcConstant';
 import {
@@ -236,12 +237,16 @@ const QuestionPage: React.FC = () => {
                           rows: 3,
                           expandable: false,
                         }}
+                        style={{
+                          marginBottom: 4,
+                          fontSize: 16,
+                        }}
                       >
                         {item.summary}
                       </Typography.Paragraph>
                     }
                   />
-                  <Link to={`/question/${item.categoryId}`} style={{ marginTop: 8 }}>
+                  <Link to={`/question/${item.ugcId}`} style={{ fontSize: 16, color: '#1990ff' }}>
                     查看全文
                   </Link>
                 </List.Item>
@@ -252,6 +257,7 @@ const QuestionPage: React.FC = () => {
 
         <Col xs={24} md={6}>
           <Card style={{ background: 'red', padding: 16 }}>右侧内容</Card>
+          <Footer />
         </Col>
       </Row>
     </Card>

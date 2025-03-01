@@ -1,5 +1,6 @@
 import { Footer } from '@/components';
 import IconText from '@/components/IconText';
+import PostPublisher from '@/components/PostPublisher';
 import { InteractType, UgcType } from '@/constants/UgcConstant';
 import UserCard from '@/pages/User/components/UserCard';
 import {
@@ -35,7 +36,6 @@ import {
 } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import PostPublisher from '../components/PostPublisher';
 
 const { Content } = Layout;
 const { Text, Link, Paragraph } = Typography;
@@ -277,6 +277,13 @@ export default function PostPage() {
                           text="分享"
                           key="list-vertical-share-o"
                         />,
+                        <Link
+                          key={item.ugcId}
+                          href={`/post/${item.ugcId}`}
+                          style={{ color: '#1990ff' }}
+                        >
+                          查看原贴
+                        </Link>,
                       ]}
                     >
                       <List.Item.Meta

@@ -45,7 +45,7 @@ export default [
     path: '/article/:ugcId',
     name: '文章详情',
     hideInMenu: true,
-    component: './Ugc/Article/Detail',
+    component: './Ugc/Detail',
   },
   {
     path: '/article/publish',
@@ -60,10 +60,22 @@ export default [
     redirect: '/post',
   },
   {
+    path: '/post/:ugcId',
+    name: '帖子详情',
+    hideInMenu: true,
+    component: './Ugc/Post/Detail',
+  },
+  {
     path: '/question/publish',
     name: '提问题',
     hideInMenu: true,
     component: './Ugc/Question/Publish',
+  },
+  {
+    path: '/question/:ugcId',
+    name: '问题详情',
+    hideInMenu: true,
+    component: './Ugc/Detail',
   },
 
   {

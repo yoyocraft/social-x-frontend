@@ -169,7 +169,7 @@ const CommentItem: React.FC<{
               </Space>
             )}
 
-            <Space>
+            <Space size={16}>
               <IconText
                 icon={liked ? LikeFilled : LikeOutlined}
                 text={likeCount?.toString() || '0'}
