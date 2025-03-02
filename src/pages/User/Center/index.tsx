@@ -22,9 +22,7 @@ const UserCenter: React.FC = () => {
             <UserInfo {...initialState?.currentUser} />
           </ProCard>
 
-          <ProCard>
-            <UgcTabSection />
-          </ProCard>
+          <UgcTabSection />
         </Col>
 
         <Col span={6}>

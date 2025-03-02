@@ -1,54 +1,91 @@
-import { Tabs } from 'antd';
+import UserArticleList from '@/components/User/UserArticleList';
+import UserPostList from '@/components/User/UserPostList';
+import UserQuestionList from '@/components/User/UserQuestionList';
+import { Card, Select, Tabs } from 'antd';
 import React, { useState } from 'react';
 
 const tabItems = [
   {
     key: 'article',
     label: '文章',
-    children: 'Content of Tab 1',
   },
   {
     key: 'post',
     label: '动态',
-    children: 'Content of Tab 2',
   },
   {
     key: 'question',
     label: '问答',
-    children: 'Content of Tab 3',
   },
   {
     key: 'collection',
     label: '收藏',
-    children: 'Content of Tab 4',
-  },
-  {
-    key: 'like',
-    label: '喜欢',
-    children: 'Content of Tab 5',
   },
   {
     key: 'follow',
     label: '关注',
-    children: 'Content of Tab 6',
   },
 ];
 
+const ugcStatusTabItems = [
+  {
+    value: 'PUBLISHED',
+    label: '已发布',
+  },
+  {
+    value: 'AUDITING',
+    label: '审核中',
+  },
+  {
+    value: 'REJECTED',
+    label: '审核不通过',
+  },
+  {
+    value: 'PRIVATE',
+    label: '私有',
+  },
+  {
+    value: 'DRAFT',
+    label: '草稿',
+  },
+];
+
+const showExtraTabKeys = ['article', 'post', 'question'];
+
 const UgcTabSection: React.FC = () => {
   const [activeTabKey, setActiveTabKey] = useState('article');
+  const [ugcStatus, setUgcStatus] = useState('PUBLISHED');
 
   const handleTabChange = (key: string) => {
     setActiveTabKey(key);
   };
 
-  return (
-    <Tabs
-      activeKey={activeTabKey}
-      onChange={handleTabChange}
-      items={tabItems}
-      size="large"
-      style={{ minHeight: 500 }}
+  const handleUgcStatusChange = (value: string) => {
+    setUgcStatus(value);
+  };
+  const operations = showExtraTabKeys.includes(activeTabKey) && (
+    <Select
+      defaultValue={ugcStatus}
+      style={{ width: 120 }}
+      onChange={handleUgcStatusChange}
+      options={ugcStatusTabItems}
     />
+  );
+
+  return (
+    <Card>
+      <Tabs
+        activeKey={activeTabKey}
+        onChange={handleTabChange}
+        items={tabItems}
+        size="large"
+        tabBarExtraContent={operations}
+      />
+
+      {activeTabKey === 'article' && <UserArticleList self ugcStatus={ugcStatus} />}
+      {activeTabKey === 'post' && <UserPostList self ugcStatus={ugcStatus} />}
+      {activeTabKey === 'question' && <UserQuestionList self ugcStatus={ugcStatus} />}
+    </Card>
   );
 };
 

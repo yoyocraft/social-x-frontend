@@ -76,21 +76,6 @@ declare namespace API {
     url?: string;
   };
 
-  type listSelfUgcUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    qaStatus?: boolean;
-    reqId?: string;
-    size?: number;
-    tags?: string[];
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
   type NotificationPublishRequest = {
     content?: string;
     notificationType?: string;
@@ -219,39 +204,9 @@ declare namespace API {
     ugcId?: string;
   };
 
-  type queryUgcDetailUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    qaStatus?: boolean;
-    reqId?: string;
-    size?: number;
-    tags?: string[];
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
-  };
-
   type queryUnreadCountUsingGETParams = {
     queryAll?: boolean;
     reqId?: string;
-  };
-
-  type queryUserPageUgcUsingGETParams = {
-    authorId?: string;
-    categoryId?: string;
-    cursor?: string;
-    keyword?: string;
-    page?: number;
-    qaStatus?: boolean;
-    reqId?: string;
-    size?: number;
-    tags?: string[];
-    ugcId?: string;
-    ugcStatus?: string;
-    ugcType?: string;
   };
 
   type ResultBoolean_ = {
