@@ -1,0 +1,73 @@
+import { listSelfCollectedUgcUsingPost } from '@/services/socialx/ugcController';
+import { Divider, List, message, Skeleton } from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import UserArticleCard from '../UserArticleList/UserArticleCard';
+import UserPostCard from '../UserPostList/UserPostCard';
+import UserQuestionCard from '../UserQuestionList/UserQuestionCard';
+
+const UserCollectionList: React.FC = () => {
+  const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+
+  // 使用 useRef 管理 cursor
+  const cursorRef = useRef<number | null>(null);
+  const isFirstLoad = useRef(true);
+
+  const setUgcData = (res: API.ResultPageCursorResultLongUgcResponse_) => {
+    setUgcList((prev) => [...prev, ...(res.data?.data || [])]);
+    cursorRef.current = res.data?.cursor || null;
+    setHasMore(res.data?.hasMore || false);
+  };
+
+  const loadSelfCollectedUgc = async () => {
+    try {
+      const res = await listSelfCollectedUgcUsingPost({
+        // @ts-ignore
+        timeCursor: cursorRef.current,
+      });
+      setUgcData(res);
+    } catch (error: any) {
+      message.error('查询失败', error.message);
+    }
+  };
+
+  const renderUgcItem = (item: API.UgcResponse) => {
+    return (
+      <>
+        {item.type === 'ARTICLE' && <UserArticleCard article={item} />}
+        {item.type === 'POST' && <UserPostCard post={item} />}
+        {item.type === 'QUESTION' && <UserQuestionCard question={item} />}
+      </>
+    );
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await loadSelfCollectedUgc();
+      isFirstLoad.current = false;
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <InfiniteScroll
+      dataLength={ugcList.length}
+      next={loadSelfCollectedUgc}
+      hasMore={hasMore}
+      loader={<Skeleton avatar active />}
+      endMessage={<Divider plain>没有更多啦～</Divider>}
+      scrollableTarget="scrollableDiv"
+    >
+      <List
+        itemLayout="vertical"
+        size="large"
+        dataSource={ugcList}
+        renderItem={(item) => renderUgcItem(item)}
+      />
+    </InfiniteScroll>
+  );
+};
+
+export default UserCollectionList;

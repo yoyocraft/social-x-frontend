@@ -119,6 +119,12 @@ declare namespace API {
     hasMore?: boolean;
   };
 
+  type PageCursorResultLongUgcResponse_ = {
+    cursor?: number;
+    data?: UgcResponse[];
+    hasMore?: boolean;
+  };
+
   type PageCursorResultStringCommentaryResponse_ = {
     cursor?: string;
     data?: CommentaryResponse[];
@@ -265,6 +271,14 @@ declare namespace API {
     timestamp?: number;
   };
 
+  type ResultPageCursorResultLongUgcResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: PageCursorResultLongUgcResponse_;
+    message?: string;
+    timestamp?: number;
+  };
+
   type ResultPageCursorResultStringCommentaryResponse_ = {
     bizState?: string;
     code?: string;
@@ -391,6 +405,7 @@ declare namespace API {
     reqId?: string;
     size?: number;
     tags?: string[];
+    timeCursor?: number;
     ugcId?: string;
     ugcStatus?: string;
     ugcType?: string;
