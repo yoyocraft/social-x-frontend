@@ -1,7 +1,13 @@
-import { queryNotificationUsingGet } from '@/services/socialx/notificationController';
+import {
+  queryNotificationUsingGet,
+  queryUnreadCountUsingGet,
+  readAllNotificationByTypeUsingPost,
+  readAllNotificationUsingPost,
+  readSingleNotificationUsingPost,
+} from '@/services/socialx/notificationController';
 import { PageContainer } from '@ant-design/pro-components';
-import { history, useParams } from '@umijs/max';
-import { Button, Card, Divider, Empty, List, Skeleton, Space, Tabs } from 'antd';
+import { history, useModel, useParams } from '@umijs/max';
+import { Badge, Button, Card, Divider, Empty, List, message, Skeleton, Space, Tabs } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CommentNotificationItem from './CommentNotificationItem';
@@ -25,6 +31,14 @@ const NotificationPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const cursorRef = useRef('0');
   const firstLoad = useRef(true);
+  const { initialState } = useModel('@@initialState');
+
+  const [unreadCount, setUnreadCount] = useState<{ [key: string]: number }>({
+    comment: 0,
+    interact: 0,
+    follow: 0,
+    system: 0,
+  });
 
   // 监听 URL 变化，更新 activeKey
   useEffect(() => {
@@ -37,6 +51,68 @@ const NotificationPage = () => {
   const handleTabChange = (key: string) => {
     setActiveKey(key);
     history.push(`/notification/${key}`);
+  };
+
+  const markAsRead = async (notificationId: string, type: string) => {
+    try {
+      await readSingleNotificationUsingPost({ notificationId });
+
+      setNotificationList((prevList) =>
+        prevList.map((item) =>
+          item.notificationId === notificationId ? { ...item, read: true } : item,
+        ),
+      );
+
+      // 减少未读计数（确保不变负数）
+      setUnreadCount((prev) => ({
+        ...prev,
+        [type]: Math.max((prev[type] || 0) - 1, 0),
+      }));
+    } catch (error) {
+      message.error('标记已读失败，请重试');
+    }
+  };
+
+  const markTypeNotificationRead = async () => {
+    try {
+      await readAllNotificationByTypeUsingPost({
+        notificationType: activeKey.toUpperCase(),
+      });
+
+      setNotificationList((prevList) =>
+        prevList.map((item) =>
+          item.notificationType === activeKey.toUpperCase() ? { ...item, read: true } : item,
+        ),
+      );
+
+      // 当前类型未读数归零
+      setUnreadCount((prev) => ({
+        ...prev,
+        [activeKey]: 0,
+      }));
+    } catch (error) {
+      message.error('标记已读失败，请重试');
+    }
+  };
+
+  const markAllNotificationRead = async () => {
+    try {
+      await readAllNotificationUsingPost({
+        reqId: initialState?.currentUser?.userId,
+      });
+
+      setNotificationList((prevList) => prevList.map((item) => ({ ...item, read: true })));
+
+      // 所有未读数清零
+      setUnreadCount({
+        comment: 0,
+        interact: 0,
+        follow: 0,
+        system: 0,
+      });
+    } catch (error) {
+      message.error('标记已读失败，请重试');
+    }
   };
 
   const loadNotificationData = async () => {
@@ -52,6 +128,32 @@ const NotificationPage = () => {
     } catch (error: any) {}
   };
 
+  const queryUnreadNotificationCount = async () => {
+    try {
+      const res = await queryUnreadCountUsingGet({});
+      if (res.data?.unreadInfoList) {
+        const newUnreadCount: { [key: string]: number } = {
+          comment: 0,
+          interact: 0,
+          follow: 0,
+          system: 0,
+        };
+
+        res.data.unreadInfoList.forEach((item: API.NotificationUnreadInfo) => {
+          const key = item.notificationType ? item.notificationType.toLowerCase() : '';
+          if (newUnreadCount.hasOwnProperty(key)) {
+            newUnreadCount[key] = item.unreadCount ?? 0;
+          }
+        });
+
+        setUnreadCount(newUnreadCount);
+      }
+      console.log('unreadCount', unreadCount);
+    } catch (error) {
+      console.error('获取未读消息失败', error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -61,6 +163,7 @@ const NotificationPage = () => {
     };
 
     fetchData();
+    queryUnreadNotificationCount();
   }, []);
 
   useEffect(() => {
@@ -72,28 +175,32 @@ const NotificationPage = () => {
     loadNotificationData();
   }, [activeKey]);
 
+  const tabItems = items.map((tab) => ({
+    ...tab,
+    label: (
+      <Badge count={unreadCount[tab.key]} offset={[8, -2]} size="small">
+        {tab.label}
+      </Badge>
+    ),
+  }));
+
   const operations = (
     <Space>
-      <Button>已读当前</Button>
-      <Button type="primary">全部已读</Button>
+      <Button onClick={markTypeNotificationRead}>已读当前</Button>
+      <Button onClick={markAllNotificationRead} type="primary">
+        全部已读
+      </Button>
     </Space>
   );
 
   const renderNotificationItem = (item: API.NotificationResponse) => {
-    if (activeKey === 'comment') {
-      return <CommentNotificationItem notification={item} />;
-    } else if (activeKey === 'interact') {
-      return <InteractNotificationItem notification={item} />;
-    } else if (activeKey === 'follow') {
-      return <FollowNotificationItem notification={item} />;
-    } else if (activeKey === 'system') {
-      return <SystemNotificationItem notification={item} />;
-    }
-
     return (
-      <Card>
-        <Empty description="暂无通知" />
-      </Card>
+      <div onClick={() => item.notificationId && markAsRead(item.notificationId, activeKey)}>
+        {activeKey === 'comment' && <CommentNotificationItem notification={item} />}
+        {activeKey === 'interact' && <InteractNotificationItem notification={item} />}
+        {activeKey === 'follow' && <FollowNotificationItem notification={item} />}
+        {activeKey === 'system' && <SystemNotificationItem notification={item} />}
+      </div>
     );
   };
 
@@ -108,7 +215,7 @@ const NotificationPage = () => {
       <Card>
         <Tabs
           size="large"
-          items={items}
+          items={tabItems}
           activeKey={activeKey}
           onChange={handleTabChange}
           tabBarExtraContent={operations}

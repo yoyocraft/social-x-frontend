@@ -1,10 +1,12 @@
-import MarkdownPreview from '@uiw/react-markdown-preview';
-import { Avatar, List } from 'antd';
+import MdViewer from '@/components/MdViewer';
+import { Avatar, List, Space, Typography } from 'antd';
 import type React from 'react';
 
 interface Props {
   notification: API.NotificationResponse;
 }
+
+const { Text } = Typography;
 
 const SystemNotificationItem: React.FC<Props> = ({ notification }) => {
   return (
@@ -12,16 +14,13 @@ const SystemNotificationItem: React.FC<Props> = ({ notification }) => {
       <List.Item.Meta
         avatar={<Avatar size={40} src={notification.senderAvatar || '/placeholder-user.jpg'} />}
         title={
-          <MarkdownPreview
-            source={notification.content}
-            style={{
-              backgroundColor: 'transparent',
-              color: 'black',
-              fontSize: 18,
-            }}
-            className="markdown-preview"
-          />
+          <Space size={8}>
+            <Text strong style={{ fontSize: 15 }}>
+              {notification.summary}
+            </Text>
+          </Space>
         }
+        description={<MdViewer value={notification.content} />}
       />
     </List.Item>
   );

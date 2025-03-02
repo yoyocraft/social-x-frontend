@@ -91,6 +91,13 @@ declare namespace API {
     ugcType?: string;
   };
 
+  type NotificationPublishRequest = {
+    content?: string;
+    notificationType?: string;
+    reqId?: string;
+    title?: string;
+  };
+
   type NotificationReadRequest = {
     notificationId?: string;
     notificationType?: string;

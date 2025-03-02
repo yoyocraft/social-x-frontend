@@ -1,5 +1,5 @@
 import { dateTimeFormat } from '@/services/utils/time';
-import { Avatar, Button, List, Space, Typography } from 'antd';
+import { Avatar, Badge, Button, List, Space, Typography } from 'antd';
 import type React from 'react';
 
 const { Text } = Typography;
@@ -9,6 +9,7 @@ interface Props {
 }
 
 const FollowNotificationItem: React.FC<Props> = ({ notification }) => {
+  /* TODO */
   const toggleFollow = () => {};
   return (
     <List.Item
@@ -39,6 +40,7 @@ const FollowNotificationItem: React.FC<Props> = ({ notification }) => {
             <Text type="secondary" style={{ fontSize: 15 }}>
               {notification.summary}
             </Text>
+            {!notification.read && <Badge count="未读" style={{ fontSize: 12 }} />}
           </Space>
         }
         description={

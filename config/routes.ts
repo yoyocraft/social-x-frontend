@@ -99,7 +99,8 @@ export default [
     access: 'canAdmin',
     routes: [
       { path: '/admin', redirect: '/admin/config' },
-      { path: '/admin/config', name: '配置管理', component: './Config/Center' },
+      { path: '/admin/config', name: '配置管理', component: './Admin/Config' },
+      { path: '/admin/notification', name: '通知管理', component: './Admin/Notification' },
     ],
   },
   { path: '*', layout: false, component: './404' },
