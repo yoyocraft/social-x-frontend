@@ -5,7 +5,8 @@ import {
   NotificationOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import { Dropdown, MenuProps, message } from 'antd';
+import { useNavigate } from '@umijs/max';
+import { Dropdown, MenuProps } from 'antd';
 
 const items: MenuProps['items'] = [
   {
@@ -31,8 +32,9 @@ const items: MenuProps['items'] = [
 ];
 
 const NotifyBar: React.FC = () => {
+  const navigate = useNavigate();
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    message.info(`Click on item ${key}`);
+    navigate(`/notification/${key}`);
   };
   return (
     <Dropdown menu={{ items, onClick }} placement="bottom">

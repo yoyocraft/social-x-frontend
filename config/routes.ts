@@ -79,6 +79,20 @@ export default [
   },
 
   {
+    path: '/notification',
+    name: '通知',
+    hideInMenu: true,
+    redirect: '/notification/comment',
+  },
+
+  {
+    path: '/notification/:type',
+    name: '通知',
+    hideInMenu: true,
+    component: './Notification',
+  },
+
+  {
     path: '/admin',
     name: '管理页',
     icon: 'crown',

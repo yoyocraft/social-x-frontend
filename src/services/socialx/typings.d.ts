@@ -99,14 +99,17 @@ declare namespace API {
 
   type NotificationResponse = {
     content?: string;
-    notificationGroup?: string;
+    followed?: boolean;
+    gmtCreate?: number;
     notificationId?: string;
     notificationType?: string;
     read?: boolean;
-    receiverId?: string;
-    receiverName?: string;
+    senderAvatar?: string;
     senderId?: string;
     senderName?: string;
+    summary?: string;
+    targetId?: string;
+    targetType?: string;
   };
 
   type NotificationUnreadInfo = {
