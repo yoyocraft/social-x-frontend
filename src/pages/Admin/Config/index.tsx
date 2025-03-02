@@ -37,7 +37,7 @@ const ConfigCenter: React.FC = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [currentConfig, setCurrentConfig] = useState<API.ConfigInfoResponse | null>(null);
-  const [cursor, setCursor] = useState(0);
+  const cursorRef = useRef(0);
 
   const [newConfigKey, setNewConfigKey] = useState<string>('');
   const [newConfigType, setNewConfigType] = useState<string>(ConfigType.DEFAULT);
@@ -49,11 +49,11 @@ const ConfigCenter: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await queryConfigForMainPageUsingGet({ cursor });
+      const res = await queryConfigForMainPageUsingGet({ cursor: cursorRef.current });
       if (res?.data) {
         setDataSource((prev) => [...prev, ...(res?.data?.data || [])]);
         setHasMore(!!(res?.data?.data && res?.data?.data.length > 0));
-        setCursor(res?.data?.cursor || 0);
+        cursorRef.current = res?.data?.cursor || 0;
       }
     } catch (error) {
       message.error('加载数据失败');
@@ -204,7 +204,6 @@ const ConfigCenter: React.FC = () => {
               ellipsis: true,
               tooltip: '标题过长会自动收缩',
             },
-
             {
               title: '类型',
               dataIndex: 'configType',
