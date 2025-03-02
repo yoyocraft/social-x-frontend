@@ -1,19 +1,15 @@
-import IconText from '@/components/IconText';
 import { UgcType } from '@/constants/UgcConstant';
 import { listSelfUgcUsingPost, queryUserPageUgcUsingPost } from '@/services/socialx/ugcController';
-import { dateTimeFormat } from '@/services/utils/time';
-import { CommentOutlined, LikeOutlined, ShareAltOutlined, StarOutlined } from '@ant-design/icons';
 import { useParams } from '@umijs/max';
-import { Avatar, Divider, Image, List, message, Skeleton, Space, Typography } from 'antd';
+import { Divider, List, message, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import UserPostCard from './UserPostCard';
 
 interface Props {
   self?: boolean;
   ugcStatus?: string;
 }
-const { Link, Text, Paragraph } = Typography;
-
 const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }) => {
   const params = useParams();
   const { userId } = params;
@@ -28,34 +24,6 @@ const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }
     setPostList((prev) => [...prev, ...(res.data?.data || [])]);
     cursorRef.current = res.data?.cursor || '0';
     setHasMore(res.data?.hasMore || false);
-  };
-
-  const renderPostContent = (item: API.UgcResponse) => {
-    const hasLink = item.content?.includes('http');
-
-    // 处理换行符，将 \n 转换为 <br />，保持原始格式
-    const contentWithLineBreaks = item.content?.split('\n');
-
-    // 如果没有链接，直接渲染内容并保留换行
-    if (!hasLink) {
-      return contentWithLineBreaks?.map((line, index) => <Paragraph key={index}>{line}</Paragraph>);
-    }
-
-    return (
-      <>
-        {contentWithLineBreaks?.map((line, index) => {
-          if (line.startsWith('http')) {
-            return (
-              <Link key={index} href={line} target="_blank">
-                {line}
-              </Link>
-            );
-          }
-          // 渲染其他文本内容
-          return <Paragraph key={index}>{line}</Paragraph>;
-        })}
-      </>
-    );
   };
 
   const loadSelfArticles = async () => {
@@ -127,56 +95,7 @@ const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }
         itemLayout="vertical"
         size="large"
         dataSource={postList}
-        renderItem={(item) => (
-          <List.Item
-            key={item.ugcId}
-            style={{
-              padding: '24px 0',
-              borderBottom: '1px solid rgba(0,0,0,0.06)',
-            }}
-            actions={[
-              <IconText
-                icon={LikeOutlined}
-                text={item.likeCount?.toString() || '0'}
-                key="list-vertical-like-o"
-              />,
-              <IconText
-                icon={CommentOutlined}
-                text={item.commentaryCount?.toString() || '0'}
-                key="list-vertical-comment-o"
-              />,
-              <IconText
-                icon={StarOutlined}
-                text={item.collectCount?.toString() || '0'}
-                key="list-vertical-star-o"
-              />,
-              <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />,
-              <Link key={item.ugcId} href={`/post/${item.ugcId}`} style={{ color: '#1990ff' }}>
-                查看原贴
-              </Link>,
-            ]}
-          >
-            <List.Item.Meta
-              avatar={<Avatar src={item.author?.avatar} size={40} />}
-              title={
-                <Space size={2} direction="vertical">
-                  <Text strong>{item.author?.nickname}</Text>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
-                  </Text>
-                </Space>
-              }
-            />
-            <div style={{ margin: '8px 0' }}>{renderPostContent(item)}</div>
-            {item.attachmentUrls && item.attachmentUrls.length > 0 && (
-              <Space size={[16, 8]} wrap style={{ marginTop: 16 }}>
-                {item.attachmentUrls.map((url, index) => (
-                  <Image key={index} width={100} src={url} fallback="/media/fallback/1.png" />
-                ))}
-              </Space>
-            )}
-          </List.Item>
-        )}
+        renderItem={(item) => <UserPostCard post={item} />}
       />
     </InfiniteScroll>
   );

@@ -85,6 +85,21 @@ export async function listSelfUgcUsingPost(
   });
 }
 
+/** listSelfCollectedUgc POST /api/ugc/me/collected */
+export async function listSelfCollectedUgcUsingPost(
+  body: API.UgcQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultLongUgcResponse_>('/api/ugc/me/collected', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** publishUgc POST /api/ugc/publish */
 export async function publishUgcUsingPost(
   body: API.UgcPublishRequest,

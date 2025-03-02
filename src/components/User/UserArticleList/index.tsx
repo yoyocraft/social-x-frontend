@@ -1,13 +1,10 @@
-import IconText from '@/components/IconText';
-import TagList from '@/components/TagList';
 import { UgcType } from '@/constants/UgcConstant';
 import { listSelfUgcUsingPost, queryUserPageUgcUsingPost } from '@/services/socialx/ugcController';
-import { dateTimeFormat } from '@/services/utils/time';
-import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import { useParams } from '@umijs/max';
-import { Divider, Empty, List, message, Skeleton, Space, Typography } from 'antd';
+import { Divider, Empty, List, message, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import UserArticleCard from './UserArticleCard';
 
 interface Props {
   self?: boolean;
@@ -102,81 +99,7 @@ const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED
         locale={{
           emptyText: <Empty description="暂无数据" />,
         }}
-        renderItem={(item) => (
-          <List.Item
-            key={item.title}
-            style={{
-              padding: '24px 0',
-              borderBottom: '1px solid rgba(0,0,0,0.06)',
-              transition: 'background-color 0.3s',
-            }}
-            actions={[
-              <IconText
-                icon={EyeOutlined}
-                text={item.viewCount?.toString() || '0'}
-                key="list-vertical-view-o"
-              />,
-              <IconText
-                icon={LikeOutlined}
-                text={item.likeCount?.toString() || '0'}
-                key="list-vertical-like-o"
-              />,
-              <IconText
-                icon={StarOutlined}
-                text={item.collectCount?.toString() || '0'}
-                key="list-vertical-star-o"
-              />,
-            ]}
-            extra={
-              item.cover && (
-                <img
-                  alt="cover"
-                  src={item.cover}
-                  style={{
-                    width: 200,
-                    height: 120,
-                    objectFit: 'cover',
-                    borderRadius: 4,
-                    marginLeft: 24,
-                  }}
-                />
-              )
-            }
-          >
-            <List.Item.Meta
-              title={
-                <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
-                  <a href={`/article/${item.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
-                    {item.title}
-                  </a>
-                </Typography.Title>
-              }
-              description={
-                <Typography.Paragraph
-                  ellipsis={{ rows: 2 }}
-                  style={{
-                    color: 'rgba(0,0,0,0.65)',
-                    marginBottom: 4,
-                    fontSize: 14,
-                  }}
-                >
-                  {item.summary}
-                </Typography.Paragraph>
-              }
-            />
-            <Space size={8} align="center">
-              <Typography.Text>{item.author?.nickname}</Typography.Text>
-              <Divider type="vertical" />
-              <Typography.Text style={{ fontSize: 12 }}>
-                {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
-              </Typography.Text>
-              <Divider type="vertical" />
-              <Space size={4}>
-                <TagList tags={item.tags} />
-              </Space>
-            </Space>
-          </List.Item>
-        )}
+        renderItem={(item) => <UserArticleCard article={item} />}
       />
     </InfiniteScroll>
   );

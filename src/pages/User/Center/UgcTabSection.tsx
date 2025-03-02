@@ -1,4 +1,5 @@
 import UserArticleList from '@/components/User/UserArticleList';
+import UserCollectionList from '@/components/User/UserCollectionList';
 import UserPostList from '@/components/User/UserPostList';
 import UserQuestionList from '@/components/User/UserQuestionList';
 import { Card, Select, Tabs } from 'antd';
@@ -85,6 +86,7 @@ const UgcTabSection: React.FC = () => {
       {activeTabKey === 'article' && <UserArticleList self ugcStatus={ugcStatus} />}
       {activeTabKey === 'post' && <UserPostList self ugcStatus={ugcStatus} />}
       {activeTabKey === 'question' && <UserQuestionList self ugcStatus={ugcStatus} />}
+      {activeTabKey === 'collection' && <UserCollectionList />}
     </Card>
   );
 };
