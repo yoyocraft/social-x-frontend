@@ -2,7 +2,7 @@ import IconText from '@/components/IconText';
 import TagList from '@/components/TagList';
 import { dateTimeFormat } from '@/services/utils/time';
 import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
-import { Divider, List, Space, Typography } from 'antd';
+import { Divider, Image, List, Space, Typography } from 'antd';
 
 interface Props {
   article: API.UgcResponse;
@@ -36,15 +36,12 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
       ]}
       extra={
         article.cover && (
-          <img
-            alt="cover"
+          <Image
+            width={200}
             src={article.cover}
             style={{
-              width: 200,
-              height: 120,
+              height: 150,
               objectFit: 'cover',
-              borderRadius: 4,
-              marginLeft: 24,
             }}
           />
         )

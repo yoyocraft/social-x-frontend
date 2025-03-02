@@ -1,8 +1,10 @@
 import UserArticleList from '@/components/User/UserArticleList';
 import UserCollectionList from '@/components/User/UserCollectionList';
+import UserFollowerList from '@/components/User/UserFollowerList';
 import UserPostList from '@/components/User/UserPostList';
 import UserQuestionList from '@/components/User/UserQuestionList';
-import { Card, Select, Tabs } from 'antd';
+import { ProCard } from '@ant-design/pro-components';
+import { Select, Tabs } from 'antd';
 import React, { useState } from 'react';
 
 const tabItems = [
@@ -74,7 +76,7 @@ const UgcTabSection: React.FC = () => {
   );
 
   return (
-    <Card>
+    <ProCard bodyStyle={{ padding: 24 }}>
       <Tabs
         activeKey={activeTabKey}
         onChange={handleTabChange}
@@ -87,7 +89,8 @@ const UgcTabSection: React.FC = () => {
       {activeTabKey === 'post' && <UserPostList self ugcStatus={ugcStatus} />}
       {activeTabKey === 'question' && <UserQuestionList self ugcStatus={ugcStatus} />}
       {activeTabKey === 'collection' && <UserCollectionList />}
-    </Card>
+      {activeTabKey === 'follow' && <UserFollowerList />}
+    </ProCard>
   );
 };
 

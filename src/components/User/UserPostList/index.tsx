@@ -1,7 +1,7 @@
 import { UgcType } from '@/constants/UgcConstant';
 import { listSelfUgcUsingPost, queryUserPageUgcUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
-import { Divider, List, message, Skeleton } from 'antd';
+import { List, message, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserPostCard from './UserPostCard';
@@ -88,7 +88,6 @@ const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }
       next={loadUgcData}
       hasMore={hasMore}
       loader={<Skeleton avatar active />}
-      endMessage={<Divider plain>没有更多啦～</Divider>}
       scrollableTarget="scrollableDiv"
     >
       <List

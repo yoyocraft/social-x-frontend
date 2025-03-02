@@ -1,3 +1,4 @@
+import { Footer } from '@/components';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Col, Row } from 'antd';
@@ -27,6 +28,7 @@ const UserCenter: React.FC = () => {
 
         <Col span={6}>
           <UserSiderBar {...initialState?.currentUser} />
+          <Footer />
         </Col>
       </Row>
     </PageContainer>
