@@ -1,45 +1,10 @@
 import { Footer } from '@/components';
-import IconText from '@/components/IconText';
-import { InteractType, UgcType } from '@/constants/UgcConstant';
-import {
-  interactUgcUsingPost,
-  listQuestionsUsingPost,
-  listTimelineUgcFeedUsingPost,
-} from '@/services/socialx/ugcController';
+import QuestionList from '@/components/Ugc/QuestionList';
 import { queryUgcQuestionCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
-import { dateTimeFormat } from '@/services/utils/time';
-import {
-  CheckCircleFilled,
-  CommentOutlined,
-  LikeFilled,
-  LikeOutlined,
-  QuestionOutlined,
-  ShareAltOutlined,
-  StarFilled,
-  StarOutlined,
-} from '@ant-design/icons';
-import { Link } from '@umijs/max';
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  List,
-  message,
-  Row,
-  Skeleton,
-  Space,
-  Tabs,
-  Tag,
-  Typography,
-} from 'antd';
+import { QuestionOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Divider, Form, Row, Space, Tabs, Tag, Typography } from 'antd';
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-
-const { Text } = Typography;
+import { useEffect, useState } from 'react';
 
 const items = [
   {
@@ -56,48 +21,9 @@ const items = [
   },
 ];
 const QuestionPage: React.FC = () => {
-  const [questionList, setQuestionList] = useState<API.UgcResponse[]>([]);
   const [questionTags, setQuestionTags] = useState<API.UgcCategoryInfoResponse[]>([]);
   const [selectedTag, setSelectedTag] = useState<API.UgcCategoryInfoResponse>();
   const [qaStatus, setQaStatus] = useState<string>('all');
-  const [hasMore, setHasMore] = useState(false);
-  const cursorRef = useRef('0');
-  const firstLoad = useRef(true);
-
-  const timelineQuestionFeed = async () => {
-    try {
-      const res = await listTimelineUgcFeedUsingPost({
-        ugcType: UgcType.QUESTION,
-        cursor: cursorRef.current,
-        categoryId: selectedTag?.categoryId,
-      });
-      setQuestionList((prev) => [...prev, ...(res.data?.data || [])]);
-      cursorRef.current = res.data?.cursor || '0';
-      setHasMore(res.data?.hasMore || false);
-    } catch {}
-  };
-
-  const listQuestionsWithQaStatusAndCursor = async () => {
-    try {
-      const res = await listQuestionsUsingPost({
-        ugcType: UgcType.QUESTION,
-        cursor: cursorRef.current,
-        categoryId: selectedTag?.categoryId,
-        qaStatus: qaStatus === 'adopted',
-      });
-      setQuestionList((prev) => [...prev, ...(res.data?.data || [])]);
-      cursorRef.current = res.data?.cursor || '0';
-      setHasMore(res.data?.hasMore || false);
-    } catch {}
-  };
-
-  const loadQuestions = async () => {
-    if (qaStatus === 'all') {
-      await timelineQuestionFeed();
-    } else {
-      await listQuestionsWithQaStatusAndCursor();
-    }
-  };
 
   const loadQuestionTags = async () => {
     try {
@@ -106,56 +32,12 @@ const QuestionPage: React.FC = () => {
       setSelectedTag(res.data?.ugcCategoryList?.[0]);
     } catch (error: any) {}
   };
-  const handleInteraction = (item: API.UgcResponse, interactionType: InteractType) => {
-    const ugcId = item.ugcId;
-    const interactionField = interactionType === InteractType.LIKE ? 'likeCount' : 'collectCount';
-    const hasInteractionField = interactionType === InteractType.LIKE ? 'liked' : 'collected';
-
-    interactUgcUsingPost({
-      targetId: ugcId,
-      interactionType: interactionType,
-      interact: !item[hasInteractionField],
-      reqId: ugcId,
-    })
-      .then(() => {
-        setQuestionList((prev) => {
-          return prev.map((prevItem) => {
-            if (prevItem.ugcId === ugcId) {
-              return {
-                ...prevItem,
-                [interactionField]:
-                  prevItem[interactionField] || 0 + (item[hasInteractionField] ? -1 : 1),
-                [hasInteractionField]: !item[hasInteractionField],
-              };
-            }
-            return prevItem;
-          });
-        });
-        message.success(`${interactionType === InteractType.LIKE ? '点赞' : '收藏'}成功`);
-      })
-      .catch(() => {
-        message.error(`${interactionType === InteractType.LIKE ? '点赞' : '收藏'}失败，请重试`);
-      });
-  };
-
-  const handleLike = (item: API.UgcResponse) => {
-    handleInteraction(item, InteractType.LIKE);
-  };
-
-  const handleCollect = (item: API.UgcResponse) => {
-    handleInteraction(item, InteractType.COLLECT);
-  };
 
   const handleSelect = (tag: API.UgcCategoryInfoResponse) => {
     setSelectedTag(tag);
   };
 
   const handleQaStatusChange = (key: string) => {
-    if (qaStatus === 'all') {
-      setQaStatus('');
-      return;
-    }
-
     setQaStatus(key);
   };
 
@@ -166,25 +48,8 @@ const QuestionPage: React.FC = () => {
   );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await loadQuestionTags();
-        await loadQuestions();
-        firstLoad.current = false;
-      } catch (error) {}
-    };
-
-    fetchData();
+    loadQuestionTags();
   }, []);
-
-  useEffect(() => {
-    if (firstLoad.current) {
-      return;
-    }
-    cursorRef.current = '0';
-    setQuestionList([]);
-    loadQuestions();
-  }, [selectedTag, qaStatus]);
 
   return (
     <Card style={{ margin: '0 24px', padding: '16px' }}>
@@ -223,98 +88,7 @@ const QuestionPage: React.FC = () => {
             onChange={handleQaStatusChange}
             size="middle"
           />
-          <InfiniteScroll
-            dataLength={questionList.length}
-            next={timelineQuestionFeed}
-            hasMore={hasMore}
-            loader={<Skeleton avatar active />}
-            endMessage={<Divider plain>没有更多啦～</Divider>}
-            scrollableTarget="scrollableDiv"
-          >
-            <List
-              itemLayout="vertical"
-              size="large"
-              dataSource={questionList}
-              renderItem={(item) => (
-                <List.Item
-                  key={item.ugcId}
-                  style={{
-                    padding: '24px 0',
-                    borderBottom: '1px solid rgba(0,0,0,0.06)',
-                  }}
-                  actions={[
-                    <Space key={item.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
-                      <Text key={item.gmtCreate} type="secondary" style={{ fontSize: 12 }}>
-                        {item.gmtCreate
-                          ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm')
-                          : 'N/A'}
-                      </Text>
-                      <IconText
-                        icon={item.liked ? LikeFilled : LikeOutlined}
-                        text={item.likeCount?.toString() || '0'}
-                        key="list-vertical-like-o"
-                        onClick={() => handleLike(item)}
-                      />
-                      <IconText
-                        icon={CommentOutlined}
-                        text={item.commentaryCount?.toString() || '0'}
-                        key="list-vertical-comment-o"
-                      />
-                      <IconText
-                        icon={item.collected ? StarFilled : StarOutlined}
-                        text={item.collectCount?.toString() || '0'}
-                        key="list-vertical-star-o"
-                        onClick={() => handleCollect(item)}
-                      />
-                      <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />
-                      <Space key={item.author?.userId}>
-                        <Avatar size={32} src={item.author?.avatar} />
-                        <Text>{item.author?.nickname}</Text>
-                      </Space>
-                      {item.hasSolved && (
-                        <Tag
-                          icon={<CheckCircleFilled />}
-                          color="success"
-                          style={{
-                            padding: '0 8px',
-                            borderRadius: '4px',
-                            fontSize: '12px',
-                            lineHeight: '18px',
-                            margin: 0,
-                          }}
-                        >
-                          已解决
-                        </Tag>
-                      )}
-                    </Space>,
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={<Typography.Title level={4}>{item.title}</Typography.Title>}
-                    description={
-                      <Typography.Paragraph
-                        strong
-                        type="secondary"
-                        ellipsis={{
-                          rows: 3,
-                          expandable: false,
-                        }}
-                        style={{
-                          marginBottom: 4,
-                          fontSize: 16,
-                        }}
-                      >
-                        {item.summary}
-                      </Typography.Paragraph>
-                    }
-                  />
-                  <Link to={`/question/${item.ugcId}`} style={{ fontSize: 16, color: '#1990ff' }}>
-                    查看全文
-                  </Link>
-                </List.Item>
-              )}
-            />
-          </InfiniteScroll>
+          <QuestionList category={selectedTag} qaStatus={qaStatus} />
         </Col>
 
         <Col xs={24} md={6}>

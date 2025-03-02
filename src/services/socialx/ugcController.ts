@@ -17,17 +17,17 @@ export async function deleteUgcUsingPost(
   });
 }
 
-/** queryUgcDetail GET /api/ugc/detail */
-export async function queryUgcDetailUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryUgcDetailUsingGETParams,
+/** queryUgcDetail POST /api/ugc/detail */
+export async function queryUgcDetailUsingPost(
+  body: API.UgcQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultUgcResponse_>('/api/ugc/detail', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }
@@ -70,17 +70,17 @@ export async function interactUgcUsingPost(
   });
 }
 
-/** listSelfUgc GET /api/ugc/me */
-export async function listSelfUgcUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.listSelfUgcUsingGETParams,
+/** listSelfUgc POST /api/ugc/me */
+export async function listSelfUgcUsingPost(
+  body: API.UgcQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/me', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }
@@ -160,17 +160,17 @@ export async function listTimelineUgcFeedUsingPost(
   });
 }
 
-/** queryUserPageUgc GET /api/ugc/user */
-export async function queryUserPageUgcUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryUserPageUgcUsingGETParams,
+/** queryUserPageUgc POST /api/ugc/user */
+export async function queryUserPageUgcUsingPost(
+  body: API.UgcQueryRequest,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultStringUgcResponse_>('/api/ugc/user', {
-    method: 'GET',
-    params: {
-      ...params,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    data: body,
     ...(options || {}),
   });
 }

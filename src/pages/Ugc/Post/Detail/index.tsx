@@ -4,7 +4,7 @@ import MdViewer from '@/components/MdViewer';
 import RelatedContentCard from '@/components/RelatedContentCard';
 import { InteractType } from '@/constants/UgcConstant';
 import UserCard from '@/pages/User/components/UserCard';
-import { interactUgcUsingPost, queryUgcDetailUsingGet } from '@/services/socialx/ugcController';
+import { interactUgcUsingPost, queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   LikeFilled,
@@ -153,7 +153,7 @@ const PostDetail: React.FC = () => {
   const [postDetail, setPostDetail] = useState<API.UgcResponse | null>(null);
 
   const loadUgcDetail = async () => {
-    const res = await queryUgcDetailUsingGet({ ugcId });
+    const res = await queryUgcDetailUsingPost({ ugcId });
     if (res.data) {
       setPostDetail(res.data);
     }
