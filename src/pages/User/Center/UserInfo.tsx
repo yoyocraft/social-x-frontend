@@ -6,12 +6,17 @@ import {
   GlobalOutlined,
 } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
+import { useNavigate } from '@umijs/max';
 import { Avatar, Button, Space, Typography } from 'antd';
 import type React from 'react';
 
 const { Text, Title } = Typography;
 
 const UserInfo: React.FC<API.UserBasicInfoResponse> = (userInfo) => {
+  const navigate = useNavigate();
+  const gotoUserSettingPage = () => {
+    navigate('/account/settings/profile');
+  };
   return (
     <ProCard bodyStyle={{ padding: 24 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -53,6 +58,7 @@ const UserInfo: React.FC<API.UserBasicInfoResponse> = (userInfo) => {
               borderColor: '#1677ff',
               color: '#1677ff',
             }}
+            onClick={gotoUserSettingPage}
           >
             设置
           </Button>

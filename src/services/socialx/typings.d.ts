@@ -125,6 +125,12 @@ declare namespace API {
     hasMore?: boolean;
   };
 
+  type PageCursorResultLongUserBasicInfoResponse_ = {
+    cursor?: number;
+    data?: UserBasicInfoResponse[];
+    hasMore?: boolean;
+  };
+
   type PageCursorResultStringCommentaryResponse_ = {
     cursor?: string;
     data?: CommentaryResponse[];
@@ -140,12 +146,6 @@ declare namespace API {
   type PageCursorResultStringUgcResponse_ = {
     cursor?: string;
     data?: UgcResponse[];
-    hasMore?: boolean;
-  };
-
-  type PageCursorResultStringUserBasicInfoResponse_ = {
-    cursor?: string;
-    data?: UserBasicInfoResponse[];
     hasMore?: boolean;
   };
 
@@ -178,28 +178,28 @@ declare namespace API {
     size?: number;
   };
 
-  type queryFollowersUsingGETParams = {
-    cursor?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-    userId?: string;
-  };
-
-  type queryFollowingUsersUsingGETParams = {
-    cursor?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-    userId?: string;
-  };
-
   type queryNotificationUsingGETParams = {
     cursor?: string;
     notificationType?: string;
     page?: number;
     reqId?: string;
     size?: number;
+  };
+
+  type querySelfFollowersUsingGETParams = {
+    cursor?: number;
+    page?: number;
+    reqId?: string;
+    size?: number;
+    userId?: string;
+  };
+
+  type querySelfFollowingUsersUsingGETParams = {
+    cursor?: number;
+    page?: number;
+    reqId?: string;
+    size?: number;
+    userId?: string;
   };
 
   type queryUgcCommentaryUsingGETParams = {
@@ -279,6 +279,14 @@ declare namespace API {
     timestamp?: number;
   };
 
+  type ResultPageCursorResultLongUserBasicInfoResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: PageCursorResultLongUserBasicInfoResponse_;
+    message?: string;
+    timestamp?: number;
+  };
+
   type ResultPageCursorResultStringCommentaryResponse_ = {
     bizState?: string;
     code?: string;
@@ -299,14 +307,6 @@ declare namespace API {
     bizState?: string;
     code?: string;
     data?: PageCursorResultStringUgcResponse_;
-    message?: string;
-    timestamp?: number;
-  };
-
-  type ResultPageCursorResultStringUserBasicInfoResponse_ = {
-    bizState?: string;
-    code?: string;
-    data?: PageCursorResultStringUserBasicInfoResponse_;
     message?: string;
     timestamp?: number;
   };
