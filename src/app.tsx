@@ -7,7 +7,7 @@ import { history, Link } from '@umijs/max';
 import { md5 } from 'js-md5';
 import defaultSettings from '../config/defaultSettings';
 import NotifyBar from './components/NotifyBar';
-import TopSearch from './components/TopSearch';
+import SearchBar from './components/SearchBar';
 import UgcDropdown from './components/UgcDropdown';
 import { requestConfig } from './requestErrorConfig';
 import { getCurrentUserUsingGet } from './services/socialx/userController';
@@ -61,7 +61,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     logo: '/logo.svg',
     actionsRender: () => [
-      <TopSearch key="search" />,
+      history.location.pathname !== '/search' && <SearchBar key="search" />,
       <UgcDropdown key="ugc" />,
       <NotifyBar key="notify" />,
     ],

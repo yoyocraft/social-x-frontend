@@ -93,6 +93,13 @@ export default [
   },
 
   {
+    path: '/search',
+    name: '搜索页',
+    hideInMenu: true,
+    component: './Search',
+  },
+
+  {
     path: '/admin',
     name: '管理页',
     icon: 'crown',
