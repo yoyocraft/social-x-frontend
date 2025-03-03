@@ -143,72 +143,74 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
   };
 
   return (
-    <InfiniteScroll
-      dataLength={postList.length}
-      next={loadPostData}
-      hasMore={hasMore}
-      loader={<Skeleton avatar active />}
-      endMessage={<Divider plain>没有更多啦～</Divider>}
-      scrollableTarget="scrollableDiv"
-    >
-      <List
-        itemLayout="vertical"
-        size="large"
-        dataSource={postList}
-        renderItem={(item) => (
-          <List.Item
-            key={item.ugcId}
-            style={{
-              padding: '24px 0',
-              borderBottom: '1px solid rgba(0,0,0,0.06)',
-            }}
-            actions={[
-              <IconText
-                icon={item.liked ? LikeFilled : LikeOutlined}
-                text={item.likeCount?.toString() || '0'}
-                key="list-vertical-like-o"
-                onClick={() => handleLike(item)}
-              />,
-              <IconText
-                icon={CommentOutlined}
-                text={item.commentaryCount?.toString() || '0'}
-                key="list-vertical-comment-o"
-              />,
-              <IconText
-                icon={item.collected ? StarFilled : StarOutlined}
-                text={item.collectCount?.toString() || '0'}
-                key="list-vertical-star-o"
-                onClick={() => handleCollect(item)}
-              />,
-              <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />,
-              <Link key={item.ugcId} href={`/post/${item.ugcId}`} style={{ color: '#1990ff' }}>
-                查看原贴
-              </Link>,
-            ]}
-          >
-            <List.Item.Meta
-              avatar={<Avatar src={item.author?.avatar} size={40} />}
-              title={
-                <Space size={2} direction="vertical">
-                  <Text strong>{item.author?.nickname}</Text>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
-                  </Text>
+    <div id="scrollableDiv">
+      <InfiniteScroll
+        dataLength={postList.length}
+        next={loadPostData}
+        hasMore={hasMore}
+        loader={<Skeleton avatar active />}
+        endMessage={<Divider plain>没有更多啦～</Divider>}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={postList}
+          renderItem={(item) => (
+            <List.Item
+              key={item.ugcId}
+              style={{
+                padding: '24px 0',
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
+              }}
+              actions={[
+                <IconText
+                  icon={item.liked ? LikeFilled : LikeOutlined}
+                  text={item.likeCount?.toString() || '0'}
+                  key="list-vertical-like-o"
+                  onClick={() => handleLike(item)}
+                />,
+                <IconText
+                  icon={CommentOutlined}
+                  text={item.commentaryCount?.toString() || '0'}
+                  key="list-vertical-comment-o"
+                />,
+                <IconText
+                  icon={item.collected ? StarFilled : StarOutlined}
+                  text={item.collectCount?.toString() || '0'}
+                  key="list-vertical-star-o"
+                  onClick={() => handleCollect(item)}
+                />,
+                <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />,
+                <Link key={item.ugcId} href={`/post/${item.ugcId}`} style={{ color: '#1990ff' }}>
+                  查看原贴
+                </Link>,
+              ]}
+            >
+              <List.Item.Meta
+                avatar={<Avatar src={item.author?.avatar} size={40} />}
+                title={
+                  <Space size={2} direction="vertical">
+                    <Text strong>{item.author?.nickname}</Text>
+                    <Text type="secondary" style={{ fontSize: 12 }}>
+                      {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
+                    </Text>
+                  </Space>
+                }
+              />
+              <div style={{ margin: '8px 0' }}>{renderPostContent(item)}</div>
+              {item.attachmentUrls && item.attachmentUrls.length > 0 && (
+                <Space size={[16, 8]} wrap style={{ marginTop: 16 }}>
+                  {item.attachmentUrls.map((url, index) => (
+                    <Image key={index} width={100} src={url} fallback="/media/fallback/1.png" />
+                  ))}
                 </Space>
-              }
-            />
-            <div style={{ margin: '8px 0' }}>{renderPostContent(item)}</div>
-            {item.attachmentUrls && item.attachmentUrls.length > 0 && (
-              <Space size={[16, 8]} wrap style={{ marginTop: 16 }}>
-                {item.attachmentUrls.map((url, index) => (
-                  <Image key={index} width={100} src={url} fallback="/media/fallback/1.png" />
-                ))}
-              </Space>
-            )}
-          </List.Item>
-        )}
-      />
-    </InfiniteScroll>
+              )}
+            </List.Item>
+          )}
+        />
+      </InfiniteScroll>
+    </div>
   );
 };
 

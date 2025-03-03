@@ -2,7 +2,7 @@ import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
 import RelatedContentCard from '@/components/RelatedContentCard';
 import UgcCard from '@/components/UgcCard';
-import UserCard from '@/pages/User/components/UserCard';
+import UserCard from '@/components/User/UserCard';
 import { queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
 import { Affix, Col, Row, Skeleton, Space } from 'antd';

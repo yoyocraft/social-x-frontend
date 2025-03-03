@@ -1,5 +1,5 @@
 import { listSelfCollectedUgcUsingPost } from '@/services/socialx/ugcController';
-import { Divider, List, message, Skeleton } from 'antd';
+import { List, message, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserArticleCard from '../UserArticleList/UserArticleCard';
@@ -10,7 +10,6 @@ const UserCollectionList: React.FC = () => {
   const [ugcList, setUgcList] = useState<API.UgcResponse[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
-  // 使用 useRef 管理 cursor
   const cursorRef = useRef<number | null>(null);
   const isFirstLoad = useRef(true);
 
@@ -52,21 +51,22 @@ const UserCollectionList: React.FC = () => {
   }, []);
 
   return (
-    <InfiniteScroll
-      dataLength={ugcList.length}
-      next={loadSelfCollectedUgc}
-      hasMore={hasMore}
-      loader={<Skeleton avatar active />}
-      endMessage={<Divider plain>没有更多啦～</Divider>}
-      scrollableTarget="scrollableDiv"
-    >
-      <List
-        itemLayout="vertical"
-        size="large"
-        dataSource={ugcList}
-        renderItem={(item) => renderUgcItem(item)}
-      />
-    </InfiniteScroll>
+    <div id="scrollableDiv">
+      <InfiniteScroll
+        dataLength={ugcList.length}
+        next={loadSelfCollectedUgc}
+        hasMore={hasMore}
+        loader={<Skeleton avatar active />}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={ugcList}
+          renderItem={(item) => renderUgcItem(item)}
+        />
+      </InfiniteScroll>
+    </div>
   );
 };
 

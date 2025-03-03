@@ -1,17 +1,17 @@
-import { querySelfFollowersUsingGet } from '@/services/socialx/userController';
+import { querySelfFollowingUsersUsingGet } from '@/services/socialx/userController';
 import { Empty, List, message, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserFollowRelationCard from '../UserCard/UserFollowRelationCard';
 
-const UserFollowerList: React.FC = () => {
+const UserFollowingUserList: React.FC = () => {
   const [followerList, setFollowerList] = useState<API.UserBasicInfoResponse[]>([]);
   const cursorRef = useRef<number | null>(null);
   const [hasMore, setHasMore] = useState(false);
 
   const loadSelfFollowingUsers = async () => {
     try {
-      const res = await querySelfFollowersUsingGet({
+      const res = await querySelfFollowingUsersUsingGet({
         // @ts-ignore
         cursor: cursorRef.current,
       });
@@ -19,7 +19,7 @@ const UserFollowerList: React.FC = () => {
       setHasMore(res.data?.hasMore || false);
       cursorRef.current = res.data?.cursor || null;
     } catch (error: any) {
-      message.error('获取粉丝列表失败, ', error.message);
+      message.error('获取关注列表失败, ', error.message);
     }
   };
 
@@ -49,4 +49,4 @@ const UserFollowerList: React.FC = () => {
   );
 };
 
-export default UserFollowerList;
+export default UserFollowingUserList;

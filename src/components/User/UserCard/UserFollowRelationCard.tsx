@@ -1,3 +1,4 @@
+import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, List, Typography } from 'antd';
 
 interface Props {
@@ -5,7 +6,7 @@ interface Props {
 }
 
 const { Text } = Typography;
-const UserFollowerCard: React.FC<Props> = ({ user }) => {
+const UserFollowRelationCard: React.FC<Props> = ({ user }) => {
   const toggleFollow = () => {};
   return (
     <List.Item
@@ -27,7 +28,7 @@ const UserFollowerCard: React.FC<Props> = ({ user }) => {
       ]}
     >
       <List.Item.Meta
-        avatar={<Avatar size={40} src={user.avatar || '/placeholder-user.jpg'} />}
+        avatar={<Avatar size={40} src={user.avatar} icon={<UserOutlined />} />}
         title={
           <Text strong style={{ fontSize: 16 }}>
             {user.nickname}
@@ -43,4 +44,4 @@ const UserFollowerCard: React.FC<Props> = ({ user }) => {
   );
 };
 
-export default UserFollowerCard;
+export default UserFollowRelationCard;

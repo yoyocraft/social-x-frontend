@@ -2,10 +2,10 @@ import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
 import RelatedContentCard from '@/components/RelatedContentCard';
 import UgcCard from '@/components/UgcCard';
-import UserCard from '@/pages/User/components/UserCard';
+import UserCard from '@/components/User/UserCard';
 import { queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
-import { Affix, Col, Row, Skeleton, Space } from 'antd';
+import { Affix, Col, message, Row, Skeleton, Space } from 'antd';
 import { useEffect, useState } from 'react';
 
 const UgcDetail: React.FC = () => {
@@ -15,9 +15,13 @@ const UgcDetail: React.FC = () => {
   const [ugcDetail, setUgcDetail] = useState<API.UgcResponse | null>(null);
 
   const loadUgcDetail = async () => {
-    const res = await queryUgcDetailUsingPost({ ugcId });
-    if (res.data) {
-      setUgcDetail(res.data);
+    try {
+      const res = await queryUgcDetailUsingPost({ ugcId });
+      if (res.data) {
+        setUgcDetail(res.data);
+      }
+    } catch (error: any) {
+      message.error(error.message);
     }
   };
 

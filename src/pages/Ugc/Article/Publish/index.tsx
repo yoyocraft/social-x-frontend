@@ -1,6 +1,7 @@
 import MdEditor from '@/components/MdEditor';
 import PictureUploader from '@/components/PictureUpload';
 import { MediaSource } from '@/constants/MediaConstant';
+import { UgcType } from '@/constants/UgcConstant';
 import { publishUgcUsingPost } from '@/services/socialx/ugcController';
 import {
   queryUgcArticleTagUsingGet,
@@ -79,7 +80,7 @@ const MarkdownEditor: React.FC = () => {
     try {
       const reqId = initialState?.currentUser?.userId + '_' + title;
       await publishUgcUsingPost({
-        ugcType: 'ARTICLE',
+        ugcType: UgcType.ARTICLE,
         title,
         content,
         summary,

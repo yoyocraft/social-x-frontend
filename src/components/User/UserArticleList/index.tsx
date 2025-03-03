@@ -1,7 +1,7 @@
 import { UgcType } from '@/constants/UgcConstant';
 import { listSelfUgcUsingPost, queryUserPageUgcUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
-import { Divider, Empty, List, message, Skeleton } from 'antd';
+import { Empty, List, message, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import UserArticleCard from './UserArticleCard';
@@ -16,8 +16,6 @@ const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED
   const { userId } = params;
   const [articleList, setArticleList] = useState<API.UgcResponse[]>([]);
   const [hasMore, setHasMore] = useState(true);
-
-  // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
   const isFirstLoad = useRef(true);
 
@@ -74,34 +72,33 @@ const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED
     if (isFirstLoad.current) {
       return;
     }
-    // 重置列表数据
     setArticleList([]);
     setHasMore(true);
 
-    // 切换 tab 时，重置 cursor
     cursorRef.current = '0';
     loadUgcData();
   }, [ugcStatus]);
 
   return (
-    <InfiniteScroll
-      dataLength={articleList.length}
-      next={loadUgcData}
-      hasMore={hasMore}
-      loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-      endMessage={<Divider plain>没有更多啦～</Divider>}
-      scrollableTarget="scrollableDiv"
-    >
-      <List
-        itemLayout="vertical"
-        size="large"
-        dataSource={articleList}
-        locale={{
-          emptyText: <Empty description="暂无数据" />,
-        }}
-        renderItem={(item) => <UserArticleCard article={item} />}
-      />
-    </InfiniteScroll>
+    <div id="scrollableDiv">
+      <InfiniteScroll
+        dataLength={articleList.length}
+        next={loadUgcData}
+        hasMore={hasMore}
+        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={articleList}
+          locale={{
+            emptyText: <Empty description="暂无数据" />,
+          }}
+          renderItem={(item) => <UserArticleCard article={item} />}
+        />
+      </InfiniteScroll>
+    </div>
   );
 };
 

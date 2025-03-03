@@ -1,6 +1,6 @@
 import { queryUgcCommentaryUsingGet } from '@/services/socialx/commentaryController';
 import { useParams } from '@umijs/max';
-import { Divider, Empty, List, message, Skeleton } from 'antd';
+import { Empty, List, message, Skeleton } from 'antd';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CommentItem from './CommentItem';
@@ -54,13 +54,12 @@ const CommentSection = forwardRef<{ refreshComments: () => void }, CommentSectio
     }
 
     return (
-      <div className="comment-section">
+      <div id="scrollableDiv" className="comment-section">
         <InfiniteScroll
           dataLength={ugcCommentary.length}
           next={loadCommentary}
           hasMore={hasMore}
           loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-          endMessage={<Divider plain>没有更多啦～</Divider>}
           scrollableTarget="scrollableDiv"
         >
           <List

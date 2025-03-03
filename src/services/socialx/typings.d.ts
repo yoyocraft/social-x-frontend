@@ -413,6 +413,7 @@ declare namespace API {
 
   type UgcResponse = {
     attachmentUrls?: string[];
+    auditRet?: string;
     author?: UserBasicInfoResponse;
     categoryId?: string;
     categoryName?: string;

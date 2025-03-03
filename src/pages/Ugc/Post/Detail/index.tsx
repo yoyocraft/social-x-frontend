@@ -2,8 +2,8 @@ import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
 import RelatedContentCard from '@/components/RelatedContentCard';
+import UserCard from '@/components/User/UserCard';
 import { InteractType } from '@/constants/UgcConstant';
-import UserCard from '@/pages/User/components/UserCard';
 import { interactUgcUsingPost, queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
