@@ -4,7 +4,7 @@ import {
   FireOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from '@umijs/max';
+import { history } from '@umijs/max';
 import { Dropdown, MenuProps } from 'antd';
 
 const items: MenuProps['items'] = [
@@ -26,12 +26,11 @@ const items: MenuProps['items'] = [
 ];
 
 const UgcDropdown: React.FC = () => {
-  const navigate = useNavigate();
   const onBtnClick = () => {
-    navigate('/article/publish');
+    history.push('/article/publish');
   };
   const onItemClick: MenuProps['onClick'] = ({ key }) => {
-    navigate(`/${key}/publish`);
+    history.push(`/${key}/publish`);
   };
 
   return (

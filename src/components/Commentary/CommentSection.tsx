@@ -54,38 +54,36 @@ const CommentSection = forwardRef<{ refreshComments: () => void }, CommentSectio
     }
 
     return (
-      <div id="scrollableDiv" className="comment-section">
-        <InfiniteScroll
-          dataLength={ugcCommentary.length}
-          next={loadCommentary}
-          hasMore={hasMore}
-          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-          scrollableTarget="scrollableDiv"
-        >
-          <List
-            itemLayout="vertical"
-            dataSource={ugcCommentary}
-            renderItem={(item) => (
-              <List.Item style={{ padding: 0, border: 'none' }}>
-                {item.topCommentary && (
-                  <CommentItem
-                    isQuestion={isQuestion}
-                    refreshComments={refreshComments}
-                    comment={item.topCommentary}
-                  />
-                )}
-                {item.replyList && item.replyList.length > 0 && (
-                  <ReplyList
-                    refreshComments={refreshComments}
-                    topCommentaryId={item.topCommentary?.commentaryId}
-                    replies={item.replyList}
-                  />
-                )}
-              </List.Item>
-            )}
-          />
-        </InfiniteScroll>
-      </div>
+      <InfiniteScroll
+        dataLength={ugcCommentary.length}
+        next={loadCommentary}
+        hasMore={hasMore}
+        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+        pullDownToRefreshThreshold={50}
+      >
+        <List
+          itemLayout="vertical"
+          dataSource={ugcCommentary}
+          renderItem={(item) => (
+            <List.Item style={{ padding: 0, border: 'none' }}>
+              {item.topCommentary && (
+                <CommentItem
+                  isQuestion={isQuestion}
+                  refreshComments={refreshComments}
+                  comment={item.topCommentary}
+                />
+              )}
+              {item.replyList && item.replyList.length > 0 && (
+                <ReplyList
+                  refreshComments={refreshComments}
+                  topCommentaryId={item.topCommentary?.commentaryId}
+                  replies={item.replyList}
+                />
+              )}
+            </List.Item>
+          )}
+        />
+      </InfiniteScroll>
     );
   },
 );

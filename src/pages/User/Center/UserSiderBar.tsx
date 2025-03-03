@@ -5,7 +5,10 @@ import type React from 'react';
 
 const { Text } = Typography;
 
-const UserSiderBar: React.FC<API.UserBasicInfoResponse> = (userInfo) => {
+interface Props {
+  userInfo?: API.UserBasicInfoResponse;
+}
+const UserSiderBar: React.FC<Props> = ({ userInfo }) => {
   const achievements = [
     { icon: <LikeOutlined />, label: '文章被点赞', value: 5 },
     { icon: <EyeOutlined />, label: '文章被阅读', value: 2296 },
@@ -47,7 +50,7 @@ const UserSiderBar: React.FC<API.UserBasicInfoResponse> = (userInfo) => {
           <div style={{ flex: 1 }}>
             <div>
               <Text strong style={{ fontSize: 16 }}>
-                {userInfo.followingCount}
+                {userInfo?.followingCount}
               </Text>
             </div>
             <Text type="secondary">关注了</Text>
@@ -56,7 +59,7 @@ const UserSiderBar: React.FC<API.UserBasicInfoResponse> = (userInfo) => {
           <div style={{ flex: 1 }}>
             <div>
               <Text strong style={{ fontSize: 16 }}>
-                {userInfo.followerCount}
+                {userInfo?.followerCount}
               </Text>
             </div>
             <Text type="secondary">关注者</Text>
@@ -76,7 +79,7 @@ const UserSiderBar: React.FC<API.UserBasicInfoResponse> = (userInfo) => {
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Text>加入于</Text>
-            <Text strong>{dayjs(userInfo.joinTime).format('YYYY-MM-DD')}</Text>
+            <Text strong>{dayjs(userInfo?.joinTime).format('YYYY-MM-DD')}</Text>
           </div>
         </Space>
       </Card>

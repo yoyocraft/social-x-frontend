@@ -51,22 +51,20 @@ const UserCollectionList: React.FC = () => {
   }, []);
 
   return (
-    <div id="scrollableDiv">
-      <InfiniteScroll
-        dataLength={ugcList.length}
-        next={loadSelfCollectedUgc}
-        hasMore={hasMore}
-        loader={<Skeleton avatar active />}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={ugcList}
-          renderItem={(item) => renderUgcItem(item)}
-        />
-      </InfiniteScroll>
-    </div>
+    <InfiniteScroll
+      dataLength={ugcList.length}
+      next={loadSelfCollectedUgc}
+      hasMore={hasMore}
+      loader={<Skeleton avatar active />}
+      pullDownToRefreshThreshold={50}
+    >
+      <List
+        itemLayout="vertical"
+        size="large"
+        dataSource={ugcList}
+        renderItem={(item) => renderUgcItem(item)}
+      />
+    </InfiniteScroll>
   );
 };
 

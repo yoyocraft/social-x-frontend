@@ -1,19 +1,18 @@
 import { BellOutlined, LeftOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import type { MenuProps } from 'antd';
 import { Menu, Space } from 'antd';
 import React, { useEffect } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const UserSettings: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (location.pathname === '/account/settings') {
-      navigate('/account/settings/profile');
+      history.push('/account/settings/profile');
     }
-  }, [location, navigate]);
+  }, [location]);
 
   const menuItems: MenuProps['items'] = [
     {
@@ -40,7 +39,7 @@ const UserSettings: React.FC = () => {
         breadcrumb: {
           items: [
             {
-              onClick: () => navigate('/account/center'),
+              onClick: () => history.push('/account/center'),
               title: (
                 <Space style={{ fontSize: '16px' }}>
                   <LeftOutlined />

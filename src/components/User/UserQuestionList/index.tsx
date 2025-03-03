@@ -79,22 +79,20 @@ const UserQuestionList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus
   }, [ugcStatus]);
 
   return (
-    <div id="scrollableDiv">
-      <InfiniteScroll
-        dataLength={questionList.length}
-        next={loadUgcData}
-        hasMore={hasMore}
-        loader={<Skeleton avatar active />}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={questionList}
-          renderItem={(item) => <UserQuestionCard question={item} />}
-        />
-      </InfiniteScroll>
-    </div>
+    <InfiniteScroll
+      dataLength={questionList.length}
+      next={loadUgcData}
+      hasMore={hasMore}
+      loader={<Skeleton avatar active />}
+      pullDownToRefreshThreshold={50}
+    >
+      <List
+        itemLayout="vertical"
+        size="large"
+        dataSource={questionList}
+        renderItem={(item) => <UserQuestionCard question={item} />}
+      />
+    </InfiniteScroll>
   );
 };
 

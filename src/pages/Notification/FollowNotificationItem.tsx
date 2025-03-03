@@ -1,6 +1,10 @@
+import { followUserUsingPost } from '@/services/socialx/userController';
 import { dateTimeFormat } from '@/services/utils/time';
-import { Avatar, Badge, Button, List, Space, Typography } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { useModel } from '@umijs/max';
+import { Avatar, Badge, Button, List, message, Space, Typography } from 'antd';
 import type React from 'react';
+import { useState } from 'react';
 
 const { Text } = Typography;
 
@@ -9,8 +13,22 @@ interface Props {
 }
 
 const FollowNotificationItem: React.FC<Props> = ({ notification }) => {
-  /* TODO */
-  const toggleFollow = () => {};
+  const { initialState } = useModel('@@initialState');
+  const [hasFollowed, setHasFollowed] = useState(notification.followed);
+  const toggleFollow = () => {
+    followUserUsingPost({
+      followUserId: notification.senderId,
+      reqId: initialState?.currentUser?.userId,
+      follow: !hasFollowed,
+    })
+      .then(() => {
+        message.success(!hasFollowed ? '关注成功' : '取关成功');
+        setHasFollowed(!hasFollowed);
+      })
+      .catch(() => {
+        message.error('操作失败，请重试');
+      });
+  };
   return (
     <List.Item
       key={notification.notificationId}
@@ -31,7 +49,7 @@ const FollowNotificationItem: React.FC<Props> = ({ notification }) => {
       ]}
     >
       <List.Item.Meta
-        avatar={<Avatar size={40} src={notification.senderAvatar || '/placeholder-user.jpg'} />}
+        avatar={<Avatar size={40} src={notification.senderAvatar} icon={<UserOutlined />} />}
         title={
           <Space size={8}>
             <Text strong style={{ fontSize: 15 }}>
@@ -45,7 +63,7 @@ const FollowNotificationItem: React.FC<Props> = ({ notification }) => {
         }
         description={
           <Text type="secondary" style={{ fontSize: 12 }} key={notification.gmtCreate}>
-            {notification.gmtCreate ? dateTimeFormat(notification.gmtCreate) : 'N/A'}
+            {dateTimeFormat(notification.gmtCreate)}
           </Text>
         }
       />

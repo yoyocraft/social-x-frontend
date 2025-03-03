@@ -94,8 +94,7 @@ const AdminNotificationPage: React.FC = () => {
       dataIndex: 'gmtCreate',
       key: 'gmtCreate',
       width: 200,
-      render: (_, record) =>
-        record.gmtCreate ? dateTimeFormat(record.gmtCreate, 'YYYY-MM-DD HH:mm') : '',
+      render: (_, record) => dateTimeFormat(record.gmtCreate),
     },
     {
       title: '操作',

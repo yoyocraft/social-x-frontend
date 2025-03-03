@@ -1,6 +1,7 @@
 import IconText from '@/components/IconText';
 import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
+import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CommentOutlined,
   EyeOutlined,
@@ -78,7 +79,12 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
             text={post.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
-          <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />
+          <IconText
+            onClick={() => copyCurrentUrlToClipboard(post)}
+            icon={ShareAltOutlined}
+            text="分享"
+            key="list-vertical-share-o"
+          />
           {canSeeDetail && (
             <Link key={post.ugcId} href={`/post/${post.ugcId}`} style={{ color: '#1990ff' }}>
               查看原贴
@@ -92,9 +98,20 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
         avatar={<Avatar src={post.author?.avatar} size={40} />}
         title={
           <Space size={2} direction="vertical">
-            <Text strong>{post.author?.nickname}</Text>
+            <Text strong>
+              <Link
+                style={{
+                  color: '#1677ff',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                }}
+                href={`/user/${post.author?.userId}`}
+              >
+                {post.author?.nickname}
+              </Link>
+            </Text>
             <Text type="secondary" style={{ fontSize: 12 }}>
-              {post.gmtCreate ? dateTimeFormat(post.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
+              {dateTimeFormat(post.gmtModified)}
             </Text>
           </Space>
         }

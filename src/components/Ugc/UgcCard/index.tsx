@@ -1,6 +1,6 @@
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
-import TagList from '@/components/TagList';
+import TagList from '@/components/Ugc/TagList';
 import { InteractType } from '@/constants/UgcConstant';
 import { interactUgcUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
@@ -94,7 +94,7 @@ const UgcCard = (props: Props) => {
           <Typography.Text>{ugc.author?.nickname}</Typography.Text>
           <Divider type="vertical" />
           <Typography.Text style={{ fontSize: 12 }}>
-            {ugc.gmtCreate ? dateTimeFormat(ugc.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
+            {dateTimeFormat(ugc.gmtModified)}
           </Typography.Text>
           <Divider type="vertical" />
           <Space size={4}>

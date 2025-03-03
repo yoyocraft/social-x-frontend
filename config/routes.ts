@@ -14,6 +14,14 @@ export default [
     hideInMenu: true,
     component: './User/Center',
   },
+
+  {
+    name: '用户信息',
+    path: '/user/:userId',
+    icon: 'user',
+    hideInMenu: true,
+    component: './User/Center',
+  },
   {
     path: '/account/settings',
     name: '个人设置',

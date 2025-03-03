@@ -1,7 +1,8 @@
 import { dateTimeFormat } from '@/services/utils/time';
+import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, List, Space, Typography } from 'antd';
 import type React from 'react';
-import { calJumpUrl } from './utils';
+import { calJumpUrl } from '../../services/utils/notification';
 
 const { Text, Link } = Typography;
 
@@ -15,7 +16,7 @@ const CommentNotificationItem: React.FC<Props> = ({ notification }) => {
       key={notification.notificationId}
       actions={[
         <Text type="secondary" style={{ fontSize: 12 }} key={notification.gmtCreate}>
-          {notification.gmtCreate ? dateTimeFormat(notification.gmtCreate) : 'N/A'}
+          {dateTimeFormat(notification.gmtCreate)}
         </Text>,
         <Space size={16} style={{ marginTop: 4 }} key={notification.notificationId}>
           {notification.targetId && (
@@ -31,7 +32,7 @@ const CommentNotificationItem: React.FC<Props> = ({ notification }) => {
       ]}
     >
       <List.Item.Meta
-        avatar={<Avatar size={40} src={notification.senderAvatar || '/placeholder-user.jpg'} />}
+        avatar={<Avatar size={40} src={notification.senderAvatar} icon={<UserOutlined />} />}
         title={
           <Space size={8}>
             <Text strong style={{ fontSize: 15 }}>

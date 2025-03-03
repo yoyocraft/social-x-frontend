@@ -1,7 +1,7 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
-import RelatedContentCard from '@/components/RelatedContentCard';
-import UgcCard from '@/components/UgcCard';
+import RelatedContentCard from '@/components/Ugc/RelatedContentCard';
+import UgcCard from '@/components/Ugc/UgcCard';
 import UserCard from '@/components/User/UserCard';
 import { queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
@@ -12,7 +12,7 @@ const UgcDetail: React.FC = () => {
   const params = useParams();
   const { ugcId } = params;
 
-  const [ugcDetail, setUgcDetail] = useState<API.UgcResponse | null>(null);
+  const [ugcDetail, setUgcDetail] = useState<API.UgcResponse>();
 
   const loadUgcDetail = async () => {
     try {

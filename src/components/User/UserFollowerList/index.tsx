@@ -27,25 +27,23 @@ const UserFollowerList: React.FC = () => {
     loadSelfFollowingUsers();
   }, []);
   return (
-    <div id="scrollableDiv">
-      <InfiniteScroll
-        dataLength={followerList.length}
-        next={loadSelfFollowingUsers}
-        hasMore={hasMore}
-        loader={<Skeleton avatar active />}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          itemLayout="horizontal"
-          size="large"
-          dataSource={followerList}
-          renderItem={(item) => <UserFollowRelationCard user={item} />}
-          locale={{
-            emptyText: <Empty description="暂无关注" />,
-          }}
-        />
-      </InfiniteScroll>
-    </div>
+    <InfiniteScroll
+      dataLength={followerList.length}
+      next={loadSelfFollowingUsers}
+      hasMore={hasMore}
+      loader={<Skeleton avatar active />}
+      pullDownToRefreshThreshold={50}
+    >
+      <List
+        itemLayout="horizontal"
+        size="large"
+        dataSource={followerList}
+        renderItem={(item) => <UserFollowRelationCard user={item} />}
+        locale={{
+          emptyText: <Empty description="暂无关注" />,
+        }}
+      />
+    </InfiniteScroll>
   );
 };
 

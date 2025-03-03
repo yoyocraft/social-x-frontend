@@ -1,6 +1,6 @@
 import { Footer } from '@/components';
 import QuestionList from '@/components/Ugc/QuestionList';
-import UgcHotRank from '@/components/UgcHotRank';
+import UgcHotRank from '@/components/Ugc/UgcHotRank';
 import { UgcType } from '@/constants/UgcConstant';
 import { queryUgcQuestionCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { QuestionOutlined } from '@ant-design/icons';

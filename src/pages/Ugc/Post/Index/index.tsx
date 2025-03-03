@@ -1,7 +1,7 @@
 import { Footer } from '@/components';
-import PostPublisher from '@/components/PostPublisher';
 import PostList from '@/components/Ugc/PostList';
-import UgcHotRank from '@/components/UgcHotRank';
+import PostPublisher from '@/components/Ugc/PostPublisher';
+import UgcHotRank from '@/components/Ugc/UgcHotRank';
 import UserCard from '@/components/User/UserCard';
 import { UgcType } from '@/constants/UgcConstant';
 import { publishUgcUsingPost } from '@/services/socialx/ugcController';
