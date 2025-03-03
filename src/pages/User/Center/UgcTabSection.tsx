@@ -34,6 +34,10 @@ const tabItems = [
     key: 'fan',
     label: '粉丝',
   },
+  {
+    key: 'draft',
+    label: '草稿',
+  },
 ];
 
 const ugcStatusTabItems = [
@@ -48,14 +52,6 @@ const ugcStatusTabItems = [
   {
     value: UgcStatus.REJECTED,
     label: '审核不通过',
-  },
-  {
-    value: UgcStatus.PRIVATE,
-    label: '私有',
-  },
-  {
-    value: UgcStatus.DRAFT,
-    label: '草稿',
   },
 ];
 
@@ -92,6 +88,7 @@ const UgcTabSection: React.FC = () => {
       />
 
       {activeTabKey === 'article' && <UserArticleList self ugcStatus={ugcStatus} />}
+      {activeTabKey === 'draft' && <UserArticleList self ugcStatus={UgcStatus.DRAFT} />}
       {activeTabKey === 'post' && <UserPostList self ugcStatus={ugcStatus} />}
       {activeTabKey === 'question' && <UserQuestionList self ugcStatus={ugcStatus} />}
       {activeTabKey === 'collection' && <UserCollectionList />}

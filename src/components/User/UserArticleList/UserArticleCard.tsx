@@ -10,15 +10,21 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Divider, Image, List, Space, Tag, Typography } from 'antd';
+import { useNavigate } from '@umijs/max';
+import { Button, Divider, Image, List, Space, Tag, Typography } from 'antd';
 
 interface Props {
   article: API.UgcResponse;
 }
 
 const UserArticleCard: React.FC<Props> = ({ article }) => {
-  const canSeeDetail = !!!article.auditRet && article.status === UgcStatus.PUBLISHED;
+  const canSeeDetail = article.status === UgcStatus.PUBLISHED;
   const showRejectInfo = article.status === UgcStatus.REJECTED;
+  const showEditFeature =
+    article.status === UgcStatus.DRAFT || article.status === UgcStatus.REJECTED;
+
+  const navigate = useNavigate();
+
   return (
     <List.Item
       key={article.title}
@@ -50,6 +56,15 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
             key="list-vertical-star-o"
           />
           {showRejectInfo ? <Tag color="error">{article.auditRet}</Tag> : null}
+          {showEditFeature && (
+            <Button
+              type="link"
+              size="small"
+              onClick={() => navigate(`/article/edit/${article.ugcId}`)}
+            >
+              编辑
+            </Button>
+          )}
         </Space>,
       ]}
       extra={
@@ -73,11 +88,14 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
             style={{ marginBottom: 8, fontSize: 18 }}
           >
             {canSeeDetail ? (
-              article.title
-            ) : (
-              <a href={`/article/${article.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
+              <div
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/article/${article.ugcId}`)}
+              >
                 {article.title}
-              </a>
+              </div>
+            ) : (
+              article.title
             )}
           </Typography.Title>
         }

@@ -399,6 +399,7 @@ declare namespace API {
     authorId?: string;
     categoryId?: string;
     cursor?: string;
+    editing?: boolean;
     keyword?: string;
     page?: number;
     qaStatus?: boolean;

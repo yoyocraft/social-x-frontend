@@ -54,6 +54,12 @@ export default [
     component: './Ugc/Article/Publish',
   },
   {
+    path: '/article/edit/:ugcId',
+    name: '编辑文章',
+    hideInMenu: true,
+    component: './Ugc/Article/Publish',
+  },
+  {
     path: '/post/publish',
     name: '发布帖子',
     hideInMenu: true,
