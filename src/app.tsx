@@ -8,7 +8,7 @@ import { md5 } from 'js-md5';
 import defaultSettings from '../config/defaultSettings';
 import NotifyBar from './components/NotifyBar';
 import SearchBar from './components/SearchBar';
-import UgcDropdown from './components/UgcDropdown';
+import UgcDropdown from './components/Ugc/UgcDropdown';
 import { requestConfig } from './requestErrorConfig';
 import { getCurrentUserUsingGet } from './services/socialx/userController';
 const isDev = process.env.NODE_ENV === 'development';

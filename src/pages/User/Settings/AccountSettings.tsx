@@ -181,9 +181,7 @@ const ResetPwdStepForm: React.FC<ResetPwdStepFormProps> = ({ visible, setVisible
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(
-                    new Error('The new password that you entered do not match!'),
-                  );
+                  return Promise.reject(new Error('两次输入密码不一致'));
                 },
               }),
             ]}

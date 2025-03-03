@@ -1,5 +1,6 @@
 import type React from 'react';
 
+import { UgcType } from '@/constants/UgcConstant';
 import { listHotUgcUsingPost } from '@/services/socialx/ugcController';
 import { FireOutlined, StarFilled } from '@ant-design/icons';
 import { Link } from '@umijs/max';
@@ -17,11 +18,11 @@ const UgcHotRank: React.FC<Props> = ({ ugcType, title = '文章榜' }) => {
 
   const calculateJumpUrl = (item: API.UgcResponse) => {
     switch (ugcType) {
-      case 'ARTICLE':
+      case UgcType.ARTICLE:
         return `/article/${item.ugcId}`;
-      case 'POST':
+      case UgcType.POST:
         return `/post/${item.ugcId}`;
-      case 'QUESTION':
+      case UgcType.QUESTION:
         return `/question/${item.ugcId}`;
       default:
         return `/article/${item.ugcId}`;
@@ -44,7 +45,7 @@ const UgcHotRank: React.FC<Props> = ({ ugcType, title = '文章榜' }) => {
 
   useEffect(() => {
     loadHotUgc();
-  }, []); // Removed ugcType as a dependency
+  }, []);
 
   if (loading) {
     return (

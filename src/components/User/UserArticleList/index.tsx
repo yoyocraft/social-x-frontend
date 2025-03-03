@@ -1,4 +1,4 @@
-import { UgcType } from '@/constants/UgcConstant';
+import { UgcStatus, UgcType } from '@/constants/UgcConstant';
 import { listSelfUgcUsingPost, queryUserPageUgcUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
 import { Empty, List, message, Skeleton } from 'antd';
@@ -11,7 +11,7 @@ interface Props {
   ugcStatus?: string;
 }
 
-const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }) => {
+const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus.PUBLISHED }) => {
   const params = useParams();
   const { userId } = params;
   const [articleList, setArticleList] = useState<API.UgcResponse[]>([]);
@@ -80,25 +80,23 @@ const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED
   }, [ugcStatus]);
 
   return (
-    <div id="scrollableDiv">
-      <InfiniteScroll
-        dataLength={articleList.length}
-        next={loadUgcData}
-        hasMore={hasMore}
-        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={articleList}
-          locale={{
-            emptyText: <Empty description="暂无数据" />,
-          }}
-          renderItem={(item) => <UserArticleCard article={item} />}
-        />
-      </InfiniteScroll>
-    </div>
+    <InfiniteScroll
+      dataLength={articleList.length}
+      next={loadUgcData}
+      hasMore={hasMore}
+      loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+      pullDownToRefreshThreshold={50}
+    >
+      <List
+        itemLayout="vertical"
+        size="large"
+        dataSource={articleList}
+        locale={{
+          emptyText: <Empty description="暂无数据" />,
+        }}
+        renderItem={(item) => <UserArticleCard article={item} />}
+      />
+    </InfiniteScroll>
   );
 };
 

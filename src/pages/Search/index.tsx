@@ -1,5 +1,5 @@
 import { Footer } from '@/components';
-import UgcHotRank from '@/components/UgcHotRank';
+import UgcHotRank from '@/components/Ugc/UgcHotRank';
 import UserArticleCard from '@/components/User/UserArticleList/UserArticleCard';
 import UserPostCard from '@/components/User/UserPostList/UserPostCard';
 import UserQuestionCard from '@/components/User/UserQuestionList/UserQuestionCard';
@@ -7,7 +7,7 @@ import { UgcType } from '@/constants/UgcConstant';
 import { listTimelineUgcFeedUsingPost } from '@/services/socialx/ugcController';
 import { CloseOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
-import { useLocation, useNavigate } from '@umijs/max';
+import { history, useLocation } from '@umijs/max';
 import {
   Col,
   Empty,
@@ -27,19 +27,19 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 const items: TabsProps['items'] = [
   {
-    key: 'ALL',
+    key: UgcType.ALL,
     label: '综合',
   },
   {
-    key: 'ARTICLE',
+    key: UgcType.ARTICLE,
     label: '文章',
   },
   {
-    key: 'POST',
+    key: UgcType.POST,
     label: '动态',
   },
   {
-    key: 'QUESTION',
+    key: UgcType.QUESTION,
     label: '问答',
   },
 ];
@@ -63,8 +63,6 @@ const SearchPage: React.FC = () => {
   const cursorRef = useRef('0');
 
   const isFirstLoad = useRef(true);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedHistory = localStorage.getItem('searchHistory');
@@ -106,7 +104,7 @@ const SearchPage: React.FC = () => {
     saveToHistory(searchValue);
 
     if (keyword !== searchValue) {
-      navigate(`/search?keyword=${encodeURIComponent(searchValue)}`, { replace: true });
+      history.replace(`/search?keyword=${encodeURIComponent(searchValue)}`);
     }
 
     setUgcList([]);
@@ -134,9 +132,9 @@ const SearchPage: React.FC = () => {
   const renderUgcItem = (item: API.UgcResponse) => {
     return (
       <>
-        {item.type === 'ARTICLE' && <UserArticleCard article={item} />}
-        {item.type === 'POST' && <UserPostCard post={item} />}
-        {item.type === 'QUESTION' && <UserQuestionCard question={item} />}
+        {item.type === UgcType.ARTICLE && <UserArticleCard article={item} />}
+        {item.type === UgcType.POST && <UserPostCard post={item} />}
+        {item.type === UgcType.QUESTION && <UserQuestionCard question={item} />}
       </>
     );
   };
@@ -224,7 +222,7 @@ const SearchPage: React.FC = () => {
               next={loadUgcData}
               hasMore={hasMore}
               loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-              scrollableTarget="scrollableDiv"
+              pullDownToRefreshThreshold={50}
             >
               <List
                 itemLayout="vertical"

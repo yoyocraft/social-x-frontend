@@ -14,7 +14,6 @@ export enum InteractType {
 
 export enum UgcStatus {
   PUBLISHED = 'PUBLISHED',
-  PRIVATE = 'PRIVATE',
   DRAFT = 'DRAFT',
   AUDITING = 'AUDITING',
   REJECTED = 'REJECTED',

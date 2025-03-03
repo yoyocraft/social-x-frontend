@@ -1,16 +1,18 @@
 import IconText from '@/components/IconText';
-import TagList from '@/components/TagList';
+import TagList from '@/components/Ugc/TagList';
 import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
+import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CommentOutlined,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
+  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from '@umijs/max';
+import { history } from '@umijs/max';
 import { Button, Divider, Image, List, Space, Tag, Typography } from 'antd';
 
 interface Props {
@@ -22,8 +24,6 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
   const showRejectInfo = article.status === UgcStatus.REJECTED;
   const showEditFeature =
     article.status === UgcStatus.DRAFT || article.status === UgcStatus.REJECTED;
-
-  const navigate = useNavigate();
 
   return (
     <List.Item
@@ -55,12 +55,18 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
             text={article.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
+          <IconText
+            onClick={() => copyCurrentUrlToClipboard(article)}
+            icon={ShareAltOutlined}
+            text="分享"
+            key="list-vertical-share-o"
+          />
           {showRejectInfo ? <Tag color="error">{article.auditRet}</Tag> : null}
           {showEditFeature && (
             <Button
               type="link"
               size="small"
-              onClick={() => navigate(`/article/edit/${article.ugcId}`)}
+              onClick={() => history.push(`/article/edit/${article.ugcId}`)}
             >
               编辑
             </Button>
@@ -90,7 +96,7 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
             {canSeeDetail ? (
               <div
                 style={{ cursor: 'pointer' }}
-                onClick={() => navigate(`/article/${article.ugcId}`)}
+                onClick={() => history.push(`/article/${article.ugcId}`)}
               >
                 {article.title}
               </div>
@@ -113,10 +119,21 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
         }
       />
       <Space size={8} align="center">
-        <Typography.Text>{article.author?.nickname}</Typography.Text>
+        <Typography.Text strong>
+          <Typography.Link
+            style={{
+              color: '#1677ff',
+              fontWeight: 500,
+              textDecoration: 'none',
+            }}
+            href={`/user/${article.author?.userId}`}
+          >
+            {article.author?.nickname}
+          </Typography.Link>
+        </Typography.Text>
         <Divider type="vertical" />
         <Typography.Text style={{ fontSize: 12 }}>
-          {article.gmtCreate ? dateTimeFormat(article.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
+          {dateTimeFormat(article.gmtModified)}
         </Typography.Text>
         <Divider type="vertical" />
         <Space size={4}>

@@ -1,11 +1,12 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
-import RelatedContentCard from '@/components/RelatedContentCard';
+import RelatedContentCard from '@/components/Ugc/RelatedContentCard';
 import UserCard from '@/components/User/UserCard';
 import { InteractType } from '@/constants/UgcConstant';
 import { interactUgcUsingPost, queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
+import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   LikeFilled,
   LikeOutlined,
@@ -82,25 +83,9 @@ const PostCard = (props: Props) => {
                 <Typography.Text strong style={{ fontSize: 16 }}>
                   {ugc.author?.nickname}
                 </Typography.Text>
-                {/* {ugc.author?.level && (
-                  <Tooltip title="用户等级">
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        backgroundColor: '#e6f7ff',
-                        borderRadius: 4,
-                        padding: '0 6px',
-                        height: 20,
-                      }}
-                    >
-                      <span style={{ color: '#1890ff', fontSize: 12 }}>{ugc.author.level}</span>
-                    </div>
-                  </Tooltip>
-                )} */}
               </div>
               <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                {ugc.gmtCreate ? dateTimeFormat(ugc.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
+                {dateTimeFormat(ugc.gmtModified)}
               </Typography.Text>
             </div>
           </Space>
@@ -138,7 +123,7 @@ const PostCard = (props: Props) => {
             icon={ShareAltOutlined}
             text="分享"
             key="list-vertical-share-o"
-            onClick={() => {}}
+            onClick={() => copyCurrentUrlToClipboard(ugc)}
           />
         </Space>
       </Card>

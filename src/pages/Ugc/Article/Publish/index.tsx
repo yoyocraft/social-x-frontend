@@ -9,7 +9,7 @@ import {
 } from '@/services/socialx/ugcMetadataController';
 import { HomeOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useModel, useNavigate, useParams } from '@umijs/max';
+import { history, useModel, useParams } from '@umijs/max';
 import { Button, Flex, Form, Input, message, Modal, Select, Typography } from 'antd';
 import 'bytemd/dist/index.css';
 import 'github-markdown-css/github-markdown-light.css';
@@ -34,8 +34,6 @@ const ArticlePublisher: React.FC = () => {
   const [tagOptions, setTagOptions] = useState([]);
 
   const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const loadEditUgcData = async () => {
     try {
@@ -126,7 +124,7 @@ const ArticlePublisher: React.FC = () => {
       });
       const successMesssage = drafting ? '保存草稿成功' : '发布成功';
       message.success(successMesssage);
-      navigate('/');
+      history.replace('/');
     } catch (error: any) {
       message.error(error.message || '发布失败，请重试');
     } finally {
@@ -152,7 +150,7 @@ const ArticlePublisher: React.FC = () => {
             path: '/',
             breadcrumbName: 'Home',
             title: <HomeOutlined />,
-            onClick: () => navigate('/'),
+            onClick: () => history.push('/'),
           },
           { breadcrumbName: '发布文章' },
         ],

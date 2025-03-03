@@ -1,6 +1,7 @@
 import IconText from '@/components/IconText';
 import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
+import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CheckCircleFilled,
   CommentOutlined,
@@ -31,8 +32,8 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
       }}
       actions={[
         <Space key={question.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
-          <Text key={question.gmtCreate} type="secondary" style={{ fontSize: 12 }}>
-            {question.gmtCreate ? dateTimeFormat(question.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
+          <Text key={question.gmtModified} type="secondary" style={{ fontSize: 12 }}>
+            {dateTimeFormat(question.gmtModified)}
           </Text>
           <IconText
             icon={EyeOutlined}
@@ -54,10 +55,26 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
             text={question.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
-          <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />
+          <IconText
+            onClick={() => copyCurrentUrlToClipboard(question)}
+            icon={ShareAltOutlined}
+            text="分享"
+            key="list-vertical-share-o"
+          />
           <Space key={question.author?.userId}>
             <Avatar size={32} src={question.author?.avatar} />
-            <Text>{question.author?.nickname}</Text>
+            <Text strong>
+              <Link
+                style={{
+                  color: '#1677ff',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                }}
+                href={`/user/${question.author?.userId}`}
+              >
+                {question.author?.nickname}
+              </Link>
+            </Text>
           </Space>
           {question.hasSolved && (
             <Tag

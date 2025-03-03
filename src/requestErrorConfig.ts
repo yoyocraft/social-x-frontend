@@ -1,5 +1,6 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
-import type { RequestConfig } from '@umijs/max';
+import { history, type RequestConfig } from '@umijs/max';
+import { message } from 'antd';
 import { ResponseCode } from './constants/ResponseCode';
 
 // 错误处理方案： 错误类型
@@ -37,7 +38,7 @@ export const requestConfig: RequestConfig = {
         const error: any = new Error(errorMessage);
         error.name = 'BizError';
         error.info = { errorCode, errorMessage, showType, data };
-        throw error; // 抛出自制的错误
+        throw error;
       }
     },
     // 错误接收及处理
@@ -99,6 +100,12 @@ export const requestConfig: RequestConfig = {
   responseInterceptors: [
     (response) => {
       const data = response.data as { code: string; message: string; bizState?: string };
+      if (data.code === ResponseCode.NOT_LOGIN) {
+        message.error('登录已过期，请重新登录');
+        history.push('/user/login', {
+          redirect: window.location.href,
+        });
+      }
       if (data.code !== ResponseCode.SUCCESS) {
         const error: any = new Error(data.message);
         error.name = 'BizError';

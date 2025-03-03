@@ -122,3 +122,18 @@ export async function querySelfFollowingUsersUsingGet(
     ...(options || {}),
   });
 }
+
+/** getUserInfo GET /api/user/query */
+export async function getUserInfoUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getUserInfoUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultUserBasicInfoResponse_>('/api/user/query', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

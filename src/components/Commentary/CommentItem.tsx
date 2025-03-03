@@ -12,6 +12,7 @@ import {
   LikeOutlined,
   MessageOutlined,
   MoreOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import { Avatar, Dropdown, Image, MenuProps, message, Space, Tag, Tooltip, Typography } from 'antd';
@@ -148,11 +149,7 @@ const CommentItem: React.FC<{
       }}
     >
       <Space align="start" style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
-        <Avatar
-          size={40}
-          src={comment.commentatorAvatar || '/placeholder-user.jpg'}
-          alt={comment.commentatorNickname}
-        />
+        <Avatar size={40} src={comment.commentatorAvatar} icon={<UserOutlined />} />
         <div style={{ flex: 1, width: '100%' }}>
           <Space direction="vertical" style={{ width: '100%' }} size={2}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

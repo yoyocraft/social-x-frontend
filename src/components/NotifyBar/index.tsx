@@ -1,3 +1,4 @@
+import useInterval from '@/hooks/useInterval';
 import { queryUnreadCountUsingGet } from '@/services/socialx/notificationController';
 import {
   BellOutlined,
@@ -6,9 +7,9 @@ import {
   NotificationOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from '@umijs/max';
+import { history } from '@umijs/max';
 import { Badge, Dropdown, MenuProps } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const items: MenuProps['items'] = [
   {
@@ -34,27 +35,24 @@ const items: MenuProps['items'] = [
 ];
 
 const NotifyBar: React.FC = () => {
-  const navigate = useNavigate();
   const onClick: MenuProps['onClick'] = ({ key }) => {
-    navigate(`/notification/${key}`);
+    history.replace(`/notification/${key}`);
   };
   const onBellClick = () => {
-    navigate('/notification');
+    history.replace('/notification');
   };
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const loadUnreadCount = () => {
-    queryUnreadCountUsingGet({
-      queryAll: true,
-    }).then((res) => {
+  const loadUnreadCount = async () => {
+    try {
+      const res = await queryUnreadCountUsingGet({ queryAll: true });
       const allCount = res.data?.unreadInfoList?.[0]?.unreadCount ?? 0;
       setUnreadCount(allCount);
-    });
+    } catch (error) {}
   };
 
-  useEffect(() => {
-    loadUnreadCount();
-  }, []);
+  useInterval(loadUnreadCount, 10000);
+
   return (
     <Dropdown menu={{ items, onClick }} placement="bottom">
       <Badge count={unreadCount} overflowCount={10}>

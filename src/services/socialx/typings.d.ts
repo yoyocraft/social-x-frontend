@@ -72,6 +72,14 @@ declare namespace API {
     reqId?: string;
   };
 
+  type getUserInfoUsingGETParams = {
+    cursor?: number;
+    page?: number;
+    reqId?: string;
+    size?: number;
+    userId?: string;
+  };
+
   type ImageUploadResponse = {
     url?: string;
   };

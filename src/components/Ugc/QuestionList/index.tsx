@@ -6,6 +6,7 @@ import {
   listTimelineUgcFeedUsingPost,
 } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
+import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CheckCircleFilled,
   CommentOutlined,
@@ -132,97 +133,111 @@ const QuestionList: React.FC<QuestionListProps> = ({
   }, [category, qaStatus]);
 
   return (
-    <div id="scrollableDiv">
-      <InfiniteScroll
-        dataLength={questionList.length}
-        next={timelineQuestionFeed}
-        hasMore={hasMore}
-        loader={<Skeleton avatar active />}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={questionList}
-          renderItem={(item) => (
-            <List.Item
-              key={item.ugcId}
-              style={{
-                padding: '24px 0',
-                borderBottom: '1px solid rgba(0,0,0,0.06)',
-              }}
-              actions={[
-                <Space key={item.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
-                  <Text key={item.gmtCreate} type="secondary" style={{ fontSize: 12 }}>
-                    {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
-                  </Text>
-                  <IconText
-                    icon={item.liked ? LikeFilled : LikeOutlined}
-                    text={item.likeCount?.toString() || '0'}
-                    key="list-vertical-like-o"
-                    onClick={() => handleLike(item)}
-                  />
-                  <IconText
-                    icon={CommentOutlined}
-                    text={item.commentaryCount?.toString() || '0'}
-                    key="list-vertical-comment-o"
-                  />
-                  <IconText
-                    icon={item.collected ? StarFilled : StarOutlined}
-                    text={item.collectCount?.toString() || '0'}
-                    key="list-vertical-star-o"
-                    onClick={() => handleCollect(item)}
-                  />
-                  <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />
-                  <Space key={item.author?.userId}>
-                    <Avatar size={32} src={item.author?.avatar} />
-                    <Text>{item.author?.nickname}</Text>
-                  </Space>
-                  {item.hasSolved && (
-                    <Tag
-                      icon={<CheckCircleFilled />}
-                      color="success"
+    <InfiniteScroll
+      dataLength={questionList.length}
+      next={timelineQuestionFeed}
+      hasMore={hasMore}
+      loader={<Skeleton avatar active />}
+      pullDownToRefreshThreshold={50}
+    >
+      <List
+        itemLayout="vertical"
+        size="large"
+        dataSource={questionList}
+        renderItem={(item) => (
+          <List.Item
+            key={item.ugcId}
+            style={{
+              padding: '24px 0',
+              borderBottom: '1px solid rgba(0,0,0,0.06)',
+            }}
+            actions={[
+              <Space key={item.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
+                <Text key={item.gmtModified} type="secondary" style={{ fontSize: 12 }}>
+                  {dateTimeFormat(item.gmtModified)}
+                </Text>
+                <IconText
+                  icon={item.liked ? LikeFilled : LikeOutlined}
+                  text={item.likeCount?.toString() || '0'}
+                  key="list-vertical-like-o"
+                  onClick={() => handleLike(item)}
+                />
+                <IconText
+                  icon={CommentOutlined}
+                  text={item.commentaryCount?.toString() || '0'}
+                  key="list-vertical-comment-o"
+                />
+                <IconText
+                  icon={item.collected ? StarFilled : StarOutlined}
+                  text={item.collectCount?.toString() || '0'}
+                  key="list-vertical-star-o"
+                  onClick={() => handleCollect(item)}
+                />
+                <IconText
+                  onClick={() => copyCurrentUrlToClipboard(item)}
+                  icon={ShareAltOutlined}
+                  text="分享"
+                  key="list-vertical-share-o"
+                />
+                <Space key={item.author?.userId}>
+                  <Avatar size={32} src={item.author?.avatar} />
+                  <Text strong>
+                    <Link
                       style={{
-                        padding: '0 8px',
-                        borderRadius: '4px',
-                        fontSize: '12px',
-                        lineHeight: '18px',
-                        margin: 0,
+                        color: '#1677ff',
+                        fontWeight: 500,
+                        textDecoration: 'none',
                       }}
+                      to={`/user/${item.author?.userId}`}
                     >
-                      已解决
-                    </Tag>
-                  )}
-                </Space>,
-              ]}
-            >
-              <List.Item.Meta
-                title={<Typography.Title level={4}>{item.title}</Typography.Title>}
-                description={
-                  <Typography.Paragraph
-                    strong
-                    type="secondary"
-                    ellipsis={{
-                      rows: 3,
-                      expandable: false,
-                    }}
+                      {item.author?.nickname}
+                    </Link>
+                  </Text>
+                </Space>
+                {item.hasSolved && (
+                  <Tag
+                    icon={<CheckCircleFilled />}
+                    color="success"
                     style={{
-                      marginBottom: 4,
-                      fontSize: 16,
+                      padding: '0 8px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      lineHeight: '18px',
+                      margin: 0,
                     }}
                   >
-                    {item.summary}
-                  </Typography.Paragraph>
-                }
-              />
-              <Link to={`/question/${item.ugcId}`} style={{ fontSize: 16, color: '#1990ff' }}>
-                查看全文
-              </Link>
-            </List.Item>
-          )}
-        />
-      </InfiniteScroll>
-    </div>
+                    已解决
+                  </Tag>
+                )}
+              </Space>,
+            ]}
+          >
+            <List.Item.Meta
+              title={<Typography.Title level={4}>{item.title}</Typography.Title>}
+              description={
+                <Typography.Paragraph
+                  strong
+                  type="secondary"
+                  ellipsis={{
+                    rows: 3,
+                    expandable: false,
+                  }}
+                  style={{
+                    marginBottom: 4,
+                    fontSize: 16,
+                  }}
+                >
+                  {item.summary}
+                </Typography.Paragraph>
+              }
+            />
+            <Link to={`/question/${item.ugcId}`} style={{ fontSize: 16, color: '#1990ff' }}>
+              查看全文
+            </Link>
+          </List.Item>
+        )}
+      />
+    </InfiniteScroll>
   );
 };
 

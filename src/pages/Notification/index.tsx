@@ -7,7 +7,7 @@ import {
 } from '@/services/socialx/notificationController';
 import { PageContainer } from '@ant-design/pro-components';
 import { history, useModel, useParams } from '@umijs/max';
-import { Badge, Button, Card, Divider, Empty, List, message, Skeleton, Space, Tabs } from 'antd';
+import { Badge, Button, Card, Empty, List, message, Skeleton, Space, Tabs } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CommentNotificationItem from './CommentNotificationItem';
@@ -40,14 +40,12 @@ const NotificationPage = () => {
     system: 0,
   });
 
-  // 监听 URL 变化，更新 activeKey
   useEffect(() => {
     if (type && type !== activeKey) {
       setActiveKey(type);
     }
   }, [type]);
 
-  // 处理 tab 切换，同时更新 URL
   const handleTabChange = (key: string) => {
     setActiveKey(key);
     history.push(`/notification/${key}`);
@@ -63,7 +61,6 @@ const NotificationPage = () => {
         ),
       );
 
-      // 减少未读计数（确保不变负数）
       setUnreadCount((prev) => ({
         ...prev,
         [type]: Math.max((prev[type] || 0) - 1, 0),
@@ -85,7 +82,6 @@ const NotificationPage = () => {
         ),
       );
 
-      // 当前类型未读数归零
       setUnreadCount((prev) => ({
         ...prev,
         [activeKey]: 0,
@@ -103,7 +99,6 @@ const NotificationPage = () => {
 
       setNotificationList((prevList) => prevList.map((item) => ({ ...item, read: true })));
 
-      // 所有未读数清零
       setUnreadCount({
         comment: 0,
         interact: 0,
@@ -148,7 +143,6 @@ const NotificationPage = () => {
 
         setUnreadCount(newUnreadCount);
       }
-      console.log('unreadCount', unreadCount);
     } catch (error) {
       console.error('获取未读消息失败', error);
     }
@@ -225,8 +219,7 @@ const NotificationPage = () => {
           next={loadNotificationData}
           hasMore={hasMore}
           loader={<Skeleton avatar active />}
-          endMessage={<Divider plain>没有更多啦～</Divider>}
-          scrollableTarget="scrollableDiv"
+          pullDownToRefreshThreshold={50}
         >
           <List
             itemLayout={type === 'follow' ? 'horizontal' : 'vertical'}

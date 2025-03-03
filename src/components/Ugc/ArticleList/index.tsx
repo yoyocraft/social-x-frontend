@@ -1,5 +1,5 @@
 import IconText from '@/components/IconText';
-import TagList from '@/components/TagList';
+import TagList from '@/components/Ugc/TagList';
 import { InteractType, UgcType } from '@/constants/UgcConstant';
 import {
   interactUgcUsingPost,
@@ -8,6 +8,7 @@ import {
   listTimelineUgcFeedUsingPost,
 } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
+import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CommentOutlined,
   LikeFilled,
@@ -166,99 +167,113 @@ const ArticleList: React.FC<Props> = ({
   }, [categoryId, viewFollow, fetchType]);
 
   return (
-    <div id="scrollableDiv">
-      <InfiniteScroll
-        dataLength={articleList.length}
-        next={loadUgcData}
-        hasMore={hasMore}
-        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-        scrollableTarget="scrollableDiv"
-      >
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={articleList}
-          renderItem={(item) => (
-            <List.Item
-              key={item.title}
-              style={{
-                padding: '24px 0',
-                borderBottom: '1px solid rgba(0,0,0,0.06)',
-                transition: 'background-color 0.3s',
-              }}
-              actions={[
-                <IconText
-                  icon={item.liked ? LikeFilled : LikeOutlined}
-                  text={item.likeCount?.toString() || '0'}
-                  key="list-vertical-like-o"
-                  onClick={() => handleLike(item)}
-                />,
-                <IconText
-                  icon={CommentOutlined}
-                  text={item.commentaryCount?.toString() || '0'}
-                  key="list-vertical-comment-o"
-                />,
-                <IconText
-                  icon={item.collected ? StarFilled : StarOutlined}
-                  text={item.collectCount?.toString() || '0'}
-                  key="list-vertical-star-o"
-                  onClick={() => handleCollect(item)}
-                />,
-                <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />,
-              ]}
-              extra={
-                item.cover && (
-                  <img
-                    alt="cover"
-                    src={item.cover}
-                    style={{
-                      width: 200,
-                      height: 120,
-                      objectFit: 'cover',
-                      borderRadius: 4,
-                      marginLeft: 24,
-                    }}
-                  />
-                )
+    <InfiniteScroll
+      dataLength={articleList.length}
+      next={loadUgcData}
+      hasMore={hasMore}
+      loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+      pullDownToRefreshThreshold={50}
+    >
+      <List
+        itemLayout="vertical"
+        size="large"
+        dataSource={articleList}
+        renderItem={(item) => (
+          <List.Item
+            key={item.title}
+            style={{
+              padding: '24px 0',
+              borderBottom: '1px solid rgba(0,0,0,0.06)',
+              transition: 'background-color 0.3s',
+            }}
+            actions={[
+              <IconText
+                icon={item.liked ? LikeFilled : LikeOutlined}
+                text={item.likeCount?.toString() || '0'}
+                key="list-vertical-like-o"
+                onClick={() => handleLike(item)}
+              />,
+              <IconText
+                icon={CommentOutlined}
+                text={item.commentaryCount?.toString() || '0'}
+                key="list-vertical-comment-o"
+              />,
+              <IconText
+                icon={item.collected ? StarFilled : StarOutlined}
+                text={item.collectCount?.toString() || '0'}
+                key="list-vertical-star-o"
+                onClick={() => handleCollect(item)}
+              />,
+              <IconText
+                onClick={() => copyCurrentUrlToClipboard(item)}
+                icon={ShareAltOutlined}
+                text="分享"
+                key="list-vertical-share-o"
+              />,
+            ]}
+            extra={
+              item.cover && (
+                <img
+                  alt="cover"
+                  src={item.cover}
+                  style={{
+                    width: 200,
+                    height: 120,
+                    objectFit: 'cover',
+                    borderRadius: 4,
+                    marginLeft: 24,
+                  }}
+                />
+              )
+            }
+          >
+            <List.Item.Meta
+              title={
+                <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
+                  <a href={`/article/${item.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
+                    {item.title}
+                  </a>
+                </Typography.Title>
               }
-            >
-              <List.Item.Meta
-                title={
-                  <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
-                    <a href={`/article/${item.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
-                      {item.title}
-                    </a>
-                  </Typography.Title>
-                }
-                description={
-                  <Typography.Paragraph
-                    ellipsis={{ rows: 2 }}
-                    style={{
-                      color: 'rgba(0,0,0,0.65)',
-                      marginBottom: 4,
-                      fontSize: 14,
-                    }}
-                  >
-                    {item.summary}
-                  </Typography.Paragraph>
-                }
-              />
-              <Space size={8} align="center">
-                <Typography.Text>{item.author?.nickname}</Typography.Text>
-                <Divider type="vertical" />
-                <Typography.Text style={{ fontSize: 12 }}>
-                  {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
-                </Typography.Text>
-                <Divider type="vertical" />
-                <Space size={4}>
-                  <TagList tags={item.tags} />
-                </Space>
+              description={
+                <Typography.Paragraph
+                  ellipsis={{ rows: 2 }}
+                  style={{
+                    color: 'rgba(0,0,0,0.65)',
+                    marginBottom: 4,
+                    fontSize: 14,
+                  }}
+                >
+                  {item.summary}
+                </Typography.Paragraph>
+              }
+            />
+            <Space size={8} align="center">
+              <Typography.Text strong>
+                <Typography.Link
+                  style={{
+                    color: '#1677ff',
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                  }}
+                  href={`/user/${item.author?.userId}`}
+                >
+                  {item.author?.nickname}
+                </Typography.Link>
+              </Typography.Text>
+              <Divider type="vertical" />
+              <Typography.Text style={{ fontSize: 13 }}>
+                {dateTimeFormat(item.gmtModified)}
+              </Typography.Text>
+              <Divider type="vertical" />
+              <Space size={4}>
+                <TagList tags={item.tags} />
               </Space>
-            </List.Item>
-          )}
-        />
-      </InfiniteScroll>
-    </div>
+            </Space>
+          </List.Item>
+        )}
+      />
+    </InfiniteScroll>
   );
 };
 

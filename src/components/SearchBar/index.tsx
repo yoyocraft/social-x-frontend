@@ -1,6 +1,6 @@
 import type React from 'react';
 
-import { useNavigate } from '@umijs/max';
+import { history } from '@umijs/max';
 import { AutoComplete, type AutoCompleteProps, Input } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -10,8 +10,6 @@ const SearchBar: React.FC = () => {
   const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedHistory = localStorage.getItem('searchHistory');
@@ -56,7 +54,7 @@ const SearchBar: React.FC = () => {
   };
 
   const gotoSearchPage = () => {
-    navigate(`/search?keyword=${searchValue}`);
+    history.push(`/search?keyword=${searchValue}`);
   };
 
   const onSelect = (value: string) => {

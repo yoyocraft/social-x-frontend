@@ -4,7 +4,7 @@ import { UgcType } from '@/constants/UgcConstant';
 import { publishUgcUsingPost } from '@/services/socialx/ugcController';
 import { queryUgcQuestionCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import MarkdownPreview from '@uiw/react-markdown-preview';
-import { useModel, useNavigate } from '@umijs/max';
+import { history, useModel } from '@umijs/max';
 import { Alert, Button, Card, Col, Input, message, Row, Select, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -29,7 +29,6 @@ const QuestionPublishPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { initialState } = useModel('@@initialState');
 
-  const navigate = useNavigate();
   const handlePublishQuestion = async () => {
     setLoading(true);
 
@@ -53,7 +52,7 @@ const QuestionPublishPage: React.FC = () => {
       });
 
       message.success('发布成功');
-      navigate('/question');
+      history.replace('/question');
     } catch (error: any) {
     } finally {
       setLoading(false);
