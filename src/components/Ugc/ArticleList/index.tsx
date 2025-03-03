@@ -1,14 +1,22 @@
 import IconText from '@/components/IconText';
 import TagList from '@/components/TagList';
-import { UgcType } from '@/constants/UgcConstant';
+import { InteractType, UgcType } from '@/constants/UgcConstant';
 import {
+  interactUgcUsingPost,
   listFollowUgcFeedUsingPost,
   listRecommendUgcFeedUsingPost,
   listTimelineUgcFeedUsingPost,
 } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
-import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
-import { Divider, List, Skeleton, Space, Typography } from 'antd';
+import {
+  CommentOutlined,
+  LikeFilled,
+  LikeOutlined,
+  ShareAltOutlined,
+  StarFilled,
+  StarOutlined,
+} from '@ant-design/icons';
+import { Divider, List, message, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -28,8 +36,46 @@ const ArticleList: React.FC<Props> = ({
   const [hasMore, setHasMore] = useState(true);
   const isFirstLoad = useRef(true);
 
-  // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
+
+  const handleInteraction = (item: API.UgcResponse, interactionType: InteractType) => {
+    const ugcId = item.ugcId;
+    const interactionField = interactionType === InteractType.LIKE ? 'likeCount' : 'collectCount';
+    const hasInteractionField = interactionType === InteractType.LIKE ? 'liked' : 'collected';
+
+    interactUgcUsingPost({
+      targetId: ugcId,
+      interactionType: interactionType,
+      interact: !item[hasInteractionField],
+      reqId: ugcId,
+    })
+      .then(() => {
+        setArticleList((prev) => {
+          return prev.map((prevItem) => {
+            if (prevItem.ugcId === ugcId) {
+              return {
+                ...prevItem,
+                [interactionField]:
+                  (prevItem[interactionField] || 0) + (item[hasInteractionField] ? -1 : 1),
+                [hasInteractionField]: !item[hasInteractionField],
+              };
+            }
+            return prevItem;
+          });
+        });
+      })
+      .catch(() => {
+        message.error('操作失败，请重试');
+      });
+  };
+
+  const handleLike = (item: API.UgcResponse) => {
+    handleInteraction(item, InteractType.LIKE);
+  };
+
+  const handleCollect = (item: API.UgcResponse) => {
+    handleInteraction(item, InteractType.COLLECT);
+  };
 
   const setArticleData = (res: API.ResultPageCursorResultStringUgcResponse_) => {
     setArticleList((prev) => [...prev, ...(res.data?.data || [])]);
@@ -44,7 +90,7 @@ const ArticleList: React.FC<Props> = ({
       setLoading(true);
       const res = await listTimelineUgcFeedUsingPost({
         cursor: cursorRef.current,
-        ugcType: 'ARTICLE',
+        ugcType: UgcType.ARTICLE,
         categoryId,
       });
       setArticleData(res);
@@ -113,105 +159,106 @@ const ArticleList: React.FC<Props> = ({
     if (isFirstLoad.current) {
       return;
     }
-    // 重置列表数据
     setArticleList([]);
     setHasMore(true);
-
-    // 切换 tab 时，重置 cursor
     cursorRef.current = '0';
     loadUgcData();
   }, [categoryId, viewFollow, fetchType]);
 
   return (
-    <InfiniteScroll
-      dataLength={articleList.length}
-      next={loadUgcData}
-      hasMore={hasMore}
-      loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-      endMessage={<Divider plain>没有更多啦～</Divider>}
-      scrollableTarget="scrollableDiv"
-    >
-      <List
-        itemLayout="vertical"
-        size="large"
-        dataSource={articleList}
-        renderItem={(item) => (
-          <List.Item
-            key={item.title}
-            style={{
-              padding: '24px 0',
-              borderBottom: '1px solid rgba(0,0,0,0.06)',
-              transition: 'background-color 0.3s',
-            }}
-            actions={[
-              <IconText
-                icon={EyeOutlined}
-                text={item.viewCount?.toString() || '0'}
-                key="list-vertical-view-o"
-              />,
-              <IconText
-                icon={LikeOutlined}
-                text={item.likeCount?.toString() || '0'}
-                key="list-vertical-like-o"
-              />,
-              <IconText
-                icon={StarOutlined}
-                text={item.collectCount?.toString() || '0'}
-                key="list-vertical-star-o"
-              />,
-            ]}
-            extra={
-              item.cover && (
-                <img
-                  alt="cover"
-                  src={item.cover}
-                  style={{
-                    width: 200,
-                    height: 120,
-                    objectFit: 'cover',
-                    borderRadius: 4,
-                    marginLeft: 24,
-                  }}
-                />
-              )
-            }
-          >
-            <List.Item.Meta
-              title={
-                <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
-                  <a href={`/article/${item.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
-                    {item.title}
-                  </a>
-                </Typography.Title>
+    <div id="scrollableDiv">
+      <InfiniteScroll
+        dataLength={articleList.length}
+        next={loadUgcData}
+        hasMore={hasMore}
+        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={articleList}
+          renderItem={(item) => (
+            <List.Item
+              key={item.title}
+              style={{
+                padding: '24px 0',
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
+                transition: 'background-color 0.3s',
+              }}
+              actions={[
+                <IconText
+                  icon={item.liked ? LikeFilled : LikeOutlined}
+                  text={item.likeCount?.toString() || '0'}
+                  key="list-vertical-like-o"
+                  onClick={() => handleLike(item)}
+                />,
+                <IconText
+                  icon={CommentOutlined}
+                  text={item.commentaryCount?.toString() || '0'}
+                  key="list-vertical-comment-o"
+                />,
+                <IconText
+                  icon={item.collected ? StarFilled : StarOutlined}
+                  text={item.collectCount?.toString() || '0'}
+                  key="list-vertical-star-o"
+                  onClick={() => handleCollect(item)}
+                />,
+                <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />,
+              ]}
+              extra={
+                item.cover && (
+                  <img
+                    alt="cover"
+                    src={item.cover}
+                    style={{
+                      width: 200,
+                      height: 120,
+                      objectFit: 'cover',
+                      borderRadius: 4,
+                      marginLeft: 24,
+                    }}
+                  />
+                )
               }
-              description={
-                <Typography.Paragraph
-                  ellipsis={{ rows: 2 }}
-                  style={{
-                    color: 'rgba(0,0,0,0.65)',
-                    marginBottom: 4,
-                    fontSize: 14,
-                  }}
-                >
-                  {item.summary}
-                </Typography.Paragraph>
-              }
-            />
-            <Space size={8} align="center">
-              <Typography.Text>{item.author?.nickname}</Typography.Text>
-              <Divider type="vertical" />
-              <Typography.Text style={{ fontSize: 12 }}>
-                {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
-              </Typography.Text>
-              <Divider type="vertical" />
-              <Space size={4}>
-                <TagList tags={item.tags} />
+            >
+              <List.Item.Meta
+                title={
+                  <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
+                    <a href={`/article/${item.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
+                      {item.title}
+                    </a>
+                  </Typography.Title>
+                }
+                description={
+                  <Typography.Paragraph
+                    ellipsis={{ rows: 2 }}
+                    style={{
+                      color: 'rgba(0,0,0,0.65)',
+                      marginBottom: 4,
+                      fontSize: 14,
+                    }}
+                  >
+                    {item.summary}
+                  </Typography.Paragraph>
+                }
+              />
+              <Space size={8} align="center">
+                <Typography.Text>{item.author?.nickname}</Typography.Text>
+                <Divider type="vertical" />
+                <Typography.Text style={{ fontSize: 12 }}>
+                  {item.gmtCreate ? dateTimeFormat(item.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
+                </Typography.Text>
+                <Divider type="vertical" />
+                <Space size={4}>
+                  <TagList tags={item.tags} />
+                </Space>
               </Space>
-            </Space>
-          </List.Item>
-        )}
-      />
-    </InfiniteScroll>
+            </List.Item>
+          )}
+        />
+      </InfiniteScroll>
+    </div>
   );
 };
 

@@ -1,5 +1,4 @@
 import { Footer } from '@/components';
-import CheckInCard from '@/components/CheckInCard';
 import ArticleList from '@/components/Ugc/ArticleList';
 import UgcHotRank from '@/components/UgcHotRank';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
@@ -121,8 +120,8 @@ const ArticleIndex = () => {
           </Col>
 
           <Col span={6}>
-            <CheckInCard />
             <UgcHotRank />
+            {/* 广告位 */}
             <Footer />
           </Col>
         </Row>

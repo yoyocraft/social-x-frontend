@@ -1,4 +1,4 @@
-import { UgcType } from '@/constants/UgcConstant';
+import { UgcStatus, UgcType } from '@/constants/UgcConstant';
 import { listSelfUgcUsingPost, queryUserPageUgcUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
 import { List, message, Skeleton } from 'antd';
@@ -11,13 +11,11 @@ interface Props {
   ugcStatus?: string;
 }
 
-const UserQuestionList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }) => {
+const UserQuestionList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus.PUBLISHED }) => {
   const params = useParams();
   const { userId } = params;
   const [questionList, setQuestionList] = useState<API.UgcResponse[]>([]);
   const [hasMore, setHasMore] = useState(true);
-
-  // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
   const isFirstLoad = useRef(true);
 
@@ -74,30 +72,29 @@ const UserQuestionList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHE
     if (isFirstLoad.current) {
       return;
     }
-    // 重置列表数据
     setQuestionList([]);
     setHasMore(true);
-
-    // 切换 tab 时，重置 cursor
     cursorRef.current = '0';
     loadUgcData();
   }, [ugcStatus]);
 
   return (
-    <InfiniteScroll
-      dataLength={questionList.length}
-      next={loadUgcData}
-      hasMore={hasMore}
-      loader={<Skeleton avatar active />}
-      scrollableTarget="scrollableDiv"
-    >
-      <List
-        itemLayout="vertical"
-        size="large"
-        dataSource={questionList}
-        renderItem={(item) => <UserQuestionCard question={item} />}
-      />
-    </InfiniteScroll>
+    <div id="scrollableDiv">
+      <InfiniteScroll
+        dataLength={questionList.length}
+        next={loadUgcData}
+        hasMore={hasMore}
+        loader={<Skeleton avatar active />}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={questionList}
+          renderItem={(item) => <UserQuestionCard question={item} />}
+        />
+      </InfiniteScroll>
+    </div>
   );
 };
 

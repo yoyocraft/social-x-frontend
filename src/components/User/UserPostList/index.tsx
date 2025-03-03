@@ -1,4 +1,4 @@
-import { UgcType } from '@/constants/UgcConstant';
+import { UgcStatus, UgcType } from '@/constants/UgcConstant';
 import { listSelfUgcUsingPost, queryUserPageUgcUsingPost } from '@/services/socialx/ugcController';
 import { useParams } from '@umijs/max';
 import { List, message, Skeleton } from 'antd';
@@ -10,13 +10,11 @@ interface Props {
   self?: boolean;
   ugcStatus?: string;
 }
-const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }) => {
+const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus.PUBLISHED }) => {
   const params = useParams();
   const { userId } = params;
   const [postList, setPostList] = useState<API.UgcResponse[]>([]);
   const [hasMore, setHasMore] = useState(true);
-
-  // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
   const isFirstLoad = useRef(true);
 
@@ -73,30 +71,29 @@ const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = 'PUBLISHED' }
     if (isFirstLoad.current) {
       return;
     }
-    // 重置列表数据
     setPostList([]);
     setHasMore(true);
-
-    // 切换 tab 时，重置 cursor
     cursorRef.current = '0';
     loadUgcData();
   }, [ugcStatus]);
 
   return (
-    <InfiniteScroll
-      dataLength={postList.length}
-      next={loadUgcData}
-      hasMore={hasMore}
-      loader={<Skeleton avatar active />}
-      scrollableTarget="scrollableDiv"
-    >
-      <List
-        itemLayout="vertical"
-        size="large"
-        dataSource={postList}
-        renderItem={(item) => <UserPostCard post={item} />}
-      />
-    </InfiniteScroll>
+    <div id="scrollableDiv">
+      <InfiniteScroll
+        dataLength={postList.length}
+        next={loadUgcData}
+        hasMore={hasMore}
+        loader={<Skeleton avatar active />}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={postList}
+          renderItem={(item) => <UserPostCard post={item} />}
+        />
+      </InfiniteScroll>
+    </div>
   );
 };
 

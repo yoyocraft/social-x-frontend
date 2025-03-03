@@ -1,14 +1,24 @@
 import IconText from '@/components/IconText';
 import TagList from '@/components/TagList';
+import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
-import { EyeOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
-import { Divider, Image, List, Space, Typography } from 'antd';
+import {
+  CommentOutlined,
+  EyeOutlined,
+  LikeFilled,
+  LikeOutlined,
+  StarFilled,
+  StarOutlined,
+} from '@ant-design/icons';
+import { Divider, Image, List, Space, Tag, Typography } from 'antd';
 
 interface Props {
   article: API.UgcResponse;
 }
 
 const UserArticleCard: React.FC<Props> = ({ article }) => {
+  const canSeeDetail = !!!article.auditRet && article.status === UgcStatus.PUBLISHED;
+  const showRejectInfo = article.status === UgcStatus.REJECTED;
   return (
     <List.Item
       key={article.title}
@@ -18,21 +28,29 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
         transition: 'background-color 0.3s',
       }}
       actions={[
-        <IconText
-          icon={EyeOutlined}
-          text={article.viewCount?.toString() || '0'}
-          key="list-vertical-view-o"
-        />,
-        <IconText
-          icon={LikeOutlined}
-          text={article.likeCount?.toString() || '0'}
-          key="list-vertical-like-o"
-        />,
-        <IconText
-          icon={StarOutlined}
-          text={article.collectCount?.toString() || '0'}
-          key="list-vertical-star-o"
-        />,
+        <Space key={article.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
+          <IconText
+            icon={EyeOutlined}
+            text={article.viewCount?.toString() || '0'}
+            key="list-vertical-view-o"
+          />
+          <IconText
+            icon={article.liked ? LikeFilled : LikeOutlined}
+            text={article.likeCount?.toString() || '0'}
+            key="list-vertical-like-o"
+          />
+          <IconText
+            icon={CommentOutlined}
+            text={article.commentaryCount?.toString() || '0'}
+            key="list-vertical-comment-o"
+          />
+          <IconText
+            icon={article.collected ? StarFilled : StarOutlined}
+            text={article.collectCount?.toString() || '0'}
+            key="list-vertical-star-o"
+          />
+          {showRejectInfo ? <Tag color="error">{article.auditRet}</Tag> : null}
+        </Space>,
       ]}
       extra={
         article.cover && (
@@ -49,10 +67,18 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
     >
       <List.Item.Meta
         title={
-          <Typography.Title level={4} style={{ marginBottom: 8, fontSize: 18 }}>
-            <a href={`/article/${article.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
-              {article.title}
-            </a>
+          <Typography.Title
+            delete={showRejectInfo}
+            level={4}
+            style={{ marginBottom: 8, fontSize: 18 }}
+          >
+            {canSeeDetail ? (
+              article.title
+            ) : (
+              <a href={`/article/${article.ugcId}`} style={{ color: 'rgba(0,0,0,0.85)' }}>
+                {article.title}
+              </a>
+            )}
           </Typography.Title>
         }
         description={

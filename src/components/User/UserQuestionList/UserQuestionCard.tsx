@@ -1,10 +1,14 @@
 import IconText from '@/components/IconText';
+import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   CheckCircleFilled,
   CommentOutlined,
+  EyeOutlined,
+  LikeFilled,
   LikeOutlined,
   ShareAltOutlined,
+  StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
 import { Avatar, Divider, List, Space, Tag, Typography } from 'antd';
@@ -16,6 +20,8 @@ interface Props {
 }
 
 const UserQuestionCard: React.FC<Props> = ({ question }) => {
+  const canSeeDetail = !!!question.auditRet && question.status === UgcStatus.PUBLISHED;
+  const showRejectInfo = question.status === UgcStatus.REJECTED;
   return (
     <List.Item
       key={question.ugcId}
@@ -29,7 +35,12 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
             {question.gmtCreate ? dateTimeFormat(question.gmtCreate, 'YYYY-MM-DD HH:mm') : 'N/A'}
           </Text>
           <IconText
-            icon={LikeOutlined}
+            icon={EyeOutlined}
+            text={question.viewCount?.toString() || '0'}
+            key="list-vertical-view-o"
+          />
+          <IconText
+            icon={question.liked ? LikeFilled : LikeOutlined}
             text={question.likeCount?.toString() || '0'}
             key="list-vertical-like-o"
           />
@@ -39,7 +50,7 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
             key="list-vertical-comment-o"
           />
           <IconText
-            icon={StarOutlined}
+            icon={question.collected ? StarFilled : StarOutlined}
             text={question.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
@@ -67,7 +78,11 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
       ]}
     >
       <List.Item.Meta
-        title={<Typography.Title level={4}>{question.title}</Typography.Title>}
+        title={
+          <Typography.Title delete={!!question.auditRet} level={4}>
+            {question.title}
+          </Typography.Title>
+        }
         description={
           <Typography.Paragraph
             strong
@@ -85,9 +100,12 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
           </Typography.Paragraph>
         }
       />
-      <Link href={`/question/${question.ugcId}`} style={{ fontSize: 16, color: '#1990ff' }}>
-        查看全文
-      </Link>
+      {canSeeDetail && (
+        <Link href={`/question/${question.ugcId}`} style={{ fontSize: 16, color: '#1990ff' }}>
+          查看全文
+        </Link>
+      )}
+      {showRejectInfo && <Tag color="error">{question.auditRet}</Tag>}
     </List.Item>
   );
 };

@@ -1,5 +1,7 @@
-import { Avatar, Button, Card, Divider, Space, Typography } from 'antd';
-import { useState } from 'react';
+import { followUserUsingPost } from '@/services/socialx/userController';
+import { useModel } from '@umijs/max';
+import { Avatar, Button, Card, Divider, message, Space, Typography } from 'antd';
+import React, { useState } from 'react';
 
 const { Meta } = Card;
 const { Text } = Typography;
@@ -9,12 +11,22 @@ interface Props {
   self?: boolean;
 }
 
-const UserCard = (props: Props) => {
-  const { user, self = false } = props;
+const UserCard: React.FC<Props> = ({ user, self = false }) => {
   const [hasFollowed, setHasFollowed] = useState(user.hasFollowed);
-
+  const { initialState } = useModel('@@initialState');
   const toggleFollow = () => {
-    setHasFollowed(!hasFollowed);
+    followUserUsingPost({
+      followUserId: user.userId,
+      reqId: initialState?.currentUser?.userId,
+      follow: !hasFollowed,
+    })
+      .then(() => {
+        message.success(!hasFollowed ? '关注成功' : '取关成功');
+        setHasFollowed(!hasFollowed);
+      })
+      .catch(() => {
+        message.error('操作失败，请重试');
+      });
   };
 
   return (

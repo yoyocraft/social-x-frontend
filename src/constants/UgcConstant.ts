@@ -10,3 +10,11 @@ export enum InteractType {
   COMMENT = 'COMMENT',
   ADOPT = 'ADOPT',
 }
+
+export enum UgcStatus {
+  PUBLISHED = 'PUBLISHED',
+  PRIVATE = 'PRIVATE',
+  DRAFT = 'DRAFT',
+  AUDITING = 'AUDITING',
+  REJECTED = 'REJECTED',
+}

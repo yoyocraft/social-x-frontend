@@ -1,8 +1,8 @@
 import { Footer } from '@/components';
 import PostPublisher from '@/components/PostPublisher';
 import PostList from '@/components/Ugc/PostList';
+import UserCard from '@/components/User/UserCard';
 import { UgcType } from '@/constants/UgcConstant';
-import UserCard from '@/pages/User/components/UserCard';
 import { publishUgcUsingPost } from '@/services/socialx/ugcController';
 import { queryUgcTopicUsingGet } from '@/services/socialx/ugcMetadataController';
 import { useModel } from '@umijs/max';

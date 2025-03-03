@@ -1,7 +1,16 @@
 import IconText from '@/components/IconText';
+import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
-import { CommentOutlined, LikeOutlined, ShareAltOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Image, List, Space, Typography } from 'antd';
+import {
+  CommentOutlined,
+  EyeOutlined,
+  LikeFilled,
+  LikeOutlined,
+  ShareAltOutlined,
+  StarFilled,
+  StarOutlined,
+} from '@ant-design/icons';
+import { Avatar, Divider, Image, List, Space, Tag, Typography } from 'antd';
 
 const { Link, Text, Paragraph } = Typography;
 
@@ -10,6 +19,9 @@ interface Props {
 }
 
 const UserPostCard: React.FC<Props> = ({ post }) => {
+  const canSeeDetail = !!!post.auditRet && post.status === UgcStatus.PUBLISHED;
+  const showRejectInfo = post.status === UgcStatus.REJECTED;
+
   const renderPostContent = (item: API.UgcResponse) => {
     const hasLink = item.content?.includes('http');
 
@@ -45,25 +57,35 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
         borderBottom: '1px solid rgba(0,0,0,0.06)',
       }}
       actions={[
-        <IconText
-          icon={LikeOutlined}
-          text={post.likeCount?.toString() || '0'}
-          key="list-vertical-like-o"
-        />,
-        <IconText
-          icon={CommentOutlined}
-          text={post.commentaryCount?.toString() || '0'}
-          key="list-vertical-comment-o"
-        />,
-        <IconText
-          icon={StarOutlined}
-          text={post.collectCount?.toString() || '0'}
-          key="list-vertical-star-o"
-        />,
-        <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />,
-        <Link key={post.ugcId} href={`/post/${post.ugcId}`} style={{ color: '#1990ff' }}>
-          查看原贴
-        </Link>,
+        <Space key={post.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
+          <IconText
+            icon={EyeOutlined}
+            text={post.viewCount?.toString() || '0'}
+            key="list-vertical-view-o"
+          />
+          <IconText
+            icon={post.liked ? LikeFilled : LikeOutlined}
+            text={post.likeCount?.toString() || '0'}
+            key="list-vertical-like-o"
+          />
+          <IconText
+            icon={CommentOutlined}
+            text={post.commentaryCount?.toString() || '0'}
+            key="list-vertical-comment-o"
+          />
+          <IconText
+            icon={post.collected ? StarFilled : StarOutlined}
+            text={post.collectCount?.toString() || '0'}
+            key="list-vertical-star-o"
+          />
+          <IconText icon={ShareAltOutlined} text="分享" key="list-vertical-share-o" />
+          {canSeeDetail && (
+            <Link key={post.ugcId} href={`/post/${post.ugcId}`} style={{ color: '#1990ff' }}>
+              查看原贴
+            </Link>
+          )}
+          {showRejectInfo && <Tag color="error">{post.auditRet}</Tag>}
+        </Space>,
       ]}
     >
       <List.Item.Meta
