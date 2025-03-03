@@ -138,7 +138,6 @@ const QuestionList: React.FC<QuestionListProps> = ({
         next={timelineQuestionFeed}
         hasMore={hasMore}
         loader={<Skeleton avatar active />}
-        endMessage={<Divider plain>没有更多啦～</Divider>}
         scrollableTarget="scrollableDiv"
       >
         <List

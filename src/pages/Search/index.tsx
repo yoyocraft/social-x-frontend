@@ -3,6 +3,7 @@ import UgcHotRank from '@/components/UgcHotRank';
 import UserArticleCard from '@/components/User/UserArticleList/UserArticleCard';
 import UserPostCard from '@/components/User/UserPostList/UserPostCard';
 import UserQuestionCard from '@/components/User/UserQuestionList/UserQuestionCard';
+import { UgcType } from '@/constants/UgcConstant';
 import { listTimelineUgcFeedUsingPost } from '@/services/socialx/ugcController';
 import { CloseOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
@@ -239,7 +240,7 @@ const SearchPage: React.FC = () => {
         </Col>
 
         <Col xs={0} md={6} lg={5}>
-          <UgcHotRank />
+          <UgcHotRank ugcType={UgcType.ALL} title="热门榜单" />
           <Footer />
         </Col>
       </Row>

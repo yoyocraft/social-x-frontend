@@ -47,10 +47,17 @@ export async function listFollowUgcFeedUsingPost(
   });
 }
 
-/** listHotUgc GET /api/ugc/hot */
-export async function listHotUgcUsingGet(options?: { [key: string]: any }) {
+/** listHotUgc POST /api/ugc/hot */
+export async function listHotUgcUsingPost(
+  body: API.UgcQueryRequest,
+  options?: { [key: string]: any },
+) {
   return request<API.ResultListUgcResponse_>('/api/ugc/hot', {
-    method: 'GET',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   });
 }

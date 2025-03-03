@@ -1,4 +1,5 @@
 export enum UgcType {
+  ALL = 'ALL',
   ARTICLE = 'ARTICLE',
   POST = 'POST',
   QUESTION = 'QUESTION',

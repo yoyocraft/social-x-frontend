@@ -1,18 +1,39 @@
-import { listHotUgcUsingGet } from '@/services/socialx/ugcController';
+import type React from 'react';
+
+import { listHotUgcUsingPost } from '@/services/socialx/ugcController';
+import { FireOutlined, StarFilled } from '@ant-design/icons';
 import { Link } from '@umijs/max';
-import { Card, List, Skeleton } from 'antd';
+import { Card, Empty, List, Skeleton, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
-const UgcHotRank = () => {
+interface Props {
+  ugcType: string;
+  title?: string;
+}
+
+const UgcHotRank: React.FC<Props> = ({ ugcType, title = '文章榜' }) => {
   const [hotUgcList, setHotUgcList] = useState<API.UgcResponse[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const calculateJumpUrl = (item: API.UgcResponse) => {
+    switch (ugcType) {
+      case 'ARTICLE':
+        return `/article/${item.ugcId}`;
+      case 'POST':
+        return `/post/${item.ugcId}`;
+      case 'QUESTION':
+        return `/question/${item.ugcId}`;
+      default:
+        return `/article/${item.ugcId}`;
+    }
+  };
 
   const loadHotUgc = () => {
     if (loading) {
       return;
     }
     setLoading(true);
-    listHotUgcUsingGet()
+    listHotUgcUsingPost({ ugcType })
       .then((res) => {
         setHotUgcList(res.data || []);
       })
@@ -23,33 +44,91 @@ const UgcHotRank = () => {
 
   useEffect(() => {
     loadHotUgc();
-  }, []);
+  }, []); // Removed ugcType as a dependency
 
   if (loading) {
-    return <Skeleton active />;
+    return (
+      <Card
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <StarFilled style={{ color: '#faad14' }} />
+            <span>{title}</span>
+          </div>
+        }
+        style={{ background: '#f0f7ff' }}
+      >
+        <Skeleton active />
+      </Card>
+    );
+  }
+
+  if (!ugcType || !hotUgcList.length) {
+    return (
+      <Card
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <StarFilled style={{ color: '#faad14' }} />
+            <span>{title}</span>
+          </div>
+        }
+        style={{ background: '#f0f7ff' }}
+      >
+        <Empty description="暂无数据" />
+      </Card>
+    );
   }
 
   return (
-    <Card title="📈 文章榜">
+    <Card
+      title={
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <StarFilled style={{ color: '#faad14' }} />
+          <span>{title}</span>
+        </div>
+      }
+      styles={{ body: { padding: '12px 24px' } }}
+    >
       <List
         size="small"
         dataSource={hotUgcList}
         renderItem={(item) => (
-          <List.Item>
-            <Link
-              to={`/article/${item.ugcId}`}
-              style={{
-                display: 'inline-block',
-                maxWidth: 'calc(100% - 38px)',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                verticalAlign: 'middle',
-              }}
-              key={item.ugcId}
-            >
-              {item.title}
-            </Link>
+          <List.Item style={{ padding: '12px 0', border: 'none' }}>
+            <div style={{ width: '100%' }}>
+              <Link
+                to={calculateJumpUrl(item)}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: 8,
+                  width: '100%',
+                }}
+              >
+                <Typography.Text
+                  ellipsis
+                  style={{
+                    flex: 1,
+                    fontSize: '14px',
+                    color: 'rgba(0, 0, 0, 0.88)',
+                  }}
+                >
+                  {item.title}
+                </Typography.Text>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    color: '#8c8c8c',
+                    fontSize: '12px',
+                    flexShrink: 0,
+                  }}
+                >
+                  <FireOutlined style={{ fontSize: '12px' }} />
+                  <span>{item.viewCount || 0}</span>
+                </div>
+              </Link>
+            </div>
           </List.Item>
         )}
       />

@@ -1,6 +1,7 @@
 import { Footer } from '@/components';
 import ArticleList from '@/components/Ugc/ArticleList';
 import UgcHotRank from '@/components/UgcHotRank';
+import { UgcType } from '@/constants/UgcConstant';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { Affix, Card, Col, Layout, Menu, Row, Tabs } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -120,7 +121,7 @@ const ArticleIndex = () => {
           </Col>
 
           <Col span={6}>
-            <UgcHotRank />
+            <UgcHotRank ugcType={UgcType.ARTICLE} />
             {/* 广告位 */}
             <Footer />
           </Col>

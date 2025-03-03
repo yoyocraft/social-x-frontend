@@ -1,5 +1,7 @@
 import { Footer } from '@/components';
 import QuestionList from '@/components/Ugc/QuestionList';
+import UgcHotRank from '@/components/UgcHotRank';
+import { UgcType } from '@/constants/UgcConstant';
 import { queryUgcQuestionCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { QuestionOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Divider, Form, Row, Space, Tabs, Tag, Typography } from 'antd';
@@ -92,7 +94,7 @@ const QuestionPage: React.FC = () => {
         </Col>
 
         <Col xs={24} md={6}>
-          <Card style={{ background: 'red', padding: 16 }}>右侧内容</Card>
+          <UgcHotRank ugcType={UgcType.QUESTION} title="热门问答" />
           <Footer />
         </Col>
       </Row>

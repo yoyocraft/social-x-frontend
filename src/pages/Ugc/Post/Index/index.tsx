@@ -1,6 +1,7 @@
 import { Footer } from '@/components';
 import PostPublisher from '@/components/PostPublisher';
 import PostList from '@/components/Ugc/PostList';
+import UgcHotRank from '@/components/UgcHotRank';
 import UserCard from '@/components/User/UserCard';
 import { UgcType } from '@/constants/UgcConstant';
 import { publishUgcUsingPost } from '@/services/socialx/ugcController';
@@ -93,6 +94,7 @@ export default function PostPage() {
 
           <Col span={6}>
             {initialState?.currentUser && <UserCard user={initialState.currentUser} self />}
+            <UgcHotRank ugcType={UgcType.POST} title="帖子榜" />
             <Footer />
           </Col>
         </Row>
