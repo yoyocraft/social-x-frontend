@@ -2,30 +2,33 @@ import MdEditor from '@/components/MdEditor';
 import PictureUploader from '@/components/PictureUpload';
 import { MediaSource } from '@/constants/MediaConstant';
 import { UgcType } from '@/constants/UgcConstant';
-import { publishUgcUsingPost } from '@/services/socialx/ugcController';
+import { publishUgcUsingPost, queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import {
   queryUgcArticleTagUsingGet,
   queryUgcCategoryUsingGet,
 } from '@/services/socialx/ugcMetadataController';
 import { HomeOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { useModel, useNavigate } from '@umijs/max';
+import { useModel, useNavigate, useParams } from '@umijs/max';
 import { Button, Flex, Form, Input, message, Modal, Select, Typography } from 'antd';
 import 'bytemd/dist/index.css';
 import 'github-markdown-css/github-markdown-light.css';
 import 'highlight.js/styles/vs.css';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const MarkdownEditor: React.FC = () => {
+const ArticlePublisher: React.FC = () => {
+  const param = useParams();
+  const { ugcId } = param;
+  const [initialValue, setInitialValue] = useState<API.UgcResponse>();
   const { initialState } = useModel('@@initialState');
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [category, setCategory] = useState<string | undefined>(undefined);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [coverImage, setCoverImage] = useState('');
-  const [summary, setSummary] = useState('');
+  const [coverImage, setCoverImage] = useState<string>('');
+  const [summary, setSummary] = useState<string>('');
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [tagOptions, setTagOptions] = useState([]);
@@ -33,6 +36,34 @@ const MarkdownEditor: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  const loadEditUgcData = async () => {
+    try {
+      const res = await queryUgcDetailUsingPost({ ugcId, editing: true });
+      setInitialValue(res.data || {});
+    } catch (error: any) {}
+  };
+
+  useEffect(() => {
+    if (!ugcId) {
+      return;
+    }
+    const fetchData = async () => {
+      await loadEditUgcData();
+    };
+    fetchData();
+  }, [ugcId]);
+
+  useEffect(() => {
+    if (initialValue) {
+      setTitle(initialValue.title || '');
+      setContent(initialValue.content || '');
+      setCategory(initialValue.categoryId || undefined);
+      setSelectedTags(initialValue.tags || []);
+      setCoverImage(initialValue.cover || '');
+      setSummary(initialValue.summary || '');
+    }
+  }, [initialValue]);
 
   const loadCategories = async () => {
     const res = await queryUgcCategoryUsingGet();
@@ -43,6 +74,7 @@ const MarkdownEditor: React.FC = () => {
     // @ts-ignore
     setCategoryOptions(opts);
   };
+
   const loadTags = async () => {
     const res = await queryUgcArticleTagUsingGet();
     const ugcTagList = res.data?.ugcTagList || [];
@@ -67,15 +99,16 @@ const MarkdownEditor: React.FC = () => {
   };
 
   const doPublishArticle = async (drafting = false) => {
-    if (!category) {
-      message.error('请选择分类');
-      return;
+    if (!drafting) {
+      if (!category) {
+        message.error('请选择分类');
+        return;
+      }
+      if (!summary) {
+        message.error('请输入文章摘要');
+        return;
+      }
     }
-    if (!summary) {
-      message.error('请输入文章摘要');
-      return;
-    }
-
     setLoading(true);
     try {
       const reqId = initialState?.currentUser?.userId + '_' + title;
@@ -89,6 +122,7 @@ const MarkdownEditor: React.FC = () => {
         cover: coverImage,
         drafting,
         reqId,
+        ugcId,
       });
       const successMesssage = drafting ? '保存草稿成功' : '发布成功';
       message.success(successMesssage);
@@ -144,9 +178,13 @@ const MarkdownEditor: React.FC = () => {
       <Modal
         title="发布文章"
         open={isModalOpen}
+        onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
             取消
+          </Button>,
+          <Button key="draft" onClick={() => doPublishArticle(true)}>
+            存草稿箱
           </Button>,
           <Button key="submit" type="primary" loading={loading} onClick={() => doPublishArticle()}>
             确认并发布
@@ -199,4 +237,4 @@ const MarkdownEditor: React.FC = () => {
   );
 };
 
-export default MarkdownEditor;
+export default ArticlePublisher;
