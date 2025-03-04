@@ -31,36 +31,36 @@ const PostCard = (props: Props) => {
   const [collected, setCollected] = useState(false);
 
   const handleLike = () => {
-    const interact = !ugc.liked;
+    const newLiked = !liked;
     interactUgcUsingPost({
       targetId: ugc.ugcId,
       interactionType: InteractType.LIKE,
-      interact,
+      interact: newLiked,
       reqId: ugc.ugcId,
     })
       .then(() => {
-        setLikeCount((prev) => (prev || 0) + (liked ? -1 : 1));
-        setLiked(interact);
+        setLikeCount((prev) => (newLiked ? prev + 1 : prev - 1));
+        setLiked(newLiked);
       })
-      .catch((error: any) => {
-        message.error(error.message || '失败，请重试');
+      .catch(() => {
+        message.error('点赞失败，请重试');
       });
   };
 
   const handleCollect = () => {
-    const interact = !ugc.collected;
+    const newCollected = !collected;
     interactUgcUsingPost({
       targetId: ugc.ugcId,
       interactionType: InteractType.COLLECT,
-      interact,
+      interact: newCollected,
       reqId: ugc.ugcId,
     })
       .then(() => {
-        setCollectCount((prev) => (prev || 0) + (collected ? -1 : 1));
-        setCollected(interact);
+        setCollectCount((prev) => (newCollected ? prev + 1 : prev - 1));
+        setCollected(newCollected);
       })
-      .catch((error: any) => {
-        message.error(error.message || '失败，请重试');
+      .catch(() => {
+        message.error('收藏失败，请重试');
       });
   };
 
