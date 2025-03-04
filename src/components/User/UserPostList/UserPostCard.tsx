@@ -1,13 +1,12 @@
 import IconText from '@/components/IconText';
+import ShareIconText from '@/components/ShareModal';
 import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
-import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CommentOutlined,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
-  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
@@ -79,12 +78,7 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
             text={post.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
-          <IconText
-            onClick={() => copyCurrentUrlToClipboard(post)}
-            icon={ShareAltOutlined}
-            text="分享"
-            key="list-vertical-share-o"
-          />
+          <ShareIconText key="list-vertical-share-o" item={post} />
           {canSeeDetail && (
             <Link key={post.ugcId} href={`/post/${post.ugcId}`} style={{ color: '#1990ff' }}>
               查看原贴

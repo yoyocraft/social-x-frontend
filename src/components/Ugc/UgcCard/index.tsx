@@ -1,6 +1,7 @@
 import AiSummary from '@/components/AiSummary';
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
+import ShareIconText from '@/components/ShareModal';
 import TagList from '@/components/Ugc/TagList';
 import { InteractType, UgcType } from '@/constants/UgcConstant';
 import { interactUgcUsingPost } from '@/services/socialx/ugcController';
@@ -10,7 +11,6 @@ import {
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
-  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
@@ -80,12 +80,7 @@ const UgcCard = (props: Props) => {
             key="list-vertical-star-o"
             onClick={handleCollect}
           />,
-          <IconText
-            icon={ShareAltOutlined}
-            text="分享"
-            key="list-vertical-share-o"
-            onClick={() => {}}
-          />,
+          <ShareIconText key="list-vertical-share-o" item={ugc} />,
         ]}
       >
         <Title level={1} style={{ fontSize: 24 }}>

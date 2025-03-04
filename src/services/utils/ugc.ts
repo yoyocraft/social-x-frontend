@@ -1,8 +1,15 @@
 import { message } from 'antd';
 
+export const getBaseUrl = () => {
+  const { origin, pathname } = window.location;
+  return `${origin}${pathname}`;
+};
+
 export const copyCurrentUrlToClipboard = (item?: API.UgcResponse) => {
-  const currentUrl = window.location.href;
-  const copyText = `我在SocialX发现了「${item?.title}」，快来看看 ${currentUrl}`;
+  const currentUrl = getBaseUrl();
+  const copyText = item
+    ? `我在SocialX发现了「${item?.title}」，快来看看 ${currentUrl}`
+    : currentUrl;
   navigator.clipboard
     .writeText(copyText)
     .then(() => {

@@ -1,14 +1,13 @@
 import IconText from '@/components/IconText';
+import ShareIconText from '@/components/ShareModal';
 import TagList from '@/components/Ugc/TagList';
 import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
-import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CommentOutlined,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
-  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
@@ -55,12 +54,7 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
             text={article.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
-          <IconText
-            onClick={() => copyCurrentUrlToClipboard(article)}
-            icon={ShareAltOutlined}
-            text="分享"
-            key="list-vertical-share-o"
-          />
+          <ShareIconText key="list-vertical-share-o" item={article} />,
           {showRejectInfo ? <Tag color="error">{article.auditRet}</Tag> : null}
           {showEditFeature && (
             <Button
