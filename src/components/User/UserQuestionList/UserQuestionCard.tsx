@@ -1,14 +1,13 @@
 import IconText from '@/components/IconText';
+import ShareIconText from '@/components/ShareModal';
 import { UgcStatus } from '@/constants/UgcConstant';
 import { dateTimeFormat } from '@/services/utils/time';
-import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CheckCircleFilled,
   CommentOutlined,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
-  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
@@ -55,12 +54,7 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
             text={question.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
-          <IconText
-            onClick={() => copyCurrentUrlToClipboard(question)}
-            icon={ShareAltOutlined}
-            text="分享"
-            key="list-vertical-share-o"
-          />
+          <ShareIconText key="list-vertical-share-o" item={question} />,
           <Space key={question.author?.userId}>
             <Avatar size={32} src={question.author?.avatar} />
             <Text strong>

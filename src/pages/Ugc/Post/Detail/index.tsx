@@ -1,18 +1,17 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
+import ShareIconText from '@/components/ShareModal';
 import RelatedContentCard from '@/components/Ugc/RelatedContentCard';
 import UserCard from '@/components/User/UserCard';
 import { InteractType } from '@/constants/UgcConstant';
 import { interactUgcUsingPost, queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
-import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   LikeFilled,
   LikeOutlined,
   MessageOutlined,
   PlusOutlined,
-  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
@@ -119,12 +118,7 @@ const PostCard = (props: Props) => {
             key="list-vertical-star-o"
             onClick={handleCollect}
           />
-          <IconText
-            icon={ShareAltOutlined}
-            text="分享"
-            key="list-vertical-share-o"
-            onClick={() => copyCurrentUrlToClipboard(ugc)}
-          />
+          <ShareIconText key="list-vertical-share-o" item={ugc} />,
         </Space>
       </Card>
     </div>

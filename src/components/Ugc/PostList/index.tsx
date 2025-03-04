@@ -5,12 +5,10 @@ import {
   listTimelineUgcFeedUsingPost,
 } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
-import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CommentOutlined,
   LikeFilled,
   LikeOutlined,
-  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
@@ -177,12 +175,6 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
                 text={item.collectCount?.toString() || '0'}
                 key="list-vertical-star-o"
                 onClick={() => handleCollect(item)}
-              />,
-              <IconText
-                onClick={() => copyCurrentUrlToClipboard(item)}
-                icon={ShareAltOutlined}
-                text="分享"
-                key="list-vertical-share-o"
               />,
               <Link key={item.ugcId} href={`/post/${item.ugcId}`} style={{ color: '#1990ff' }}>
                 查看原贴

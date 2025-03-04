@@ -6,13 +6,11 @@ import {
   listTimelineUgcFeedUsingPost,
 } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
-import { copyCurrentUrlToClipboard } from '@/services/utils/ugc';
 import {
   CheckCircleFilled,
   CommentOutlined,
   LikeFilled,
   LikeOutlined,
-  ShareAltOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
@@ -172,12 +170,6 @@ const QuestionList: React.FC<QuestionListProps> = ({
                   text={item.collectCount?.toString() || '0'}
                   key="list-vertical-star-o"
                   onClick={() => handleCollect(item)}
-                />
-                <IconText
-                  onClick={() => copyCurrentUrlToClipboard(item)}
-                  icon={ShareAltOutlined}
-                  text="分享"
-                  key="list-vertical-share-o"
                 />
                 <Space key={item.author?.userId}>
                   <Avatar size={32} src={item.author?.avatar} />
