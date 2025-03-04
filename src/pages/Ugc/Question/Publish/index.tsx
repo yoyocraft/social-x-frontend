@@ -54,6 +54,7 @@ const QuestionPublishPage: React.FC = () => {
       message.success('发布成功');
       history.replace('/question');
     } catch (error: any) {
+      message.error(error.message || '发布失败，请重试');
     } finally {
       setLoading(false);
     }
@@ -80,7 +81,7 @@ const QuestionPublishPage: React.FC = () => {
       setQaCategories(categories || []);
       setSelectedCategory(categories?.[0]);
     } catch (error: any) {
-      // 错误处理
+      message.error(error.message);
     }
   };
 

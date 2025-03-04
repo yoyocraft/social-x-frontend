@@ -38,7 +38,6 @@ const MdEditor = (props: Props) => {
       <Editor
         value={value}
         placeholder={placeholder}
-        mode="split"
         plugins={plugins}
         onChange={onChange}
         uploadImages={onUploadImagesHandle}

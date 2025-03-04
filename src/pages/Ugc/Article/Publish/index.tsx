@@ -7,10 +7,8 @@ import {
   queryUgcArticleTagUsingGet,
   queryUgcCategoryUsingGet,
 } from '@/services/socialx/ugcMetadataController';
-import { HomeOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
 import { history, useModel, useParams } from '@umijs/max';
-import { Button, Flex, Form, Input, message, Modal, Select, Typography } from 'antd';
+import { Button, Card, Flex, Form, Input, message, Modal, Select, Typography } from 'antd';
 import 'bytemd/dist/index.css';
 import 'github-markdown-css/github-markdown-light.css';
 import 'highlight.js/styles/vs.css';
@@ -34,6 +32,8 @@ const ArticlePublisher: React.FC = () => {
   const [tagOptions, setTagOptions] = useState([]);
 
   const [loading, setLoading] = useState(false);
+
+  const summaryMaxLength = 200;
 
   const loadEditUgcData = async () => {
     try {
@@ -92,6 +92,7 @@ const ArticlePublisher: React.FC = () => {
       message.error('请输入文章内容');
       return;
     }
+    setSummary(initialValue?.summary || content.substring(0, summaryMaxLength));
     Promise.all([loadCategories(), loadTags()]);
     setIsModalOpen(true);
   };
@@ -141,21 +142,7 @@ const ArticlePublisher: React.FC = () => {
   };
 
   return (
-    <PageContainer
-      title="发布文章"
-      breadcrumb={{
-        separator: '>',
-        routes: [
-          {
-            path: '/',
-            breadcrumbName: 'Home',
-            title: <HomeOutlined />,
-            onClick: () => history.push('/'),
-          },
-          { breadcrumbName: '发布文章' },
-        ],
-      }}
-    >
+    <Card title="发布文章">
       <Flex gap="8px">
         <Input
           placeholder="输入文章标题..."
@@ -224,14 +211,14 @@ const ArticlePublisher: React.FC = () => {
             <Input.TextArea
               value={summary}
               onChange={handleSummaryChange}
-              maxLength={100}
+              maxLength={summaryMaxLength}
               rows={4}
               placeholder="输入文章摘要..."
             />
           </Form.Item>
         </Form>
       </Modal>
-    </PageContainer>
+    </Card>
   );
 };
 

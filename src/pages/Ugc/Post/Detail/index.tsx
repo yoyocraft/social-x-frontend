@@ -16,7 +16,7 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { useParams } from '@umijs/max';
+import { useModel, useParams } from '@umijs/max';
 import { Avatar, Button, Card, Col, message, Row, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -43,8 +43,8 @@ const PostCard = (props: Props) => {
         setLikeCount((prev) => (prev || 0) + (liked ? -1 : 1));
         setLiked(interact);
       })
-      .catch(() => {
-        message.error('失败，请重试');
+      .catch((error: any) => {
+        message.error(error.message || '失败，请重试');
       });
   };
 
@@ -60,8 +60,8 @@ const PostCard = (props: Props) => {
         setCollectCount((prev) => (prev || 0) + (collected ? -1 : 1));
         setCollected(interact);
       })
-      .catch(() => {
-        message.error('失败，请重试');
+      .catch((error: any) => {
+        message.error(error.message || '失败，请重试');
       });
   };
 
@@ -135,7 +135,9 @@ const PostDetail: React.FC = () => {
   const params = useParams();
   const { ugcId } = params;
 
-  const [postDetail, setPostDetail] = useState<API.UgcResponse | null>(null);
+  const [postDetail, setPostDetail] = useState<API.UgcResponse>();
+
+  const { initialState } = useModel('@@initialState');
 
   const loadUgcDetail = async () => {
     const res = await queryUgcDetailUsingPost({ ugcId });
@@ -195,7 +197,12 @@ const PostDetail: React.FC = () => {
               boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}
           >
-            {postDetail.author && <UserCard user={postDetail.author} />}
+            {postDetail.author && (
+              <UserCard
+                self={initialState?.currentUser?.userId === postDetail.author.userId}
+                user={postDetail.author}
+              />
+            )}
             <RelatedContentCard
               style={{ marginTop: 16 }}
               ugcId={postDetail.ugcId || ''}
