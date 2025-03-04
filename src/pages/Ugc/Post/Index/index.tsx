@@ -58,7 +58,7 @@ export default function PostPage() {
   return (
     <Layout
       style={{
-        padding: '24px',
+        padding: '16px',
         transition: 'margin 0.2s',
         height: '100vh',
         margin: '0 24px',

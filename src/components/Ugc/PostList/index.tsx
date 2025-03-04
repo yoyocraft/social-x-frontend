@@ -14,7 +14,7 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Avatar, Divider, Image, List, message, Skeleton, Space, Typography } from 'antd';
+import { Avatar, Image, List, message, Skeleton, Space, Typography } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -29,8 +29,6 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
   const [postList, setPostList] = useState<API.UgcResponse[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const isFirstLoad = useRef(true);
-
-  // 使用 useRef 管理 cursor
   const cursorRef = useRef('0');
 
   const setPostData = (res: API.ResultPageCursorResultStringUgcResponse_) => {
@@ -149,7 +147,6 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
       next={loadPostData}
       hasMore={hasMore}
       loader={<Skeleton avatar active />}
-      endMessage={<Divider plain>没有更多啦～</Divider>}
       pullDownToRefreshThreshold={50}
     >
       <List

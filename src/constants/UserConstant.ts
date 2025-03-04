@@ -3,6 +3,11 @@ export enum IdentityType {
   EMAIL_PASSWORD = 'EMAIL_PASSWORD',
 }
 
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}
+
 export const emailCheckRule = [
   {
     required: true,

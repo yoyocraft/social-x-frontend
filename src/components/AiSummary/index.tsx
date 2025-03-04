@@ -30,7 +30,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
 
     eventSource.onmessage = (event) => {
       if (firstMessage) {
-        message.success('开始总结');
+        message.success('开始总结文章');
         firstMessage = false;
       }
       const ret = event.data + '\n';
@@ -39,7 +39,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
 
     eventSource.onerror = (event) => {
       if (event.eventPhase === EventSource.CLOSED) {
-        message.info('总结完成');
+        message.info('文章总结完成');
         eventSource.close();
       }
     };
@@ -55,7 +55,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
   return loading ? (
     <Card className="ai-summary-card" bordered={false}>
       <Alert
-        message={<Typography.Title level={3}>智能总结</Typography.Title>}
+        message={<Typography.Title level={4}>智能总结</Typography.Title>}
         description={
           <>
             {summary && (
@@ -64,7 +64,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
                 style={{
                   backgroundColor: 'transparent',
                   color: 'black',
-                  fontSize: 18,
+                  fontSize: 15,
                 }}
                 className="markdown-preview"
               />

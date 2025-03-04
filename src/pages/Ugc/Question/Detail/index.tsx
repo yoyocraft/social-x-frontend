@@ -4,20 +4,24 @@ import RelatedContentCard from '@/components/Ugc/RelatedContentCard';
 import UgcCard from '@/components/Ugc/UgcCard';
 import UserCard from '@/components/User/UserCard';
 import { queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
-import { useParams } from '@umijs/max';
-import { Affix, Col, Row, Skeleton, Space } from 'antd';
+import { useModel, useParams } from '@umijs/max';
+import { Affix, Col, message, Row, Skeleton, Space } from 'antd';
 import { useEffect, useState } from 'react';
 
 const QuestionDetail: React.FC = () => {
   const params = useParams();
   const { ugcId } = params;
 
-  const [questionDetail, setQuestionDetail] = useState<API.UgcResponse | null>(null);
+  const [questionDetail, setQuestionDetail] = useState<API.UgcResponse>();
+
+  const { initialState } = useModel('@@initialState');
 
   const loadUgcDetail = async () => {
-    const res = await queryUgcDetailUsingPost({ ugcId });
-    if (res.data) {
+    try {
+      const res = await queryUgcDetailUsingPost({ ugcId });
       setQuestionDetail(res.data);
+    } catch (error: any) {
+      message.error(error.message);
     }
   };
 
@@ -46,7 +50,12 @@ const QuestionDetail: React.FC = () => {
 
         <Col span={6}>
           <Space direction="vertical">
-            {questionDetail.author && <UserCard user={questionDetail.author} />}
+            {questionDetail.author && (
+              <UserCard
+                self={initialState?.currentUser?.userId === questionDetail.author.userId}
+                user={questionDetail.author}
+              />
+            )}
             <Affix offsetTop={56}>
               {questionDetail.content && <MdNavbar content={questionDetail.content} />}
               <RelatedContentCard

@@ -59,7 +59,7 @@ const SearchBar: React.FC = () => {
 
   const onSelect = (value: string) => {
     setSearchValue(value);
-    saveToHistory(value);
+    gotoSearchPage();
   };
 
   const onSearch = (value: string) => {
