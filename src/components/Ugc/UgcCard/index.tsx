@@ -1,7 +1,8 @@
+import AiSummary from '@/components/AiSummary';
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
 import TagList from '@/components/Ugc/TagList';
-import { InteractType } from '@/constants/UgcConstant';
+import { InteractType, UgcType } from '@/constants/UgcConstant';
 import { interactUgcUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
@@ -123,6 +124,8 @@ const UgcCard = (props: Props) => {
             </>
           )}
         </Space>
+        <div style={{ marginBottom: 16 }} />
+        {ugc.type === UgcType.ARTICLE && ugc.ugcId && <AiSummary ugcId={ugc.ugcId} />}
         <div style={{ marginBottom: 16 }} />
         <MdViewer value={ugc.content} />
         <div style={{ marginBottom: 16 }} />
