@@ -72,6 +72,11 @@ declare namespace API {
     reqId?: string;
   };
 
+  type generateSummaryUsingGETParams = {
+    reqId?: string;
+    ugcId?: string;
+  };
+
   type getUserInfoUsingGETParams = {
     cursor?: number;
     page?: number;
@@ -361,6 +366,10 @@ declare namespace API {
     reqId?: string;
     revokePermissions?: string[];
     role?: string;
+  };
+
+  type SseEmitter = {
+    timeout?: number;
   };
 
   type UgcCategoryInfoResponse = {
