@@ -1,6 +1,7 @@
 import { Footer } from '@/components';
 import ArticleList from '@/components/Ugc/ArticleList';
 import UgcHotRank from '@/components/Ugc/UgcHotRank';
+import SuggestedUserCard from '@/components/User/SuggestedUserCard';
 import { UgcType } from '@/constants/UgcConstant';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { Affix, Card, Col, Layout, Menu, Row, Tabs } from 'antd';
@@ -122,7 +123,8 @@ const ArticleIndex = () => {
 
           <Col span={6}>
             <UgcHotRank ugcType={UgcType.ARTICLE} />
-            {/* 广告位 */}
+            <div style={{ marginTop: 16 }}></div>
+            <SuggestedUserCard />
             <Footer />
           </Col>
         </Row>

@@ -217,6 +217,14 @@ declare namespace API {
     userId?: string;
   };
 
+  type querySuggestedUsersUsingGETParams = {
+    cursor?: number;
+    page?: number;
+    reqId?: string;
+    size?: number;
+    userId?: string;
+  };
+
   type queryUgcCommentaryUsingGETParams = {
     cursor?: string;
     page?: number;
@@ -258,6 +266,14 @@ declare namespace API {
     bizState?: string;
     code?: string;
     data?: UgcResponse[];
+    message?: string;
+    timestamp?: number;
+  };
+
+  type ResultListUserBasicInfoResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: UserBasicInfoResponse[];
     message?: string;
     timestamp?: number;
   };
