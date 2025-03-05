@@ -51,7 +51,7 @@ const QuestionPublishPage: React.FC = () => {
         reqId,
       });
 
-      message.success('发布成功');
+      message.success('发布成功，待审核通过');
       history.replace('/question');
     } catch (error: any) {
       message.error(error.message || '发布失败，请重试');

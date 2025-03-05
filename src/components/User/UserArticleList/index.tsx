@@ -59,6 +59,16 @@ const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus.
     await loadUserArticles();
   };
 
+  const refreshUgcList = (ugcId: string) => {
+    setArticleList((prevData) => {
+      if (!prevData) {
+        return prevData;
+      }
+      const updatedData = prevData.filter((item) => item.ugcId !== ugcId);
+      return updatedData;
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await loadUgcData();
@@ -94,7 +104,7 @@ const UserArticleList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus.
         locale={{
           emptyText: <Empty description="暂无数据" />,
         }}
-        renderItem={(item) => <UserArticleCard article={item} />}
+        renderItem={(item) => <UserArticleCard refreshUgcList={refreshUgcList} article={item} />}
       />
     </InfiniteScroll>
   );

@@ -123,7 +123,7 @@ const ArticlePublisher: React.FC = () => {
         reqId,
         ugcId,
       });
-      const successMesssage = drafting ? '保存草稿成功' : '发布成功';
+      const successMesssage = drafting ? '保存草稿成功' : '发布成功，待审核通过';
       message.success(successMesssage);
       history.replace('/');
     } catch (error: any) {

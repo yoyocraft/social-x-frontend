@@ -1,26 +1,83 @@
 import IconText from '@/components/IconText';
 import ShareIconText from '@/components/ShareModal';
 import { UgcStatus } from '@/constants/UgcConstant';
+import { deleteUgcUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   CommentOutlined,
+  ExclamationCircleFilled,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
+  MoreOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Avatar, Divider, Image, List, Space, Tag, Typography } from 'antd';
+import { useModel } from '@umijs/max';
+import {
+  Avatar,
+  Divider,
+  Dropdown,
+  Image,
+  List,
+  MenuProps,
+  message,
+  Modal,
+  Space,
+  Tag,
+  Typography,
+} from 'antd';
 
 const { Link, Text, Paragraph } = Typography;
 
+const { confirm } = Modal;
+
+const items: MenuProps['items'] = [
+  {
+    key: 'delete',
+    label: '删除',
+    danger: true,
+  },
+];
+
 interface Props {
   post: API.UgcResponse;
+  refreshUgcList?: (ugcId: string) => void;
+  collectPage?: boolean;
 }
 
-const UserPostCard: React.FC<Props> = ({ post }) => {
+const UserPostCard: React.FC<Props> = ({ post, refreshUgcList, collectPage = false }) => {
   const canSeeDetail = !!!post.auditRet && post.status === UgcStatus.PUBLISHED;
   const showRejectInfo = post.status === UgcStatus.REJECTED;
+
+  const { initialState } = useModel('@@initialState');
+
+  const showAuthorFeature =
+    initialState?.currentUser?.userId === post.author?.userId && !collectPage;
+
+  const handleDeleteUgc = async () => {
+    try {
+      await deleteUgcUsingPost({ ugcId: post.ugcId });
+      message.success('删除成功');
+      if (refreshUgcList) {
+        refreshUgcList(post.ugcId || '');
+      }
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
+
+  const onMoreOptClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'delete') {
+      confirm({
+        title: '确认删除吗？',
+        icon: <ExclamationCircleFilled />,
+        onOk() {
+          handleDeleteUgc();
+        },
+      });
+    }
+  };
 
   const renderPostContent = (item: API.UgcResponse) => {
     const hasLink = item.content?.includes('http');
@@ -85,6 +142,11 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
             </Link>
           )}
           {showRejectInfo && <Tag color="error">{post.auditRet}</Tag>}
+          {showAuthorFeature && (
+            <Dropdown menu={{ items, onClick: onMoreOptClick }}>
+              <MoreOutlined style={{ color: '#666', cursor: 'pointer' }} />
+            </Dropdown>
+          )}
         </Space>,
       ]}
     >
@@ -95,7 +157,7 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
             <Text strong>
               <Link
                 style={{
-                  color: '#1677ff',
+                  color: 'black',
                   fontWeight: 500,
                   textDecoration: 'none',
                 }}
@@ -104,9 +166,7 @@ const UserPostCard: React.FC<Props> = ({ post }) => {
                 {post.author?.nickname}
               </Link>
             </Text>
-            <Text type="secondary" style={{ fontSize: 12 }}>
-              {dateTimeFormat(post.gmtModified)}
-            </Text>
+            <Text type="secondary">{dateTimeFormat(post.gmtModified)}</Text>
           </Space>
         }
       />

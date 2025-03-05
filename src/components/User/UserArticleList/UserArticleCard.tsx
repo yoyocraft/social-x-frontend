@@ -2,27 +2,83 @@ import IconText from '@/components/IconText';
 import ShareIconText from '@/components/ShareModal';
 import TagList from '@/components/Ugc/TagList';
 import { UgcStatus } from '@/constants/UgcConstant';
+import { deleteUgcUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   CommentOutlined,
+  ExclamationCircleFilled,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
+  MoreOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { history } from '@umijs/max';
-import { Button, Divider, Image, List, Space, Tag, Typography } from 'antd';
+import { history, useModel } from '@umijs/max';
+import {
+  Button,
+  Divider,
+  Dropdown,
+  Image,
+  List,
+  MenuProps,
+  message,
+  Modal,
+  Space,
+  Tag,
+  Typography,
+} from 'antd';
+
+const { confirm } = Modal;
+
+const items: MenuProps['items'] = [
+  {
+    key: 'delete',
+    label: '删除',
+    danger: true,
+  },
+];
 
 interface Props {
   article: API.UgcResponse;
+  refreshUgcList?: (ugcId: string) => void;
+  collectPage?: boolean;
 }
 
-const UserArticleCard: React.FC<Props> = ({ article }) => {
+const UserArticleCard: React.FC<Props> = ({ article, refreshUgcList, collectPage = false }) => {
   const canSeeDetail = article.status === UgcStatus.PUBLISHED;
   const showRejectInfo = article.status === UgcStatus.REJECTED;
   const showEditFeature =
     article.status === UgcStatus.DRAFT || article.status === UgcStatus.REJECTED;
+
+  const { initialState } = useModel('@@initialState');
+
+  const showAuthorFeature =
+    initialState?.currentUser?.userId === article.author?.userId && !collectPage;
+
+  const handleDeleteUgc = async () => {
+    try {
+      await deleteUgcUsingPost({ ugcId: article.ugcId });
+      message.success('删除成功');
+      if (refreshUgcList) {
+        refreshUgcList(article.ugcId || '');
+      }
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
+
+  const onMoreOptClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'delete') {
+      confirm({
+        title: '确认删除吗？',
+        icon: <ExclamationCircleFilled />,
+        onOk() {
+          handleDeleteUgc();
+        },
+      });
+    }
+  };
 
   return (
     <List.Item
@@ -54,8 +110,8 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
             text={article.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
-          <ShareIconText key="list-vertical-share-o" item={article} />,
-          {showRejectInfo ? <Tag color="error">{article.auditRet}</Tag> : null}
+          <ShareIconText key="list-vertical-share-o" item={article} />
+          {showRejectInfo && <Tag color="error">{article.auditRet}</Tag>}
           {showEditFeature && (
             <Button
               type="link"
@@ -64,6 +120,11 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
             >
               编辑
             </Button>
+          )}
+          {showAuthorFeature && (
+            <Dropdown menu={{ items, onClick: onMoreOptClick }}>
+              <MoreOutlined style={{ color: '#666', cursor: 'pointer' }} />
+            </Dropdown>
           )}
         </Space>,
       ]}
@@ -116,7 +177,7 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
         <Typography.Text strong>
           <Typography.Link
             style={{
-              color: '#1677ff',
+              color: 'black',
               fontWeight: 500,
               textDecoration: 'none',
             }}
@@ -126,9 +187,7 @@ const UserArticleCard: React.FC<Props> = ({ article }) => {
           </Typography.Link>
         </Typography.Text>
         <Divider type="vertical" />
-        <Typography.Text style={{ fontSize: 12 }}>
-          {dateTimeFormat(article.gmtModified)}
-        </Typography.Text>
+        <Typography.Text>{dateTimeFormat(article.gmtModified)}</Typography.Text>
         <Divider type="vertical" />
         <Space size={4}>
           <TagList tags={article.tags} />

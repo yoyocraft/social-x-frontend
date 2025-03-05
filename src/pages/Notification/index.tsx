@@ -1,8 +1,8 @@
 import {
-  queryNotificationUsingGet,
+  listNotificationUsingGet,
   queryUnreadCountUsingGet,
-  readAllNotificationByTypeUsingPost,
   readAllNotificationUsingPost,
+  readNotificationByTypeUsingPost,
   readSingleNotificationUsingPost,
 } from '@/services/socialx/notificationController';
 import { PageContainer } from '@ant-design/pro-components';
@@ -72,7 +72,7 @@ const NotificationPage = () => {
 
   const markTypeNotificationRead = async () => {
     try {
-      await readAllNotificationByTypeUsingPost({
+      await readNotificationByTypeUsingPost({
         notificationType: activeKey.toUpperCase(),
       });
 
@@ -112,7 +112,7 @@ const NotificationPage = () => {
 
   const loadNotificationData = async () => {
     try {
-      const res = await queryNotificationUsingGet({
+      const res = await listNotificationUsingGet({
         notificationType: activeKey.toUpperCase(),
         cursor: cursorRef.current,
       });

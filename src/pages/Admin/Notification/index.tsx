@@ -1,7 +1,7 @@
 import MdViewer from '@/components/MdViewer';
 import {
+  listNotificationUsingGet,
   publishNotificationUsingPost,
-  queryNotificationUsingGet,
 } from '@/services/socialx/notificationController';
 import { dateTimeFormat } from '@/services/utils/time';
 import { PlusOutlined } from '@ant-design/icons';
@@ -55,7 +55,7 @@ const AdminNotificationPage: React.FC = () => {
     }
     setLoading(true);
     try {
-      const res = await queryNotificationUsingGet({
+      const res = await listNotificationUsingGet({
         cursor: cursorRef.current,
         notificationType: 'SYSTEM',
       });

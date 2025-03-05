@@ -4,7 +4,7 @@ import RelatedContentCard from '@/components/Ugc/RelatedContentCard';
 import UgcCard from '@/components/Ugc/UgcCard';
 import UserCard from '@/components/User/UserCard';
 import { queryUgcDetailUsingPost } from '@/services/socialx/ugcController';
-import { useModel, useParams } from '@umijs/max';
+import { history, useModel, useParams } from '@umijs/max';
 import { Affix, Col, message, Row, Skeleton, Space } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -23,6 +23,7 @@ const UgcDetail: React.FC = () => {
       }
     } catch (error: any) {
       message.error(error.message);
+      history.back();
     }
   };
 

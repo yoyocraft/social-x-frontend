@@ -59,6 +59,16 @@ const UserQuestionList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus
     await loadUserArticles();
   };
 
+  const refreshUgcList = (ugcId: string) => {
+    setQuestionList((prevData) => {
+      if (!prevData) {
+        return prevData;
+      }
+      const updatedData = prevData.filter((item) => item.ugcId !== ugcId);
+      return updatedData;
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await loadUgcData();
@@ -90,7 +100,7 @@ const UserQuestionList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus
         itemLayout="vertical"
         size="large"
         dataSource={questionList}
-        renderItem={(item) => <UserQuestionCard question={item} />}
+        renderItem={(item) => <UserQuestionCard refreshUgcList={refreshUgcList} question={item} />}
       />
     </InfiniteScroll>
   );
