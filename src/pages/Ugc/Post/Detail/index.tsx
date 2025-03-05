@@ -129,14 +129,14 @@ const PostDetail: React.FC = () => {
   const params = useParams();
   const { ugcId } = params;
 
-  const [postDetail, setPostDetail] = useState<API.UgcResponse>();
+  const [post, setPost] = useState<API.UgcResponse>();
 
   const { initialState } = useModel('@@initialState');
 
   const loadUgcDetail = async () => {
     const res = await queryUgcDetailUsingPost({ ugcId });
     if (res.data) {
-      setPostDetail(res.data);
+      setPost(res.data);
     }
   };
 
@@ -144,7 +144,7 @@ const PostDetail: React.FC = () => {
     loadUgcDetail();
   }, []);
 
-  if (!postDetail) {
+  if (!post) {
     return <Skeleton active />;
   }
 
@@ -167,7 +167,7 @@ const PostDetail: React.FC = () => {
               boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}
           >
-            <PostCard ugc={postDetail} />
+            <PostCard ugc={post} />
           </div>
 
           <div
@@ -178,7 +178,7 @@ const PostDetail: React.FC = () => {
               boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}
           >
-            <CommentaryCard />
+            <CommentaryCard ugcAuthorId={post.author?.userId} />
           </div>
         </Col>
 
@@ -191,17 +191,17 @@ const PostDetail: React.FC = () => {
               boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
             }}
           >
-            {postDetail.author && (
+            {post.author && (
               <UserCard
-                self={initialState?.currentUser?.userId === postDetail.author.userId}
-                user={postDetail.author}
+                self={initialState?.currentUser?.userId === post.author.userId}
+                user={post.author}
               />
             )}
             <RelatedContentCard
               style={{ marginTop: 16 }}
-              ugcId={postDetail.ugcId || ''}
-              ugcType={postDetail.type || ''}
-              categoryId={postDetail.categoryId || ''}
+              ugcId={post.ugcId || ''}
+              ugcType={post.type || ''}
+              categoryId={post.categoryId || ''}
             />
           </div>
         </Col>

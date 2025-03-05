@@ -10,6 +10,7 @@ export enum InteractType {
   COLLECT = 'COLLECT',
   COMMENT = 'COMMENT',
   ADOPT = 'ADOPT',
+  FEATURED = 'FEATURED',
 }
 
 export enum UgcStatus {

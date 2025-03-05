@@ -5,7 +5,8 @@ const ReplyList: React.FC<{
   replies?: API.CommentaryInfo[];
   topCommentaryId?: string;
   refreshComments?: () => void;
-}> = ({ replies = [], topCommentaryId = '', refreshComments }) => {
+  ugcAuthorId?: string;
+}> = ({ replies = [], topCommentaryId = '', refreshComments, ugcAuthorId = '' }) => {
   if (replies.length === 0) return null;
 
   return (
@@ -25,6 +26,7 @@ const ReplyList: React.FC<{
         renderItem={(reply) => (
           <List.Item style={{ padding: 0 }}>
             <CommentItem
+              ugcAuthorId={ugcAuthorId}
               refreshComments={refreshComments}
               topCommentaryId={topCommentaryId}
               comment={reply}

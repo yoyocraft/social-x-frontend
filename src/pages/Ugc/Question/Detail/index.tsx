@@ -12,14 +12,14 @@ const QuestionDetail: React.FC = () => {
   const params = useParams();
   const { ugcId } = params;
 
-  const [questionDetail, setQuestionDetail] = useState<API.UgcResponse>();
+  const [question, setQuestion] = useState<API.UgcResponse>();
 
   const { initialState } = useModel('@@initialState');
 
   const loadUgcDetail = async () => {
     try {
       const res = await queryUgcDetailUsingPost({ ugcId });
-      setQuestionDetail(res.data);
+      setQuestion(res.data);
     } catch (error: any) {
       message.error(error.message);
     }
@@ -29,7 +29,7 @@ const QuestionDetail: React.FC = () => {
     loadUgcDetail();
   }, [ugcId]);
 
-  if (!questionDetail) {
+  if (!question) {
     return <Skeleton active />;
   }
 
@@ -44,25 +44,25 @@ const QuestionDetail: React.FC = () => {
             boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
           }}
         >
-          <UgcCard ugc={questionDetail} />
-          <CommentaryCard isQuestion />
+          <UgcCard ugc={question} />
+          <CommentaryCard isQuestion ugcAuthorId={question.author?.userId} />
         </Col>
 
         <Col span={6}>
           <Space direction="vertical">
-            {questionDetail.author && (
+            {question.author && (
               <UserCard
-                self={initialState?.currentUser?.userId === questionDetail.author.userId}
-                user={questionDetail.author}
+                self={initialState?.currentUser?.userId === question.author.userId}
+                user={question.author}
               />
             )}
             <Affix offsetTop={56}>
-              {questionDetail.content && <MdNavbar content={questionDetail.content} />}
+              {question.content && <MdNavbar content={question.content} />}
               <RelatedContentCard
                 style={{ marginTop: 16 }}
-                ugcId={questionDetail.ugcId || ''}
-                ugcType={questionDetail.type || ''}
-                categoryId={questionDetail.categoryId || ''}
+                ugcId={question.ugcId || ''}
+                ugcType={question.type || ''}
+                categoryId={question.categoryId || ''}
               />
             </Affix>
           </Space>

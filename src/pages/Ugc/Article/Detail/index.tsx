@@ -47,7 +47,7 @@ const UgcDetail: React.FC = () => {
           }}
         >
           <UgcCard ugc={article} />
-          <CommentaryCard />
+          <CommentaryCard ugcAuthorId={article.author?.userId} />
         </Col>
 
         <Col span={6}>

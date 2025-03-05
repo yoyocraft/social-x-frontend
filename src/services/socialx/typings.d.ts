@@ -18,11 +18,13 @@ declare namespace API {
     commentatorAvatar?: string;
     commentatorId?: string;
     commentatorNickname?: string;
+    featured?: boolean;
     gmtCreate?: number;
     gmtModified?: number;
     likeCount?: number;
     liked?: boolean;
     parentId?: string;
+    sensitive?: boolean;
     status?: string;
     ugcId?: string;
   };

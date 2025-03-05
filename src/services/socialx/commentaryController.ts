@@ -47,6 +47,21 @@ export async function deleteCommentaryUsingPost(
   });
 }
 
+/** featuredCommentary POST /api/commentary/featured */
+export async function featuredCommentaryUsingPost(
+  body: API.UgcInteractionRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultBoolean_>('/api/commentary/featured', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** likeCommentary POST /api/commentary/like */
 export async function likeCommentaryUsingPost(
   body: API.UgcInteractionRequest,
