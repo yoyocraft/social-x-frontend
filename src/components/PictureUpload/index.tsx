@@ -29,7 +29,7 @@ const PictureUploader: React.FC<Props> = (props) => {
           {},
           fileObj.file,
         );
-        const fullPath = res.data?.url;
+        const fullPath = res.data?.accessUrl;
         onChange?.(fullPath ?? '');
         fileObj.onSuccess(fullPath);
       } catch (e: any) {

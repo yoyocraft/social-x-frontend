@@ -1,27 +1,81 @@
 import IconText from '@/components/IconText';
 import ShareIconText from '@/components/ShareModal';
 import { UgcStatus } from '@/constants/UgcConstant';
+import { deleteUgcUsingPost } from '@/services/socialx/ugcController';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   CheckCircleFilled,
   CommentOutlined,
+  ExclamationCircleFilled,
   EyeOutlined,
   LikeFilled,
   LikeOutlined,
+  MoreOutlined,
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Avatar, Divider, List, Space, Tag, Typography } from 'antd';
+import { useModel } from '@umijs/max';
+import {
+  Avatar,
+  Divider,
+  Dropdown,
+  List,
+  MenuProps,
+  message,
+  Modal,
+  Space,
+  Tag,
+  Typography,
+} from 'antd';
 
 const { Link, Text } = Typography;
+const { confirm } = Modal;
+
+const items: MenuProps['items'] = [
+  {
+    key: 'delete',
+    label: '删除',
+    danger: true,
+  },
+];
 
 interface Props {
   question: API.UgcResponse;
+  refreshUgcList?: (ugcId: string) => void;
+  collectPage?: boolean;
 }
 
-const UserQuestionCard: React.FC<Props> = ({ question }) => {
+const UserQuestionCard: React.FC<Props> = ({ question, refreshUgcList, collectPage = false }) => {
   const canSeeDetail = !!!question.auditRet && question.status === UgcStatus.PUBLISHED;
   const showRejectInfo = question.status === UgcStatus.REJECTED;
+  const { initialState } = useModel('@@initialState');
+
+  const showAuthorFeature =
+    initialState?.currentUser?.userId === question.author?.userId && !collectPage;
+
+  const handleDeleteUgc = async () => {
+    try {
+      await deleteUgcUsingPost({ ugcId: question.ugcId });
+      message.success('删除成功');
+      if (refreshUgcList) {
+        refreshUgcList(question.ugcId || '');
+      }
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
+
+  const onMoreOptClick: MenuProps['onClick'] = ({ key }) => {
+    if (key === 'delete') {
+      confirm({
+        title: '确认删除吗？',
+        icon: <ExclamationCircleFilled />,
+        onOk() {
+          handleDeleteUgc();
+        },
+      });
+    }
+  };
   return (
     <List.Item
       key={question.ugcId}
@@ -54,13 +108,13 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
             text={question.collectCount?.toString() || '0'}
             key="list-vertical-star-o"
           />
-          <ShareIconText key="list-vertical-share-o" item={question} />,
+          <ShareIconText key="list-vertical-share-o" item={question} />
           <Space key={question.author?.userId}>
             <Avatar size={32} src={question.author?.avatar} />
             <Text strong>
               <Link
                 style={{
-                  color: '#1677ff',
+                  color: 'black',
                   fontWeight: 500,
                   textDecoration: 'none',
                 }}
@@ -70,6 +124,11 @@ const UserQuestionCard: React.FC<Props> = ({ question }) => {
               </Link>
             </Text>
           </Space>
+          {showAuthorFeature && (
+            <Dropdown menu={{ items, onClick: onMoreOptClick }}>
+              <MoreOutlined style={{ color: '#666', cursor: 'pointer' }} />
+            </Dropdown>
+          )}
           {question.hasSolved && (
             <Tag
               icon={<CheckCircleFilled />}

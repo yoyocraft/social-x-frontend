@@ -18,12 +18,24 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
-import { Avatar, Dropdown, Image, MenuProps, message, Space, Tag, Tooltip, Typography } from 'antd';
+import {
+  Avatar,
+  Dropdown,
+  Image,
+  MenuProps,
+  message,
+  Modal,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import CommentPublisher from './CommentPublisher';
 
 const { Text, Paragraph } = Typography;
+const { confirm } = Modal;
 
 const CommentItem: React.FC<{
   comment: API.CommentaryInfo;
@@ -132,7 +144,13 @@ const CommentItem: React.FC<{
       return;
     }
     if (key === 'delete') {
-      handleDeleteComment();
+      confirm({
+        title: '确认删除吗？',
+        icon: <ExclamationCircleFilled />,
+        onOk() {
+          handleDeleteComment();
+        },
+      });
     }
   };
 

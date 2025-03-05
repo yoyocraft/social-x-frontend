@@ -6,7 +6,7 @@ import {
 import {
   createConfigUsingPost,
   deleteConfigUsingPost,
-  queryConfigForMainPageUsingGet,
+  listConfigUsingGet,
   queryConfigUsingGet,
   updateConfigUsingPost,
 } from '@/services/socialx/configController';
@@ -49,7 +49,7 @@ const ConfigCenter: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await queryConfigForMainPageUsingGet({ cursor: cursorRef.current });
+      const res = await listConfigUsingGet({ cursor: cursorRef.current });
       if (res?.data) {
         setDataSource((prev) => [...prev, ...(res?.data?.data || [])]);
         setHasMore(!!(res?.data?.data && res?.data?.data.length > 0));

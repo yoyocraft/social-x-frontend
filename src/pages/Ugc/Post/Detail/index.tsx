@@ -15,7 +15,7 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { useModel, useParams } from '@umijs/max';
+import { history, useModel, useParams } from '@umijs/max';
 import { Avatar, Button, Card, Col, message, Row, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -134,9 +134,12 @@ const PostDetail: React.FC = () => {
   const { initialState } = useModel('@@initialState');
 
   const loadUgcDetail = async () => {
-    const res = await queryUgcDetailUsingPost({ ugcId });
-    if (res.data) {
+    try {
+      const res = await queryUgcDetailUsingPost({ ugcId });
       setPost(res.data);
+    } catch (error: any) {
+      message.error(error.message);
+      history.back();
     }
   };
 

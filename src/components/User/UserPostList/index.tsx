@@ -58,6 +58,16 @@ const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus.PUB
     await loadUserArticles();
   };
 
+  const refreshUgcList = (ugcId: string) => {
+    setPostList((prevData) => {
+      if (!prevData) {
+        return prevData;
+      }
+      const updatedData = prevData.filter((item) => item.ugcId !== ugcId);
+      return updatedData;
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await loadUgcData();
@@ -90,7 +100,7 @@ const UserPostList: React.FC<Props> = ({ self = false, ugcStatus = UgcStatus.PUB
           itemLayout="vertical"
           size="large"
           dataSource={postList}
-          renderItem={(item) => <UserPostCard post={item} />}
+          renderItem={(item) => <UserPostCard refreshUgcList={refreshUgcList} post={item} />}
         />
       </InfiniteScroll>
     </div>

@@ -88,7 +88,23 @@ declare namespace API {
   };
 
   type ImageUploadResponse = {
-    url?: string;
+    accessUrl?: string;
+  };
+
+  type listConfigUsingGETParams = {
+    cursor?: number;
+    key?: string;
+    page?: number;
+    reqId?: string;
+    size?: number;
+  };
+
+  type listNotificationUsingGETParams = {
+    cursor?: string;
+    notificationType?: string;
+    page?: number;
+    reqId?: string;
+    size?: number;
   };
 
   type NotificationPublishRequest = {
@@ -177,25 +193,9 @@ declare namespace API {
     ugcId?: string;
   };
 
-  type queryConfigForMainPageUsingGETParams = {
-    cursor?: number;
-    key?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-  };
-
   type queryConfigUsingGETParams = {
     cursor?: number;
     key?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-  };
-
-  type queryNotificationUsingGETParams = {
-    cursor?: string;
-    notificationType?: string;
     page?: number;
     reqId?: string;
     size?: number;

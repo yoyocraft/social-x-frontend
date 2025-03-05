@@ -17,10 +17,10 @@ export async function createConfigUsingPost(
   });
 }
 
-/** queryConfigForMainPage GET /api/config/cursor */
-export async function queryConfigForMainPageUsingGet(
+/** listConfig GET /api/config/cursor */
+export async function listConfigUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryConfigForMainPageUsingGETParams,
+  params: API.listConfigUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultPageCursorResultLongConfigInfoResponse_>('/api/config/cursor', {

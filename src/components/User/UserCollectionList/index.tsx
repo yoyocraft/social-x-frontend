@@ -1,3 +1,4 @@
+import { UgcType } from '@/constants/UgcConstant';
 import { listSelfCollectedUgcUsingPost } from '@/services/socialx/ugcController';
 import { List, message, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
@@ -34,9 +35,9 @@ const UserCollectionList: React.FC = () => {
   const renderUgcItem = (item: API.UgcResponse) => {
     return (
       <>
-        {item.type === 'ARTICLE' && <UserArticleCard article={item} />}
-        {item.type === 'POST' && <UserPostCard post={item} />}
-        {item.type === 'QUESTION' && <UserQuestionCard question={item} />}
+        {item.type === UgcType.ARTICLE && <UserArticleCard collectPage article={item} />}
+        {item.type === UgcType.POST && <UserPostCard collectPage post={item} />}
+        {item.type === UgcType.QUESTION && <UserQuestionCard collectPage question={item} />}
       </>
     );
   };

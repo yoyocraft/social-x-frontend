@@ -2,6 +2,21 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+/** listNotification GET /api/notification/list */
+export async function listNotificationUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listNotificationUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultPageCursorResultStringNotificationResponse_>('/api/notification/list', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** publishNotification POST /api/notification/publish */
 export async function publishNotificationUsingPost(
   body: API.NotificationPublishRequest,
@@ -13,21 +28,6 @@ export async function publishNotificationUsingPost(
       'Content-Type': 'application/json',
     },
     data: body,
-    ...(options || {}),
-  });
-}
-
-/** queryNotification GET /api/notification/query */
-export async function queryNotificationUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryNotificationUsingGETParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.ResultPageCursorResultStringNotificationResponse_>('/api/notification/query', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
     ...(options || {}),
   });
 }
@@ -62,12 +62,12 @@ export async function readAllNotificationUsingPost(
   });
 }
 
-/** readAllNotificationByType POST /api/notification/read/all/type */
-export async function readAllNotificationByTypeUsingPost(
+/** readNotificationByType POST /api/notification/read/type */
+export async function readNotificationByTypeUsingPost(
   body: API.NotificationReadRequest,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultBoolean_>('/api/notification/read/all/type', {
+  return request<API.ResultBoolean_>('/api/notification/read/type', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

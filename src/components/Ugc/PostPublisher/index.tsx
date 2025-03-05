@@ -104,7 +104,7 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
     setInputCount(0);
     setSelectedTopic(null);
 
-    message.success('发布成功');
+    message.success('发布成功，待审核通过');
   };
 
   const emojiPicker = (
@@ -224,7 +224,7 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
                 {},
                 file,
               );
-              const fullPath = res.data?.url;
+              const fullPath = res.data?.accessUrl;
               if (!fullPath) {
                 message.error('上传失败');
                 return false;
