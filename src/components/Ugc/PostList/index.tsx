@@ -188,7 +188,7 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
                   <Text strong>
                     <Link
                       style={{
-                        color: '#1677ff',
+                        color: 'black',
                         fontWeight: 500,
                         textDecoration: 'none',
                       }}

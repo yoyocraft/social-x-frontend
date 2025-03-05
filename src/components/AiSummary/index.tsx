@@ -13,7 +13,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
   const { initialState } = useModel('@@initialState');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const apiEndpoint = 'http://localhost:8080/api/ugc/summary';
+  const apiEndpoint = 'http://127.0.0.1:8085/api/ugc/summary';
 
   const fetchSummary = () => {
     setLoading(true);
