@@ -6,10 +6,11 @@ import CommentSection from './CommentSection';
 
 interface CommentaryCardProps {
   isQuestion?: boolean;
+  ugcAuthorId?: string;
 }
 
 const CommentaryCard = (props: CommentaryCardProps) => {
-  const { isQuestion = false } = props;
+  const { isQuestion = false, ugcAuthorId = '' } = props;
   const commentSectionRef = useRef<{ refreshComments: () => void } | null>(null);
 
   const params = useParams();
@@ -24,7 +25,7 @@ const CommentaryCard = (props: CommentaryCardProps) => {
   return (
     <Card title="评论区" bordered={false} style={{ marginTop: 16 }}>
       <CommentPublisher refreshComments={refreshAll} ugcId={ugcId} />
-      <CommentSection isQuestion={isQuestion} ref={commentSectionRef} />
+      <CommentSection ugcAuthorId={ugcAuthorId} isQuestion={isQuestion} ref={commentSectionRef} />
     </Card>
   );
 };

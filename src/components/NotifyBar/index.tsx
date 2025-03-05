@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
 import { Badge, Dropdown, MenuProps } from 'antd';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const items: MenuProps['items'] = [
   {
@@ -35,6 +35,8 @@ const items: MenuProps['items'] = [
 ];
 
 const NotifyBar: React.FC = () => {
+  const clearIntervalRef = useRef<() => void>();
+
   const onClick: MenuProps['onClick'] = ({ key }) => {
     history.replace(`/notification/${key}`);
   };
@@ -51,7 +53,13 @@ const NotifyBar: React.FC = () => {
     } catch (error) {}
   };
 
-  useInterval(loadUnreadCount, 10000);
+  clearIntervalRef.current = useInterval(loadUnreadCount, 10000);
+
+  useEffect(() => {
+    return () => {
+      clearIntervalRef.current?.();
+    };
+  }, []);
 
   return (
     <Dropdown menu={{ items, onClick }} placement="bottom">

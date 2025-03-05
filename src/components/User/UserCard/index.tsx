@@ -40,7 +40,20 @@ const UserCard: React.FC<Props> = ({ user, self = false }) => {
     >
       <Meta
         avatar={<Avatar src={user.avatar} size={64} />}
-        title={<Text strong>{user.nickname}</Text>}
+        title={
+          <Text strong>
+            <Typography.Link
+              style={{
+                color: 'black',
+                fontWeight: 500,
+                textDecoration: 'none',
+              }}
+              href={`/user/${user.userId}`}
+            >
+              {user.nickname}
+            </Typography.Link>
+          </Text>
+        }
         description={
           <Text type="secondary" style={{ fontSize: 14 }}>
             {user.bio}

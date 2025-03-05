@@ -3,11 +3,14 @@ import { InteractType } from '@/constants/UgcConstant';
 import {
   adoptCommentaryUsingPost,
   deleteCommentaryUsingPost,
+  featuredCommentaryUsingPost,
   likeCommentaryUsingPost,
   publishCommentaryUsingPost,
 } from '@/services/socialx/commentaryController';
 import {
   CheckCircleFilled,
+  CrownFilled,
+  ExclamationCircleFilled,
   LikeFilled,
   LikeOutlined,
   MessageOutlined,
@@ -28,11 +31,20 @@ const CommentItem: React.FC<{
   isQuestion?: boolean;
   topCommentaryId?: string;
   refreshComments?: () => void;
-}> = ({ comment, isReply = false, topCommentaryId = '', refreshComments, isQuestion = false }) => {
+  ugcAuthorId?: string;
+}> = ({
+  comment,
+  isReply = false,
+  topCommentaryId = '',
+  refreshComments,
+  isQuestion = false,
+  ugcAuthorId = '',
+}) => {
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [liked, setLiked] = useState(comment.liked);
   const [likeCount, setLikeCount] = useState(comment.likeCount || 0);
   const [adopted, setAdopted] = useState(comment.adopted);
+  const [featured, setFeatured] = useState(comment.featured);
   const { initialState } = useModel('@@initialState');
 
   const onCommentaryPublish = async (content: string, attachmentUrls: string[]) => {
@@ -54,8 +66,12 @@ const CommentItem: React.FC<{
     }
   };
 
-  const checkSelf = () => {
+  const checkCommentarySelf = () => {
     return initialState?.currentUser?.userId === comment.commentatorId;
+  };
+
+  const checkUgcSelf = () => {
+    return initialState?.currentUser?.userId === ugcAuthorId;
   };
 
   const handleDeleteComment = async () => {
@@ -89,9 +105,30 @@ const CommentItem: React.FC<{
     }
   };
 
+  const handleFeaturedComment = async () => {
+    if (featured) {
+      return;
+    }
+    try {
+      await featuredCommentaryUsingPost({
+        targetId: comment.commentaryId,
+        interactionType: InteractType.FEATURED,
+        reqId: comment.ugcId,
+      });
+      message.success('精选成功');
+      setFeatured(true);
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
+
   const onMoreOptClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'adopt') {
       handleAdoptComment();
+      return;
+    }
+    if (key === 'featured') {
+      handleFeaturedComment();
       return;
     }
     if (key === 'delete') {
@@ -126,17 +163,25 @@ const CommentItem: React.FC<{
   };
 
   const items: MenuProps['items'] = [
-    isQuestion
+    isQuestion && checkUgcSelf()
       ? {
           key: 'adopt',
           label: '采纳',
         }
       : null,
-    {
-      key: 'delete',
-      label: '删除',
-      danger: true,
-    },
+    checkUgcSelf()
+      ? {
+          key: 'featured',
+          label: '精选',
+        }
+      : null,
+    checkCommentarySelf()
+      ? {
+          key: 'delete',
+          label: '删除',
+          danger: true,
+        }
+      : null,
   ].filter(Boolean);
 
   return (
@@ -158,7 +203,7 @@ const CommentItem: React.FC<{
                   {comment.commentatorNickname || 'Anonymous'}
                 </Text>
 
-                {comment.adopted && (
+                {adopted && (
                   <Tag
                     icon={<CheckCircleFilled />}
                     color="success"
@@ -173,7 +218,7 @@ const CommentItem: React.FC<{
                     已采纳
                   </Tag>
                 )}
-                {/* {comment.featured && (
+                {featured && (
                   <Tag
                     icon={<CrownFilled />}
                     color="blue"
@@ -187,7 +232,7 @@ const CommentItem: React.FC<{
                   >
                     精选
                   </Tag>
-                )} */}
+                )}
               </Space>
               <Tooltip title={dayjs(comment.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}>
                 <Text type="secondary" style={{ fontSize: '12px' }}>
@@ -196,16 +241,38 @@ const CommentItem: React.FC<{
               </Tooltip>
             </div>
 
-            <Paragraph
-              style={{
-                margin: '8px 0',
-                fontSize: '14px',
-                whiteSpace: 'pre-wrap',
-                color: '#333',
-              }}
-            >
-              {comment.commentary}
-            </Paragraph>
+            {comment.sensitive ? (
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #fff2f0 0%, #fff0f6 100%)',
+                  borderRadius: 8,
+                  padding: 12,
+                  margin: '8px 0',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+              >
+                <ExclamationCircleFilled style={{ color: '#ff4d4f', fontSize: 16 }} />
+                <Text type="secondary" style={{ fontSize: 14 }}>
+                  该评论包含敏感内容，已根据社区规范进行屏蔽
+                </Text>
+              </div>
+            ) : (
+              <>
+                <Paragraph
+                  style={{
+                    margin: '8px 0',
+                    fontSize: '14px',
+                    whiteSpace: 'pre-wrap',
+                    color: '#333',
+                  }}
+                >
+                  {comment.commentary}
+                </Paragraph>
+              </>
+            )}
 
             {comment.attachmentUrls && comment.attachmentUrls.length > 0 && (
               <Space size={[16, 4]} wrap style={{ marginTop: 8 }}>
@@ -221,27 +288,27 @@ const CommentItem: React.FC<{
               </Space>
             )}
 
-            <Space size={16} style={{ marginTop: 8 }}>
-              <IconText
-                icon={liked ? LikeFilled : LikeOutlined}
-                text={likeCount?.toString() || '0'}
-                key="list-vertical-like-o"
-                onClick={() => handleLike(comment)}
-                style={{ fontSize: '14px', color: liked ? '#1890ff' : '#666' }}
-              />
-              <IconText
-                icon={MessageOutlined}
-                text={'回复'}
-                key="list-vertical-reply-o"
-                onClick={handleReply}
-                style={{ fontSize: '14px', color: '#666' }}
-              />
-              {(checkSelf() || isQuestion) && (
+            {!comment.sensitive && (
+              <Space size={16} style={{ marginTop: 8 }}>
+                <IconText
+                  icon={liked ? LikeFilled : LikeOutlined}
+                  text={likeCount?.toString() || '0'}
+                  key="list-vertical-like-o"
+                  onClick={() => handleLike(comment)}
+                  style={{ fontSize: '14px', color: liked ? '#1890ff' : '#666' }}
+                />
+                <IconText
+                  icon={MessageOutlined}
+                  text={'回复'}
+                  key="list-vertical-reply-o"
+                  onClick={handleReply}
+                  style={{ fontSize: '14px', color: '#666' }}
+                />
                 <Dropdown menu={{ items, onClick: onMoreOptClick }}>
                   <MoreOutlined style={{ color: '#666', cursor: 'pointer' }} />
                 </Dropdown>
-              )}
-            </Space>
+              </Space>
+            )}
           </Space>
         </div>
       </Space>
