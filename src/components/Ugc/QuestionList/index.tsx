@@ -176,7 +176,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
                   <Text strong>
                     <Link
                       style={{
-                        color: '#1677ff',
+                        color: 'black',
                         fontWeight: 500,
                         textDecoration: 'none',
                       }}
