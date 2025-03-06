@@ -1,6 +1,7 @@
 import { Footer } from '@/components';
 import ArticleList from '@/components/Ugc/ArticleList';
 import UgcHotRank from '@/components/Ugc/UgcHotRank';
+import HotAuthorCard from '@/components/User/HotAuthorCard';
 import SuggestedUserCard from '@/components/User/SuggestedUserCard';
 import { UgcType } from '@/constants/UgcConstant';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
@@ -125,6 +126,8 @@ const ArticleIndex = () => {
             <UgcHotRank ugcType={UgcType.ARTICLE} />
             <div style={{ marginTop: 16 }}></div>
             <SuggestedUserCard />
+            <div style={{ marginTop: 16 }}></div>
+            <HotAuthorCard />
             <Footer />
           </Col>
         </Row>

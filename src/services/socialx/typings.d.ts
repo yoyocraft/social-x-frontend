@@ -507,6 +507,7 @@ declare namespace API {
     followerCount?: number;
     followingCount?: number;
     hasFollowed?: boolean;
+    hotScore?: number;
     jobTitle?: string;
     joinTime?: number;
     nickname?: string;
