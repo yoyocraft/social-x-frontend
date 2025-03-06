@@ -22,7 +22,7 @@ const SuggestedUserCard = () => {
     loadSuggestedUsers();
   }, []);
   return (
-    <Card title="可能认识的人">
+    <Card title="可能认识的人" styles={{ body: { padding: '0' } }}>
       <List
         itemLayout="horizontal"
         size="large"

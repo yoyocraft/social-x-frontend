@@ -70,6 +70,14 @@ export async function followUserUsingPost(
   });
 }
 
+/** listHotUser GET /api/user/hot */
+export async function listHotUserUsingGet(options?: { [key: string]: any }) {
+  return request<API.ResultListUserBasicInfoResponse_>('/api/user/hot', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** login POST /api/user/login */
 export async function loginUsingPost(
   body: API.UserAuthenticateRequest,
