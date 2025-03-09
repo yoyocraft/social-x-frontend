@@ -4,7 +4,13 @@ import { BizType } from '@/constants/SystemConstant';
 import { captchaCheckRule, emailCheckRule, IdentityType } from '@/constants/UserConstant';
 import { loginUsingPost } from '@/services/socialx/userController';
 import { notifyEmailCaptchaUsingPost } from '@/services/socialx/verificationController';
-import { GithubOutlined, LockOutlined, QqOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  GithubOutlined,
+  LockOutlined,
+  QqOutlined,
+  SafetyOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, history, useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
@@ -63,6 +69,10 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.UserAuthenticateRequest) => {
     try {
       if (type === IdentityType.EMAIL_PASSWORD) {
+        if (!values.extra) {
+          message.error('验证码是必填项！');
+          return;
+        }
         if (!values.credential) {
           message.error('密码是必填项！');
           return;
@@ -108,7 +118,13 @@ const Login: React.FC = () => {
           subTitle={'SocialX 社交网络平台'}
           actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.UserAuthenticateRequest);
+            const req: API.UserAuthenticateRequest = {
+              ...values,
+              extra: {
+                imageCaptcha: values.imageCaptcha,
+              },
+            };
+            await handleSubmit(req);
           }}
         >
           <Tabs
@@ -198,6 +214,33 @@ const Login: React.FC = () => {
                     message: '密码是必填项！',
                   },
                 ]}
+              />
+              <ProFormText
+                name="imageCaptcha"
+                placeholder="请输入验证码"
+                rules={[
+                  {
+                    required: true,
+                    message: '验证码是必填项！',
+                  },
+                ]}
+                fieldProps={{
+                  size: 'large',
+                  prefix: <SafetyOutlined />,
+                  suffix: (
+                    <img
+                      width={100}
+                      height={38}
+                      src={`/api/verification/image/captcha?timestamp=${new Date().getTime()}`}
+                      style={{ cursor: 'pointer' }}
+                      onClick={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `/api/verification/image/captcha?timestamp=${new Date().getTime()}`;
+                      }}
+                      alt="验证码"
+                    />
+                  ),
+                }}
               />
             </>
           )}
