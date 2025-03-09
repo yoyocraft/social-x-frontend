@@ -158,7 +158,12 @@ const ArticlePublisher: React.FC = () => {
         </div>
       </Flex>
       <div style={{ marginTop: '16px' }}></div>
-      <MdEditor source="ARTICLE" value={content} onChange={setContent} placeholder="开始编写..." />
+      <MdEditor
+        source={MediaSource.ARTICLE}
+        value={content}
+        onChange={setContent}
+        placeholder="开始编写..."
+      />
 
       <Modal
         title="发布文章"

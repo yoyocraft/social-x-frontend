@@ -28,7 +28,7 @@ const MdEditor = (props: Props) => {
       {},
       files[0],
     );
-    const fullPath = res.data?.url ?? '';
+    const fullPath = res.data?.accessUrl ?? '';
     list.push({ title: files[0].name, url: fullPath });
     return Promise.resolve(list);
   };

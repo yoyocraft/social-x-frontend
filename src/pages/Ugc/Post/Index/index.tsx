@@ -46,7 +46,7 @@ export default function PostPage() {
         attachmentUrls,
         reqId,
       });
-      message.success('发布成功');
+      message.success('发布成功，待审核通过');
     } catch (error: any) {
       message.error(error.message || '发布失败，请重试');
     }

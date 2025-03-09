@@ -103,8 +103,6 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
     setFileList([]);
     setInputCount(0);
     setSelectedTopic(null);
-
-    message.success('发布成功，待审核通过');
   };
 
   const emojiPicker = (
@@ -219,7 +217,7 @@ const PostPublisher: React.FC<PostPublisherProps> = ({ onPublish }) => {
 
               const res = await uploadImageUsingPost(
                 {
-                  source: MediaSource.ARTICLE,
+                  source: MediaSource.POST,
                 },
                 {},
                 file,

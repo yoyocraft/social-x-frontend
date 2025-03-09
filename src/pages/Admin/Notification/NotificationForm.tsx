@@ -1,6 +1,7 @@
 'use client';
 
 import MdEditor from '@/components/MdEditor';
+import { MediaSource } from '@/constants/MediaConstant';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
 import { Button, Form } from 'antd';
 import type React from 'react';
@@ -46,7 +47,7 @@ const NotificationForm: React.FC<NotificationFormProps> = ({ initialValues, onFi
       <ProForm.Item name="content" label="内容" rules={[{ required: true, message: '请输入内容' }]}>
         <MdEditor
           value={content}
-          source="SYSTEM"
+          source={MediaSource.SYSTEM}
           onChange={(value) => {
             setContent(value);
             form.setFieldsValue({ content: value });
