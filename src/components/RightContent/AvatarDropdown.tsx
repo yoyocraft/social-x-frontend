@@ -1,13 +1,15 @@
 import { logoutUsingPost } from '@/services/socialx/userController';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
-import { Spin } from 'antd';
+import { Modal, Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
+
+const { confirm } = Modal;
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -62,14 +64,23 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
 
   const { initialState, setInitialState } = useModel('@@initialState');
 
+  const logout = () => {
+    flushSync(() => {
+      setInitialState((s) => ({ ...s, currentUser: undefined }));
+    });
+    loginOut();
+  };
+
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
-        flushSync(() => {
-          setInitialState((s) => ({ ...s, currentUser: undefined }));
+        confirm({
+          title: '确认退出登录吗？',
+          onOk() {
+            logout();
+          },
         });
-        loginOut();
         return;
       }
       history.push(`/account/${key}`);
