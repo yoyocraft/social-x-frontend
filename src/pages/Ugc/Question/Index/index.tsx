@@ -59,7 +59,7 @@ const QuestionPage: React.FC = () => {
         <Col xs={24} md={18}>
           <Form layout="horizontal">
             <Form.Item
-              label={<Typography.Text strong>分类搜索：</Typography.Text>}
+              label={<Typography.Text strong>分类搜索</Typography.Text>}
               labelCol={{ style: { fontSize: '14px', fontWeight: 'normal' } }}
             >
               <Space size="middle" wrap>

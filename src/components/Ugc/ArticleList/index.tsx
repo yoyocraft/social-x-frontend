@@ -244,7 +244,7 @@ const ArticleList: React.FC<Props> = ({
               <Typography.Text strong>
                 <Typography.Link
                   style={{
-                    color: '#1677ff',
+                    color: 'black',
                     fontWeight: 500,
                     textDecoration: 'none',
                   }}
@@ -254,9 +254,7 @@ const ArticleList: React.FC<Props> = ({
                 </Typography.Link>
               </Typography.Text>
               <Divider type="vertical" />
-              <Typography.Text style={{ fontSize: 13 }}>
-                {dateTimeFormat(item.gmtModified)}
-              </Typography.Text>
+              <Typography.Text>{dateTimeFormat(item.gmtModified)}</Typography.Text>
               <Divider type="vertical" />
               <Space size={4}>
                 <TagList tags={item.tags} />

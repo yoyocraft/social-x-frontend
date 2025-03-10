@@ -16,7 +16,7 @@ import {
   StarOutlined,
 } from '@ant-design/icons';
 import { history, useModel, useParams } from '@umijs/max';
-import { Avatar, Button, Card, Col, message, Row, Skeleton, Space, Typography } from 'antd';
+import { Avatar, Button, Card, Col, Image, message, Row, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -94,10 +94,14 @@ const PostCard = (props: Props) => {
         </div>
 
         <div style={{ marginBottom: 16 }}>
-          <Typography.Paragraph style={{ fontSize: 15, lineHeight: 1.6, margin: 0 }}>
-            {ugc.title}
-          </Typography.Paragraph>
           <MdViewer value={ugc.content} />
+          {ugc.attachmentUrls && ugc.attachmentUrls.length > 0 && (
+            <Space size={[16, 8]} wrap style={{ marginTop: 16 }}>
+              {ugc.attachmentUrls.map((url, index) => (
+                <Image key={index} width={100} src={url} fallback="/media/fallback/1.png" />
+              ))}
+            </Space>
+          )}
         </div>
 
         <Space size={16}>
@@ -118,7 +122,7 @@ const PostCard = (props: Props) => {
             key="list-vertical-star-o"
             onClick={handleCollect}
           />
-          <ShareIconText key="list-vertical-share-o" item={ugc} />,
+          <ShareIconText key="list-vertical-share-o" item={ugc} />
         </Space>
       </Card>
     </div>
