@@ -3,8 +3,8 @@ import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
 import ShareIconText from '@/components/ShareModal';
 import TagList from '@/components/Ugc/TagList';
-import { InteractType, UgcType } from '@/constants/UgcConstant';
-import { interactUgcUsingPost } from '@/services/socialx/ugcController';
+import { UgcType } from '@/constants/UgcConstant';
+import { useUgcInteraction } from '@/hooks/useUgcInteraction';
 import { dateTimeFormat } from '@/services/utils/time';
 import {
   CheckCircleFilled,
@@ -14,54 +14,16 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Card, Divider, message, Space, Tag, Typography } from 'antd';
+import { Card, Divider, Space, Tag, Typography } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { useState } from 'react';
 
 interface Props {
   ugc: API.UgcResponse;
 }
 
-const UgcCard = (props: Props) => {
-  const { ugc } = props;
-  const [likeCount, setLikeCount] = useState(ugc.likeCount || 0);
-  const [collectCount, setCollectCount] = useState(ugc.collectCount || 0);
-  const [liked, setLiked] = useState(ugc.liked);
-  const [collected, setCollected] = useState(ugc.collected);
-
-  const handleLike = () => {
-    const newLiked = !liked;
-    interactUgcUsingPost({
-      targetId: ugc.ugcId,
-      interactionType: InteractType.LIKE,
-      interact: newLiked,
-      reqId: ugc.ugcId,
-    })
-      .then(() => {
-        setLikeCount((prev) => (newLiked ? prev + 1 : prev - 1));
-        setLiked(newLiked);
-      })
-      .catch(() => {
-        message.error('点赞失败，请重试');
-      });
-  };
-
-  const handleCollect = () => {
-    const newCollected = !collected;
-    interactUgcUsingPost({
-      targetId: ugc.ugcId,
-      interactionType: InteractType.COLLECT,
-      interact: newCollected,
-      reqId: ugc.ugcId,
-    })
-      .then(() => {
-        setCollectCount((prev) => (newCollected ? prev + 1 : prev - 1));
-        setCollected(newCollected);
-      })
-      .catch(() => {
-        message.error('收藏失败，请重试');
-      });
-  };
+const UgcCard: React.FC<Props> = ({ ugc }) => {
+  const { likeCount, collectCount, liked, collected, handleLike, handleCollect } =
+    useUgcInteraction(ugc.ugcId ?? '', ugc.likeCount, ugc.collectCount, ugc.liked, ugc.collected);
 
   return (
     <div className="ugc-card">
