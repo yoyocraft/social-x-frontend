@@ -1,3 +1,4 @@
+import { getApiEndpoint } from '@/constants/config';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { useModel } from '@umijs/max';
 import { Alert, Card, message, Typography } from 'antd';
@@ -13,8 +14,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
   const { initialState } = useModel('@@initialState');
   const [loading, setLoading] = useState<boolean>(false);
 
-  // const apiEndpoint = 'http://127.0.0.1:8085/api/ugc/summary';
-  const apiEndpoint = 'http://127.0.0.1:8080/api/ugc/summary';
+  const apiEndpoint = getApiEndpoint('AI_SUMMARY');
 
   const fetchSummary = () => {
     setLoading(true);
