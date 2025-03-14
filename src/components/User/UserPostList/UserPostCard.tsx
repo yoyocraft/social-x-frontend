@@ -166,7 +166,7 @@ const UserPostCard: React.FC<Props> = ({ post, refreshUgcList, collectPage = fal
                 {post.author?.nickname}
               </Link>
             </Text>
-            <Text type="secondary">{dateTimeFormat(post.gmtModified)}</Text>
+            <Text type="secondary">{dateTimeFormat(post.gmtCreate)}</Text>
           </Space>
         }
       />

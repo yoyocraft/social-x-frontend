@@ -198,7 +198,7 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
                     </Link>
                   </Text>
                   <Text type="secondary" style={{ fontSize: 12 }}>
-                    {dateTimeFormat(item.gmtModified)}
+                    {dateTimeFormat(item.gmtCreate)}
                   </Text>
                 </Space>
               }

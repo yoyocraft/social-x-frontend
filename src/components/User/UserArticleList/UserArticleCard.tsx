@@ -187,7 +187,7 @@ const UserArticleCard: React.FC<Props> = ({ article, refreshUgcList, collectPage
           </Typography.Link>
         </Typography.Text>
         <Divider type="vertical" />
-        <Typography.Text>{dateTimeFormat(article.gmtModified)}</Typography.Text>
+        <Typography.Text>{dateTimeFormat(article.gmtCreate)}</Typography.Text>
         <Divider type="vertical" />
         <Space size={4}>
           <TagList tags={article.tags} />

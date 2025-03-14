@@ -85,8 +85,8 @@ const UserQuestionCard: React.FC<Props> = ({ question, refreshUgcList, collectPa
       }}
       actions={[
         <Space key={question.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
-          <Text key={question.gmtModified} type="secondary" style={{ fontSize: 12 }}>
-            {dateTimeFormat(question.gmtModified)}
+          <Text key={question.gmtCreate} type="secondary" style={{ fontSize: 12 }}>
+            {dateTimeFormat(question.gmtCreate)}
           </Text>
           <IconText
             icon={EyeOutlined}
@@ -149,7 +149,7 @@ const UserQuestionCard: React.FC<Props> = ({ question, refreshUgcList, collectPa
     >
       <List.Item.Meta
         title={
-          <Typography.Title delete={!!question.auditRet} level={4}>
+          <Typography.Title delete={showRejectInfo} level={4}>
             {question.title}
           </Typography.Title>
         }

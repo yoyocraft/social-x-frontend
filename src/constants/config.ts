@@ -1,7 +1,7 @@
 export const API_CONFIG = {
   AI_SUMMARY: {
     DEV: 'http://127.0.0.1:8085/api/ugc/summary',
-    PROD: '/api/ugc/summary',
+    PROD: 'http://127.0.0.1/api/ugc/summary',
   },
 };
 

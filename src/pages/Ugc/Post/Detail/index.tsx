@@ -84,7 +84,7 @@ const PostCard = (props: Props) => {
                 </Typography.Text>
               </div>
               <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                {dateTimeFormat(ugc.gmtModified)}
+                {dateTimeFormat(ugc.gmtCreate)}
               </Typography.Text>
             </div>
           </Space>

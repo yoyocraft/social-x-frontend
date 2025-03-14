@@ -158,7 +158,7 @@ const CommentPublisher: React.FC<PostPublisherProps> = ({ onPublish, refreshComm
                 {},
                 file,
               );
-              const fullPath = res.data?.url;
+              const fullPath = res.data?.accessUrl;
               if (!fullPath) {
                 message.error('上传失败');
                 return false;

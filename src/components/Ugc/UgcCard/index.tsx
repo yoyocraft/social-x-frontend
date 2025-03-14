@@ -52,7 +52,7 @@ const UgcCard: React.FC<Props> = ({ ugc }) => {
           <Typography.Text>{ugc.author?.nickname}</Typography.Text>
           <Divider type="vertical" />
           <Typography.Text style={{ fontSize: 12 }}>
-            {dateTimeFormat(ugc.gmtModified)}
+            {dateTimeFormat(ugc.gmtCreate)}
           </Typography.Text>
           <Divider type="vertical" />
           <Space size={4}>

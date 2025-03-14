@@ -254,7 +254,7 @@ const ArticleList: React.FC<Props> = ({
                 </Typography.Link>
               </Typography.Text>
               <Divider type="vertical" />
-              <Typography.Text>{dateTimeFormat(item.gmtModified)}</Typography.Text>
+              <Typography.Text>{dateTimeFormat(item.gmtCreate)}</Typography.Text>
               <Divider type="vertical" />
               <Space size={4}>
                 <TagList tags={item.tags} />

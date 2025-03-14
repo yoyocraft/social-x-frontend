@@ -151,8 +151,8 @@ const QuestionList: React.FC<QuestionListProps> = ({
             }}
             actions={[
               <Space key={item.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
-                <Text key={item.gmtModified} type="secondary" style={{ fontSize: 12 }}>
-                  {dateTimeFormat(item.gmtModified)}
+                <Text key={item.gmtCreate} type="secondary" style={{ fontSize: 12 }}>
+                  {dateTimeFormat(item.gmtCreate)}
                 </Text>
                 <IconText
                   icon={item.liked ? LikeFilled : LikeOutlined}

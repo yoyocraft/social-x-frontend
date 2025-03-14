@@ -37,7 +37,7 @@ const UserFollowRelationCard: React.FC<Props> = ({ user, btnSize = 'middle' }) =
         !self && (
           <Button
             key="follow-button"
-            type={user.hasFollowed ? 'default' : 'primary'}
+            type={hasFollowed ? 'default' : 'primary'}
             onClick={toggleFollow}
             style={{
               width: '100%',
@@ -47,7 +47,7 @@ const UserFollowRelationCard: React.FC<Props> = ({ user, btnSize = 'middle' }) =
             }}
             size={btnSize}
           >
-            {user.hasFollowed ? '取关' : '关注'}
+            {hasFollowed ? '取关' : '关注'}
           </Button>
         ),
       ]}
