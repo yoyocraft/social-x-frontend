@@ -87,6 +87,11 @@ declare namespace API {
     userId?: string;
   };
 
+  type ImageCaptchaResponse = {
+    captchaId?: string;
+    image?: string;
+  };
+
   type ImageUploadResponse = {
     accessUrl?: string;
   };
@@ -185,14 +190,6 @@ declare namespace API {
     reqId?: string;
   };
 
-  type queryCommentaryCountUsingGETParams = {
-    cursor?: string;
-    page?: number;
-    reqId?: string;
-    size?: number;
-    ugcId?: string;
-  };
-
   type queryConfigUsingGETParams = {
     cursor?: number;
     key?: string;
@@ -254,6 +251,14 @@ declare namespace API {
     timestamp?: number;
   };
 
+  type ResultImageCaptchaResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: ImageCaptchaResponse;
+    message?: string;
+    timestamp?: number;
+  };
+
   type ResultImageUploadResponse_ = {
     bizState?: string;
     code?: string;
@@ -274,14 +279,6 @@ declare namespace API {
     bizState?: string;
     code?: string;
     data?: UserBasicInfoResponse[];
-    message?: string;
-    timestamp?: number;
-  };
-
-  type ResultLong_ = {
-    bizState?: string;
-    code?: string;
-    data?: number;
     message?: string;
     timestamp?: number;
   };
@@ -470,12 +467,6 @@ declare namespace API {
     type?: string;
     ugcId?: string;
     viewCount?: number;
-  };
-
-  type UgcSetStatusRequest = {
-    reqId?: string;
-    status?: string;
-    ugcId?: string;
   };
 
   type UgcTagInfoResponse = {

@@ -3,7 +3,10 @@ import { ResponseCode } from '@/constants/ResponseCode';
 import { BizType } from '@/constants/SystemConstant';
 import { captchaCheckRule, emailCheckRule, IdentityType } from '@/constants/UserConstant';
 import { loginUsingPost } from '@/services/socialx/userController';
-import { notifyEmailCaptchaUsingPost } from '@/services/socialx/verificationController';
+import {
+  notifyEmailCaptchaUsingPost,
+  notifyImageCaptchaUsingGet,
+} from '@/services/socialx/verificationController';
 import {
   GithubOutlined,
   LockOutlined,
@@ -15,7 +18,7 @@ import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-componen
 import { Helmet, history, useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 const useStyles = createStyles(({ token }) => {
@@ -54,6 +57,8 @@ const ActionIcons = () => {
 const Login: React.FC = () => {
   const [type, setType] = useState<string>(IdentityType.EMAIL_CAPTCHA);
   const { initialState, setInitialState } = useModel('@@initialState');
+  const [captchaId, setCaptchaId] = useState<string>('');
+  const [imageCaptcha, setImageCaptcha] = useState<string>('');
   const { styles } = useStyles();
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -95,6 +100,17 @@ const Login: React.FC = () => {
       message.error(error.message || defaultLoginFailureMessage);
     }
   };
+  const fetchImageCaptcha = async () => {
+    const res = await notifyImageCaptchaUsingGet();
+    setCaptchaId(res.data?.captchaId || '');
+    setImageCaptcha(res.data?.image || '');
+  };
+
+  useEffect(() => {
+    if (type === IdentityType.EMAIL_PASSWORD) {
+      fetchImageCaptcha();
+    }
+  }, [type]);
   return (
     <div className={styles.container}>
       <Helmet>
@@ -122,6 +138,7 @@ const Login: React.FC = () => {
               ...values,
               extra: {
                 imageCaptcha: values.imageCaptcha,
+                captchaId: captchaId,
               },
             };
             await handleSubmit(req);
@@ -229,14 +246,11 @@ const Login: React.FC = () => {
                   prefix: <SafetyOutlined />,
                   suffix: (
                     <img
-                      width={100}
-                      height={38}
-                      src={`/api/verification/image/captcha?timestamp=${new Date().getTime()}`}
+                      width={130}
+                      height={24}
+                      src={imageCaptcha}
                       style={{ cursor: 'pointer' }}
-                      onClick={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = `/api/verification/image/captcha?timestamp=${new Date().getTime()}`;
-                      }}
+                      onClick={() => fetchImageCaptcha()}
                       alt="验证码"
                     />
                   ),

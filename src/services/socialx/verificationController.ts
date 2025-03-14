@@ -16,3 +16,11 @@ export async function notifyEmailCaptchaUsingPost(
     ...(options || {}),
   });
 }
+
+/** notifyImageCaptcha GET /api/verification/image/captcha */
+export async function notifyImageCaptchaUsingGet(options?: { [key: string]: any }) {
+  return request<API.ResultImageCaptchaResponse_>('/api/verification/image/captcha', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

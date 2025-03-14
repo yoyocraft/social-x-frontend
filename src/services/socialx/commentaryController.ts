@@ -17,21 +17,6 @@ export async function adoptCommentaryUsingPost(
   });
 }
 
-/** queryCommentaryCount GET /api/commentary/count */
-export async function queryCommentaryCountUsingGet(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.queryCommentaryCountUsingGETParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.ResultLong_>('/api/commentary/count', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-
 /** deleteCommentary POST /api/commentary/delete */
 export async function deleteCommentaryUsingPost(
   body: API.CommentaryDeleteRequest,

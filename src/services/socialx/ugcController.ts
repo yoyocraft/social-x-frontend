@@ -152,21 +152,6 @@ export async function listRecommendUgcFeedUsingPost(
   });
 }
 
-/** setUgcStatus POST /api/ugc/set_status */
-export async function setUgcStatusUsingPost(
-  body: API.UgcSetStatusRequest,
-  options?: { [key: string]: any },
-) {
-  return request<API.ResultBoolean_>('/api/ugc/set_status', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
 /** generateSummary GET /api/ugc/summary */
 export async function generateSummaryUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
