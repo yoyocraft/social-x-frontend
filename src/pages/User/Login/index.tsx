@@ -7,13 +7,7 @@ import {
   notifyEmailCaptchaUsingPost,
   notifyImageCaptchaUsingGet,
 } from '@/services/socialx/verificationController';
-import {
-  GithubOutlined,
-  LockOutlined,
-  QqOutlined,
-  SafetyOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { LockOutlined, SafetyOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCaptcha, ProFormText } from '@ant-design/pro-components';
 import { Helmet, history, useModel } from '@umijs/max';
 import { message, Tabs } from 'antd';
@@ -44,15 +38,6 @@ const useStyles = createStyles(({ token }) => {
     },
   };
 });
-const ActionIcons = () => {
-  const { styles } = useStyles();
-  return (
-    <>
-      <GithubOutlined key="GithubOutlined" className={styles.action} />
-      <QqOutlined key="QqOutlined" className={styles.action} />
-    </>
-  );
-};
 
 const Login: React.FC = () => {
   const [type, setType] = useState<string>(IdentityType.EMAIL_CAPTCHA);
@@ -132,7 +117,6 @@ const Login: React.FC = () => {
           logo={<img alt="logo" src="/logo.svg" />}
           title="SocialX"
           subTitle={'SocialX 社交网络平台'}
-          actions={['其他登录方式 :', <ActionIcons key="icons" />]}
           onFinish={async (values) => {
             const req: API.UserAuthenticateRequest = {
               ...values,

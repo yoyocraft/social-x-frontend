@@ -1,5 +1,14 @@
-import { EyeOutlined, LikeOutlined, RiseOutlined } from '@ant-design/icons';
-import { Card, Divider, Space, Typography } from 'antd';
+import {
+  BookOutlined,
+  CalendarOutlined,
+  CommentOutlined,
+  FileTextOutlined,
+  FireOutlined,
+  LikeOutlined,
+  QuestionCircleOutlined,
+  StarOutlined,
+} from '@ant-design/icons';
+import { Card, Divider, Space, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import type React from 'react';
 
@@ -7,50 +16,17 @@ const { Text } = Typography;
 
 interface Props {
   userInfo?: API.UserBasicInfoResponse;
+  ugcStatistic?: API.UgcStatisticResponse;
 }
-const UserSiderBar: React.FC<Props> = ({ userInfo }) => {
-  const achievements = [
-    { icon: <LikeOutlined />, label: '文章被点赞', value: 5 },
-    { icon: <EyeOutlined />, label: '文章被阅读', value: 2296 },
-    { icon: <RiseOutlined />, label: '掘力值', value: 314 },
-  ];
-  const collections = 19;
-  const followedTags = 0;
+const UserSiderBar: React.FC<Props> = ({ userInfo, ugcStatistic = {} }) => {
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-      <Card title="个人成就" bordered={false}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
-          {achievements.map((achievement, index) => (
-            <div key={index} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(24, 144, 255, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#1890ff',
-                }}
-              >
-                {achievement.icon}
-              </div>
-              <Space size={4}>
-                <Text>{achievement.label}</Text>
-                <Text strong>{achievement.value.toLocaleString()}</Text>
-              </Space>
-            </div>
-          ))}
-        </Space>
-      </Card>
-
       <Card bordered={false}>
         <div style={{ display: 'flex', textAlign: 'center' }}>
           <div style={{ flex: 1 }}>
             <div>
               <Text strong style={{ fontSize: 16 }}>
-                {userInfo?.followingCount}
+                {userInfo?.followingCount || 0}
               </Text>
             </div>
             <Text type="secondary">关注了</Text>
@@ -59,7 +35,7 @@ const UserSiderBar: React.FC<Props> = ({ userInfo }) => {
           <div style={{ flex: 1 }}>
             <div>
               <Text strong style={{ fontSize: 16 }}>
-                {userInfo?.followerCount}
+                {userInfo?.followerCount || 0}
               </Text>
             </div>
             <Text type="secondary">关注者</Text>
@@ -67,18 +43,95 @@ const UserSiderBar: React.FC<Props> = ({ userInfo }) => {
         </div>
       </Card>
 
-      <Card bordered={false}>
+      {/* 内容统计卡片 */}
+      <Card
+        title={
+          <>
+            <FileTextOutlined /> 内容统计
+          </>
+        }
+        bordered={false}
+        size="small"
+      >
+        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Space>
+              <BookOutlined />
+              <Text>文章</Text>
+            </Space>
+            <Text strong>{ugcStatistic?.articleCount || 0}</Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Space>
+              <CommentOutlined />
+              <Text>动态</Text>
+            </Space>
+            <Text strong>{ugcStatistic?.postCount || 0}</Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Space>
+              <QuestionCircleOutlined />
+              <Text>问答</Text>
+            </Space>
+            <Text strong>{ugcStatistic?.questionCount || 0}</Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Space>
+              <StarOutlined />
+              <Text>收藏</Text>
+            </Space>
+            <Text strong>{ugcStatistic?.collectCount || 0}</Text>
+          </div>
+        </Space>
+      </Card>
+
+      {/* 活跃度卡片 */}
+      <Card
+        title={
+          <>
+            <FireOutlined /> 活跃度
+          </>
+        }
+        bordered={false}
+        size="small"
+      >
+        <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Space>
+              <LikeOutlined />
+              <Text>获赞</Text>
+            </Space>
+            <Text strong>{ugcStatistic?.likeCount || 0}</Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Space>
+              <CommentOutlined />
+              <Text>发表评论</Text>
+            </Space>
+            <Text strong>{ugcStatistic?.commentaryCount || 0}</Text>
+          </div>
+        </Space>
+      </Card>
+
+      {/* 用户标签 */}
+      <Card title="个人标签" bordered={false} size="small">
+        <Space size={[8, 8]} wrap>
+          {userInfo?.personalizedTags?.map((tag, index) => (
+            <Tag key={index} color="blue">
+              {tag}
+            </Tag>
+          )) || <Text type="secondary">暂无标签</Text>}
+        </Space>
+      </Card>
+
+      {/* 用户信息卡片 */}
+      <Card bordered={false} size="small">
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text>收藏集</Text>
-            <Text strong>{collections}</Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text>关注标签</Text>
-            <Text strong>{followedTags}</Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text>加入于</Text>
+            <Space>
+              <CalendarOutlined />
+              <Text>加入于</Text>
+            </Space>
             <Text strong>{dayjs(userInfo?.joinTime).format('YYYY-MM-DD')}</Text>
           </div>
         </Space>

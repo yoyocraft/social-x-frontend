@@ -4,9 +4,11 @@ import UgcHotRank from '@/components/Ugc/UgcHotRank';
 import { UgcType } from '@/constants/UgcConstant';
 import { queryUgcQuestionCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { QuestionOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Divider, Form, Row, Space, Tabs, Tag, Typography } from 'antd';
+import { Button, Card, Col, Form, Layout, Row, Space, Tabs, Tag, Typography } from 'antd';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+
+const { Content } = Layout;
 
 const items = [
   {
@@ -54,51 +56,74 @@ const QuestionPage: React.FC = () => {
   }, []);
 
   return (
-    <Card style={{ margin: '0 24px', padding: '16px' }}>
-      <Row gutter={[33, 16]}>
-        <Col xs={24} md={18}>
-          <Form layout="horizontal">
-            <Form.Item
-              label={<Typography.Text strong>分类搜索</Typography.Text>}
-              labelCol={{ style: { fontSize: '14px', fontWeight: 'normal' } }}
+    <Layout
+      style={{
+        padding: '16px',
+        transition: 'margin 0.2s',
+        height: '100vh',
+        margin: '0 24px',
+      }}
+    >
+      <Content style={{ minHeight: '100%' }}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
+            <Card
+              bordered={false}
+              style={{
+                borderRadius: 8,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                padding: '0 6px',
+              }}
             >
-              <Space size="middle" wrap>
-                {questionTags.map((tag) => (
-                  <Tag.CheckableTag
-                    key={tag.categoryId}
-                    checked={selectedTag?.categoryId === tag.categoryId}
-                    onChange={() => handleSelect(tag)}
-                    style={{
-                      fontSize: '14px',
-                      padding: '6px 12px',
-                      borderRadius: '4px',
-                      marginRight: '8px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {tag.categoryName}
-                  </Tag.CheckableTag>
-                ))}
-              </Space>
-            </Form.Item>
-          </Form>
-          <Divider />
-          <Tabs
-            tabBarExtraContent={operations}
-            items={items}
-            activeKey={qaStatus}
-            onChange={handleQaStatusChange}
-            size="middle"
-          />
-          <QuestionList category={selectedTag} qaStatus={qaStatus} />
-        </Col>
+              <Form layout="horizontal">
+                <Form.Item
+                  label={<Typography.Text strong>分类搜索</Typography.Text>}
+                  labelCol={{ style: { fontSize: '14px', fontWeight: 'normal' } }}
+                >
+                  <Space size="middle" wrap>
+                    {questionTags.map((tag) => (
+                      <Tag.CheckableTag
+                        key={tag.categoryId}
+                        checked={selectedTag?.categoryId === tag.categoryId}
+                        onChange={() => handleSelect(tag)}
+                        style={{
+                          fontSize: '14px',
+                          padding: '6px 8px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {tag.categoryName}
+                      </Tag.CheckableTag>
+                    ))}
+                  </Space>
+                </Form.Item>
+              </Form>
+              <Tabs
+                tabBarExtraContent={operations}
+                items={items}
+                activeKey={qaStatus}
+                onChange={handleQaStatusChange}
+                size="middle"
+              />
+              <QuestionList category={selectedTag} qaStatus={qaStatus} />
+            </Card>
+          </Col>
 
-        <Col xs={24} md={6}>
-          <UgcHotRank ugcType={UgcType.QUESTION} title="热门问答" />
-          <Footer />
-        </Col>
-      </Row>
-    </Card>
+          <Col xs={24} sm={24} md={24} lg={24} xl={6} xxl={6}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16,
+              }}
+            >
+              <UgcHotRank ugcType={UgcType.QUESTION} title="热门问答" />
+              <Footer />
+            </div>
+          </Col>
+        </Row>
+      </Content>
+    </Layout>
   );
 };
 

@@ -1,4 +1,4 @@
-import { BellOutlined, LeftOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LeftOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import type { MenuProps } from 'antd';
@@ -25,11 +25,11 @@ const UserSettings: React.FC = () => {
       icon: <LockOutlined />,
       label: <Link to="/account/settings/account">账号设置</Link>,
     },
-    {
-      key: 'notification',
-      icon: <BellOutlined />,
-      label: <Link to="/account/settings/notification">消息设置</Link>,
-    },
+    // {
+    //   key: 'notification',
+    //   icon: <BellOutlined />,
+    //   label: <Link to="/account/settings/notification">消息设置</Link>,
+    // },
   ];
 
   return (

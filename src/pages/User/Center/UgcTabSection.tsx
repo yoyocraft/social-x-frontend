@@ -6,6 +6,7 @@ import UserPostList from '@/components/User/UserPostList';
 import UserQuestionList from '@/components/User/UserQuestionList';
 import { UgcStatus } from '@/constants/UgcConstant';
 import { ProCard } from '@ant-design/pro-components';
+import { useSearchParams } from '@umijs/max';
 import { Select, Tabs } from 'antd';
 import React, { useState } from 'react';
 
@@ -50,6 +51,12 @@ interface Props {
 }
 
 const UgcTabSection: React.FC<Props> = ({ self = false }) => {
+  const [searchParam] = useSearchParams();
+  const paramTab = searchParam.get('tab');
+  const paramStatus = searchParam.get('st');
+
+  const defaultTab = paramTab || 'article';
+  const defaultStatus = paramStatus || UgcStatus.PUBLISHED.toString();
   const baseTabItems = [
     { key: 'article', label: '文章' },
     { key: 'post', label: '动态' },
@@ -58,8 +65,8 @@ const UgcTabSection: React.FC<Props> = ({ self = false }) => {
 
   const tabItems = self ? baseTabItems.concat(selfItems) : baseTabItems;
 
-  const [activeTabKey, setActiveTabKey] = useState(tabItems[0]?.key || 'article');
-  const [ugcStatus, setUgcStatus] = useState(UgcStatus.PUBLISHED.toString());
+  const [activeTabKey, setActiveTabKey] = useState(defaultTab);
+  const [ugcStatus, setUgcStatus] = useState(defaultStatus);
 
   const handleTabChange = (key: string) => setActiveTabKey(key);
   const handleUgcStatusChange = (value: string) => setUgcStatus(value);

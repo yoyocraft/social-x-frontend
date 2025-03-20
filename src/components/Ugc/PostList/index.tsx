@@ -12,7 +12,17 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Avatar, Image, List, message, Skeleton, Space, Typography } from 'antd';
+import {
+  Avatar,
+  Card,
+  ConfigProvider,
+  Image,
+  List,
+  message,
+  Skeleton,
+  Space,
+  Typography,
+} from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -113,29 +123,49 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
 
   const renderPostContent = (item: API.UgcResponse) => {
     const hasLink = item.content?.includes('http');
-
-    // 处理换行符，将 \n 转换为 <br />，保持原始格式
     const contentWithLineBreaks = item.content?.split('\n');
 
-    // 如果没有链接，直接渲染内容并保留换行
     if (!hasLink) {
-      return contentWithLineBreaks?.map((line, index) => <Paragraph key={index}>{line}</Paragraph>);
+      return (
+        <Paragraph
+          ellipsis={{
+            rows: 10,
+            expandable: true,
+            symbol: '展开更多',
+          }}
+        >
+          {contentWithLineBreaks?.join('\n')}
+        </Paragraph>
+      );
     }
 
     return (
-      <>
+      <Paragraph
+        ellipsis={{
+          rows: 10,
+          expandable: true,
+          symbol: '展开更多',
+        }}
+      >
         {contentWithLineBreaks?.map((line, index) => {
           if (line.startsWith('http')) {
             return (
-              <Link key={index} href={line} target="_blank">
-                {line}
-              </Link>
+              <span key={index}>
+                <Link href={line} target="_blank">
+                  {line}
+                </Link>
+                {index < contentWithLineBreaks.length - 1 && '\n'}
+              </span>
             );
           }
-          // 渲染其他文本内容
-          return <Paragraph key={index}>{line}</Paragraph>;
+          return (
+            <span key={index}>
+              {line}
+              {index < contentWithLineBreaks.length - 1 && '\n'}
+            </span>
+          );
         })}
-      </>
+      </Paragraph>
     );
   };
 
@@ -152,65 +182,80 @@ const PostList: React.FC<PostListProps> = ({ categoryId }) => {
         size="large"
         dataSource={postList}
         renderItem={(item) => (
-          <List.Item
-            key={item.ugcId}
-            style={{
-              padding: '24px 0',
-              borderBottom: '1px solid rgba(0,0,0,0.06)',
-            }}
-            actions={[
-              <IconText
-                icon={item.liked ? LikeFilled : LikeOutlined}
-                text={item.likeCount?.toString() || '0'}
-                key="list-vertical-like-o"
-                onClick={() => handleLike(item)}
-              />,
-              <IconText
-                icon={CommentOutlined}
-                text={item.commentaryCount?.toString() || '0'}
-                key="list-vertical-comment-o"
-              />,
-              <IconText
-                icon={item.collected ? StarFilled : StarOutlined}
-                text={item.collectCount?.toString() || '0'}
-                key="list-vertical-star-o"
-                onClick={() => handleCollect(item)}
-              />,
-              <Link key={item.ugcId} href={`/post/${item.ugcId}`} style={{ color: '#1990ff' }}>
-                查看原贴
-              </Link>,
-            ]}
-          >
-            <List.Item.Meta
-              avatar={<Avatar src={item.author?.avatar} size={40} />}
-              title={
-                <Space size={2} direction="vertical">
-                  <Text strong>
-                    <Link
-                      style={{
-                        color: 'black',
-                        fontWeight: 500,
-                        textDecoration: 'none',
-                      }}
-                      href={`/user/${item.author?.userId}`}
-                    >
-                      {item.author?.nickname}
-                    </Link>
-                  </Text>
-                  <Text type="secondary" style={{ fontSize: 12 }}>
-                    {dateTimeFormat(item.gmtCreate)}
-                  </Text>
-                </Space>
-              }
-            />
-            <div style={{ margin: '8px 0' }}>{renderPostContent(item)}</div>
-            {item.attachmentUrls && item.attachmentUrls.length > 0 && (
-              <Space size={[16, 8]} wrap style={{ marginTop: 16 }}>
-                {item.attachmentUrls.map((url, index) => (
-                  <Image key={index} width={100} src={url} fallback="/media/fallback/1.png" />
-                ))}
-              </Space>
-            )}
+          <List.Item key={item.ugcId}>
+            <ConfigProvider
+              theme={{
+                components: {
+                  Card: {
+                    bodyPadding: 4,
+                  },
+                },
+              }}
+            >
+              <Card
+                bordered={false}
+                actions={[
+                  <IconText
+                    icon={item.liked ? LikeFilled : LikeOutlined}
+                    text={item.likeCount?.toString() || '0'}
+                    key="list-vertical-like-o"
+                    onClick={() => handleLike(item)}
+                  />,
+                  <IconText
+                    icon={CommentOutlined}
+                    text={item.commentaryCount?.toString() || '0'}
+                    key="list-vertical-comment-o"
+                  />,
+                  <IconText
+                    icon={item.collected ? StarFilled : StarOutlined}
+                    text={item.collectCount?.toString() || '0'}
+                    key="list-vertical-star-o"
+                    onClick={() => handleCollect(item)}
+                  />,
+                  <Link
+                    key={item.ugcId}
+                    href={`/post/${item.ugcId}`}
+                    style={{
+                      color: '#1990ff',
+                      fontSize: '15px',
+                    }}
+                  >
+                    查看原贴
+                  </Link>,
+                ]}
+              >
+                <Card.Meta
+                  avatar={<Avatar src={item.author?.avatar} size={40} />}
+                  title={
+                    <Space size={0} direction="vertical">
+                      <Text strong>
+                        <Link
+                          style={{
+                            color: 'black',
+                            fontWeight: 500,
+                            textDecoration: 'none',
+                          }}
+                          href={`/user/${item.author?.userId}`}
+                        >
+                          {item.author?.nickname}
+                        </Link>
+                      </Text>
+                      <Text type="secondary">{dateTimeFormat(item.gmtCreate)}</Text>
+                    </Space>
+                  }
+                />
+                <>
+                  {renderPostContent(item)}
+                  {item.attachmentUrls && item.attachmentUrls.length > 0 && (
+                    <Space size={[16, 8]} wrap style={{ marginTop: 16 }}>
+                      {item.attachmentUrls.map((url, index) => (
+                        <Image key={index} width={100} src={url} fallback="/media/fallback/1.png" />
+                      ))}
+                    </Space>
+                  )}
+                </>
+              </Card>
+            </ConfigProvider>
           </List.Item>
         )}
       />

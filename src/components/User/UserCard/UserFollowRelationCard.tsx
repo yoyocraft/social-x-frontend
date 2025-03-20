@@ -7,10 +7,11 @@ import { useState } from 'react';
 interface Props {
   user: API.UserBasicInfoResponse;
   btnSize?: 'small' | 'middle' | 'large';
+  avatarSize?: number;
 }
 
 const { Text, Link } = Typography;
-const UserFollowRelationCard: React.FC<Props> = ({ user, btnSize = 'middle' }) => {
+const UserFollowRelationCard: React.FC<Props> = ({ user, btnSize = 'middle', avatarSize = 40 }) => {
   const { initialState } = useModel('@@initialState');
   const [hasFollowed, setHasFollowed] = useState(user.hasFollowed);
   const self = user.userId === initialState?.currentUser?.userId;
@@ -40,7 +41,7 @@ const UserFollowRelationCard: React.FC<Props> = ({ user, btnSize = 'middle' }) =
             type={hasFollowed ? 'default' : 'primary'}
             onClick={toggleFollow}
             style={{
-              width: '100%',
+              // width: '100%',
               borderRadius: 20,
               fontWeight: 'bold',
               transition: 'all 0.3s',
@@ -53,14 +54,13 @@ const UserFollowRelationCard: React.FC<Props> = ({ user, btnSize = 'middle' }) =
       ]}
     >
       <List.Item.Meta
-        avatar={<Avatar size={40} src={user.avatar} icon={<UserOutlined />} />}
+        avatar={<Avatar size={avatarSize} src={user.avatar} icon={<UserOutlined />} />}
         title={
           <>
-            <Text strong style={{ fontSize: 16 }}>
+            <Text ellipsis strong style={{ fontSize: 16 }}>
               <Link
                 style={{
-                  color: '#1677ff',
-                  fontWeight: 500,
+                  color: 'black',
                   textDecoration: 'none',
                 }}
                 href={`/user/${user?.userId}`}

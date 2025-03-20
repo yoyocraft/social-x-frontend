@@ -152,6 +152,21 @@ export async function listRecommendUgcFeedUsingPost(
   });
 }
 
+/** queryUgcStatistic POST /api/ugc/statistic */
+export async function queryUgcStatisticUsingPost(
+  body: API.UgcQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultUgcStatisticResponse_>('/api/ugc/statistic', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** generateSummary GET /api/ugc/summary */
 export async function generateSummaryUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

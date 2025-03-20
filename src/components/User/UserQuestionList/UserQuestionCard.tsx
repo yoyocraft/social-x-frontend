@@ -148,22 +148,16 @@ const UserQuestionCard: React.FC<Props> = ({ question, refreshUgcList, collectPa
       ]}
     >
       <List.Item.Meta
-        title={
-          <Typography.Title delete={showRejectInfo} level={4}>
-            {question.title}
-          </Typography.Title>
-        }
+        title={<Typography.Title level={5}>{question.title}</Typography.Title>}
         description={
           <Typography.Paragraph
-            strong
-            type="secondary"
             ellipsis={{
               rows: 3,
               expandable: false,
             }}
             style={{
-              marginBottom: 4,
-              fontSize: 16,
+              marginBottom: 2,
+              fontSize: 14,
             }}
           >
             {question.summary}

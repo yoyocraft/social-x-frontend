@@ -52,7 +52,7 @@ const QuestionPublishPage: React.FC = () => {
       });
 
       message.success('发布成功，待审核通过');
-      history.replace('/question');
+      history.replace('/account/center?tab=question&st=AUDITING');
     } catch (error: any) {
       message.error(error.message || '发布失败，请重试');
     } finally {

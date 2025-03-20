@@ -24,7 +24,9 @@ const HotAuthorCard = () => {
         itemLayout="horizontal"
         size="large"
         dataSource={hotUsers}
-        renderItem={(item) => <UserFollowRelationCard btnSize="small" user={item} />}
+        renderItem={(item) => (
+          <UserFollowRelationCard avatarSize={30} btnSize="small" user={item} />
+        )}
         locale={{
           emptyText: <Empty description="暂无热门作者，快去成为吧" />,
         }}

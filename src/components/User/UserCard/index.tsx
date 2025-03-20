@@ -35,7 +35,6 @@ const UserCard: React.FC<Props> = ({ user, self = false }) => {
         borderRadius: 8,
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
         padding: '8px',
-        marginBottom: 16,
       }}
     >
       <Meta
