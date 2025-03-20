@@ -81,29 +81,49 @@ const UserPostCard: React.FC<Props> = ({ post, refreshUgcList, collectPage = fal
 
   const renderPostContent = (item: API.UgcResponse) => {
     const hasLink = item.content?.includes('http');
-
-    // 处理换行符，将 \n 转换为 <br />，保持原始格式
     const contentWithLineBreaks = item.content?.split('\n');
 
-    // 如果没有链接，直接渲染内容并保留换行
     if (!hasLink) {
-      return contentWithLineBreaks?.map((line, index) => <Paragraph key={index}>{line}</Paragraph>);
+      return (
+        <Paragraph
+          ellipsis={{
+            rows: 10,
+            expandable: true,
+            symbol: '展开更多',
+          }}
+        >
+          {contentWithLineBreaks?.join('\n')}
+        </Paragraph>
+      );
     }
 
     return (
-      <>
+      <Paragraph
+        ellipsis={{
+          rows: 10,
+          expandable: true,
+          symbol: '展开更多',
+        }}
+      >
         {contentWithLineBreaks?.map((line, index) => {
           if (line.startsWith('http')) {
             return (
-              <Link key={index} href={line} target="_blank">
-                {line}
-              </Link>
+              <span key={index}>
+                <Link href={line} target="_blank">
+                  {line}
+                </Link>
+                {index < contentWithLineBreaks.length - 1 && '\n'}
+              </span>
             );
           }
-          // 渲染其他文本内容
-          return <Paragraph key={index}>{line}</Paragraph>;
+          return (
+            <span key={index}>
+              {line}
+              {index < contentWithLineBreaks.length - 1 && '\n'}
+            </span>
+          );
         })}
-      </>
+      </Paragraph>
     );
   };
   return (

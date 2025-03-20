@@ -125,7 +125,11 @@ const ArticlePublisher: React.FC = () => {
       });
       const successMesssage = drafting ? '保存草稿成功' : '发布成功，待审核通过';
       message.success(successMesssage);
-      history.replace('/');
+      if (drafting) {
+        history.replace('/account/center?tab=draft');
+      } else {
+        history.replace('/account/center?tab=article&st=AUDITING');
+      }
     } catch (error: any) {
       message.error(error.message || '发布失败，请重试');
     } finally {

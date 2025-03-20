@@ -355,6 +355,14 @@ declare namespace API {
     timestamp?: number;
   };
 
+  type ResultUgcStatisticResponse_ = {
+    bizState?: string;
+    code?: string;
+    data?: UgcStatisticResponse;
+    message?: string;
+    timestamp?: number;
+  };
+
   type ResultUserBasicInfoResponse_ = {
     bizState?: string;
     code?: string;
@@ -467,6 +475,15 @@ declare namespace API {
     type?: string;
     ugcId?: string;
     viewCount?: number;
+  };
+
+  type UgcStatisticResponse = {
+    articleCount?: number;
+    collectCount?: number;
+    commentaryCount?: number;
+    likeCount?: number;
+    postCount?: number;
+    questionCount?: number;
   };
 
   type UgcTagInfoResponse = {

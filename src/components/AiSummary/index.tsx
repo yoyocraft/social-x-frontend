@@ -31,7 +31,6 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
 
     eventSource.onmessage = (event) => {
       if (firstMessage) {
-        message.success('开始总结文章');
         firstMessage = false;
       }
       const ret = event.data + '\n';

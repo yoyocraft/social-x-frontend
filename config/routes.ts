@@ -14,7 +14,6 @@ export default [
     hideInMenu: true,
     component: './User/Center',
   },
-
   {
     name: '用户信息',
     path: '/user/:userId',
@@ -39,11 +38,11 @@ export default [
         name: '账号资料',
         component: './User/Settings/AccountSettings',
       },
-      {
-        path: '/account/settings/notification',
-        name: '消息设置',
-        component: './User/Settings/NotificationSettings',
-      },
+      // {
+      //   path: '/account/settings/notification',
+      //   name: '消息设置',
+      //   component: './User/Settings/NotificationSettings',
+      // },
     ],
   },
 
@@ -112,7 +111,6 @@ export default [
     hideInMenu: true,
     component: './Search',
   },
-
   {
     path: '/admin',
     name: '管理页',

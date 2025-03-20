@@ -4,6 +4,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
+import { message } from 'antd';
 import { md5 } from 'js-md5';
 import defaultSettings from '../config/defaultSettings';
 import NotifyBar from './components/NotifyBar';
@@ -31,6 +32,7 @@ export async function getInitialState(): Promise<{
       });
       return msg.data;
     } catch (error) {
+      message.error('登录状态失效，请重新登录');
       history.push(loginPath);
     }
     return undefined;
@@ -80,6 +82,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
+        message.error('您需要先登录！');
         history.push(loginPath);
       }
     },

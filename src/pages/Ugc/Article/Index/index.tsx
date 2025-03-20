@@ -61,16 +61,16 @@ const ArticleIndex = () => {
         height: '100vh',
       }}
     >
-      <Affix offsetTop={55}>
-        <Sider
-          theme="light"
-          width={200}
-          style={{
-            background: '#fff',
-            boxShadow: '2px 0 8px rgba(0,0,0,0.06)',
-            overflow: 'auto',
-          }}
-        >
+      <Sider
+        theme="light"
+        collapsible
+        style={{
+          background: '#fff',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.06)',
+          overflow: 'auto',
+        }}
+      >
+        <Affix offsetTop={55}>
           <Menu
             mode="inline"
             defaultSelectedKeys={['comprehensive']}
@@ -79,7 +79,7 @@ const ArticleIndex = () => {
               icon: <span>{item.icon}</span>,
               label: item.label,
             }))}
-            style={{ height: '100%', borderRight: 0 }}
+            style={{ borderRight: 0 }}
             onSelect={(item) => {
               if (item.key === 'follow') {
                 setViewFollow(true);
@@ -93,18 +93,24 @@ const ArticleIndex = () => {
               setViewFollow(false);
             }}
           />
-        </Sider>
-      </Affix>
+        </Affix>
+      </Sider>
 
-      <Content style={{ marginLeft: 16, minHeight: '100%' }}>
-        <Row gutter={16}>
-          <Col span={18}>
+      <Content
+        style={{
+          marginLeft: 16,
+          minHeight: '100%',
+          transition: 'margin 0.2s',
+        }}
+      >
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
             <Card
               bordered={false}
               style={{
                 borderRadius: 8,
                 boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                padding: '0 12px',
+                padding: '0 8px',
               }}
             >
               {!viewFollow && (
@@ -112,23 +118,26 @@ const ArticleIndex = () => {
                   size="large"
                   defaultActiveKey="recommended"
                   items={tabItems}
-                  onChange={(key) => {
-                    setActiveTab(key);
-                  }}
+                  onChange={setActiveTab}
                 />
               )}
-
               <ArticleList categoryId={categoryId} fetchType={activeTab} viewFollow={viewFollow} />
             </Card>
           </Col>
 
-          <Col span={6}>
-            <UgcHotRank ugcType={UgcType.ARTICLE} />
-            <div style={{ marginTop: 16 }}></div>
-            <SuggestedUserCard />
-            <div style={{ marginTop: 16 }}></div>
-            <HotAuthorCard />
-            <Footer />
+          <Col xs={24} sm={24} md={24} lg={24} xl={6} xxl={6}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16,
+              }}
+            >
+              <UgcHotRank ugcType={UgcType.ARTICLE} />
+              <SuggestedUserCard />
+              <HotAuthorCard />
+              <Footer />
+            </div>
           </Col>
         </Row>
       </Content>

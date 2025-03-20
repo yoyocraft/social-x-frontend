@@ -151,7 +151,7 @@ const QuestionList: React.FC<QuestionListProps> = ({
             }}
             actions={[
               <Space key={item.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
-                <Text key={item.gmtCreate} type="secondary" style={{ fontSize: 12 }}>
+                <Text key={item.gmtCreate} type="secondary">
                   {dateTimeFormat(item.gmtCreate)}
                 </Text>
                 <IconText
@@ -205,18 +205,16 @@ const QuestionList: React.FC<QuestionListProps> = ({
             ]}
           >
             <List.Item.Meta
-              title={<Typography.Title level={4}>{item.title}</Typography.Title>}
+              title={<Typography.Title level={5}>{item.title}</Typography.Title>}
               description={
                 <Typography.Paragraph
-                  strong
-                  type="secondary"
                   ellipsis={{
                     rows: 3,
                     expandable: false,
                   }}
                   style={{
-                    marginBottom: 4,
-                    fontSize: 16,
+                    marginBottom: 2,
+                    fontSize: 14,
                   }}
                 >
                   {item.summary}

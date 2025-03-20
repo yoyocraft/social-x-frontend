@@ -6,7 +6,7 @@ import UserCard from '@/components/User/UserCard';
 import { UgcType } from '@/constants/UgcConstant';
 import { publishUgcUsingPost } from '@/services/socialx/ugcController';
 import { queryUgcTopicUsingGet } from '@/services/socialx/ugcMetadataController';
-import { useModel } from '@umijs/max';
+import { history, useModel } from '@umijs/max';
 import { Card, Col, Layout, message, Row, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -47,6 +47,7 @@ export default function PostPage() {
         reqId,
       });
       message.success('发布成功，待审核通过');
+      history.replace('/account/center?tab=post&st=AUDITING');
     } catch (error: any) {
       message.error(error.message || '发布失败，请重试');
     }
@@ -65,8 +66,8 @@ export default function PostPage() {
       }}
     >
       <Content style={{ marginLeft: 16, minHeight: '100%' }}>
-        <Row gutter={16}>
-          <Col span={18}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
             {initialState?.currentUser && <PostPublisher onPublish={handlePublishPost} />}
             <Card
               bordered={false}
@@ -92,10 +93,18 @@ export default function PostPage() {
             </Card>
           </Col>
 
-          <Col span={6}>
-            {initialState?.currentUser && <UserCard user={initialState.currentUser} self />}
-            <UgcHotRank ugcType={UgcType.POST} title="帖子榜" />
-            <Footer />
+          <Col xs={24} sm={24} md={24} lg={24} xl={6} xxl={6}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16,
+              }}
+            >
+              {initialState?.currentUser && <UserCard user={initialState.currentUser} self />}
+              <UgcHotRank ugcType={UgcType.POST} title="帖子榜" />
+              <Footer />
+            </div>
           </Col>
         </Row>
       </Content>
