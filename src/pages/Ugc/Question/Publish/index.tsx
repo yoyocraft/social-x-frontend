@@ -27,7 +27,12 @@ const QuestionPublishPage: React.FC = () => {
   const [qaCategoryOptions, setQaCategoryOptions] = useState<Opt[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<QuestionCategory | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [attachmentUrls, setAttachmentUrls] = useState<string[]>([]);
   const { initialState } = useModel('@@initialState');
+
+  const afterImageUpload = (url: string) => {
+    setAttachmentUrls([...attachmentUrls, url]);
+  };
 
   const handlePublishQuestion = async () => {
     setLoading(true);
@@ -115,7 +120,11 @@ const QuestionPublishPage: React.FC = () => {
           </Space>
           <Space direction="vertical" style={{ width: '100%', marginTop: 16 }}>
             <Typography.Text>请详细描述您的问题</Typography.Text>
-            <MdEditor value={content} source={MediaSource.QUESTION} />
+            <MdEditor
+              value={content}
+              source={MediaSource.QUESTION}
+              afterImageUpload={afterImageUpload}
+            />
           </Space>
           <Space direction="vertical" style={{ width: '100%', marginTop: 16 }}>
             <Typography.Text>标题</Typography.Text>

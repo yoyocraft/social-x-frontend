@@ -1,4 +1,5 @@
 import { Footer } from '@/components';
+import MorePageFeature from '@/components/MorePageFeature';
 import UgcHotRank from '@/components/Ugc/UgcHotRank';
 import UserArticleCard from '@/components/User/UserArticleList/UserArticleCard';
 import UserPostCard from '@/components/User/UserPostList/UserPostCard';
@@ -165,7 +166,7 @@ const SearchPage: React.FC = () => {
       }}
       style={{ background: '#f0f2f5' }}
     >
-      <Row justify="center" style={{ marginBottom: 20 }}>
+      <Row justify="center" gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col xs={24} sm={20} md={16} lg={12}>
           <Input.Search
             enterButton="搜索"
@@ -206,7 +207,7 @@ const SearchPage: React.FC = () => {
         </Col>
       </Row>
 
-      <Row gutter={24} justify="center">
+      <Row gutter={[16, 16]} justify="center">
         <Col xs={24} md={18} lg={16}>
           <ProCard bodyStyle={{ padding: 24 }}>
             <Tabs
@@ -237,11 +238,12 @@ const SearchPage: React.FC = () => {
           </ProCard>
         </Col>
 
-        <Col xs={0} md={6} lg={5}>
+        <Col xs={24} md={6} lg={5}>
           <UgcHotRank ugcType={UgcType.ALL} title="热门榜单" />
           <Footer />
         </Col>
       </Row>
+      <MorePageFeature />
     </PageContainer>
   );
 };

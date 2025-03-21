@@ -1,4 +1,5 @@
 import { Footer } from '@/components';
+import MorePageFeature from '@/components/MorePageFeature';
 import ArticleList from '@/components/Ugc/ArticleList';
 import UgcHotRank from '@/components/Ugc/UgcHotRank';
 import HotAuthorCard from '@/components/User/HotAuthorCard';
@@ -141,6 +142,7 @@ const ArticleIndex = () => {
           </Col>
         </Row>
       </Content>
+      <MorePageFeature />
     </Layout>
   );
 };

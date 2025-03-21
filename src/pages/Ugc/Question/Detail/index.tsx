@@ -1,5 +1,6 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import MdNavbar from '@/components/MdNavbar';
+import MorePageFeature from '@/components/MorePageFeature';
 import RelatedContentCard from '@/components/Ugc/RelatedContentCard';
 import UgcCard from '@/components/Ugc/UgcCard';
 import UserCard from '@/components/User/UserCard';
@@ -69,6 +70,7 @@ const QuestionDetail: React.FC = () => {
           </Space>
         </Col>
       </Row>
+      <MorePageFeature />
     </div>
   );
 };

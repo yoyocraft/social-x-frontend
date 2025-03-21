@@ -11,12 +11,13 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { message, Typography } from 'antd';
+import { Card, Divider, message, Space, Tag, Typography } from 'antd';
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { history, useModel } from 'umi';
+import { useModel } from 'umi';
 
 const { Text } = Typography;
+const { CheckableTag } = Tag;
 
 const ProfileSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -24,6 +25,7 @@ const ProfileSettings: React.FC = () => {
 
   const [interestTags, setInterestTags] = useState<string[]>([]);
   const [avatarUrl, setAvatarUrl] = useState<string>(currentUser?.avatar || '');
+  const [selectedTags, setSelectedTags] = useState<string[]>(currentUser?.personalizedTags || []);
 
   const [initialValue, setInitialValue] = useState<API.UserEditInfoRequest>({
     nickname: currentUser?.nickname,
@@ -43,14 +45,23 @@ const ProfileSettings: React.FC = () => {
         const sortedTags = res.data.ugcTagList.sort(
           (a, b) => (a.priority ?? 0) - (b.priority ?? 0),
         );
-        setInterestTags(
-          sortedTags
-            .map((tag) => tag.tagName)
-            .filter((tagName): tagName is string => tagName !== undefined),
-        );
+
+        // 提取所有标签
+        const allTags = sortedTags
+          .map((tag) => tag.tagName)
+          .filter((tagName): tagName is string => tagName !== undefined);
+
+        setInterestTags(allTags);
       }
     });
   }, []);
+
+  const handleTagChange = (tag: string, checked: boolean) => {
+    const nextSelectedTags = checked
+      ? [...selectedTags, tag]
+      : selectedTags.filter((t) => t !== tag);
+    setSelectedTags(nextSelectedTags);
+  };
 
   const doUpdateProfile = async (values: API.UserEditInfoRequest) => {
     try {
@@ -58,6 +69,7 @@ const ProfileSettings: React.FC = () => {
         ...values,
         userId: currentUser?.userId,
         avatar: avatarUrl,
+        personalizedTags: selectedTags, // 使用选中的标签
       });
       if (resp.code === ResponseCode.SUCCESS) {
         message.success('修改成功！');
@@ -65,7 +77,6 @@ const ProfileSettings: React.FC = () => {
           const newUserInfo = await initialState.fetchUserInfo();
           setInitialValue({ ...newUserInfo });
         }
-        history.push('/account/center');
         return;
       }
     } catch (error) {
@@ -155,13 +166,61 @@ const ProfileSettings: React.FC = () => {
           </ProCard>
 
           <ProCard title="兴趣标签管理" bordered={false}>
-            <ProFormSelect
-              name="personalizedTags"
-              label="兴趣标签"
-              mode="multiple"
-              rules={[{ required: true }]}
-              options={interestTags.map((tag) => ({ label: tag, value: tag }))}
-            />
+            {/* 已选标签区域 */}
+            <Card
+              title="已选标签"
+              style={{ marginBottom: 16 }}
+              styles={{ body: { padding: '12px' } }}
+              bordered={false}
+            >
+              {selectedTags.length > 0 ? (
+                <Space size={[8, 8]} wrap>
+                  {selectedTags.map((tag) => (
+                    <Tag
+                      key={tag}
+                      closable
+                      color="blue"
+                      onClose={() => handleTagChange(tag, false)}
+                    >
+                      {tag}
+                    </Tag>
+                  ))}
+                </Space>
+              ) : (
+                <Text type="secondary">暂无选中标签</Text>
+              )}
+            </Card>
+
+            <Divider style={{ margin: '16px 0' }} />
+
+            {/* 标签选择区域 */}
+            <Card title="选择兴趣标签" styles={{ body: { padding: '12px' } }} bordered={false}>
+              <Space size={[8, 8]} wrap>
+                {interestTags.map((tag) => (
+                  <CheckableTag
+                    key={tag}
+                    checked={selectedTags.includes(tag)}
+                    onChange={(checked) => handleTagChange(tag, checked)}
+                    style={{
+                      borderRadius: '16px',
+                      padding: '4px 12px',
+                      backgroundColor: selectedTags.includes(tag) ? '#1890ff' : '#f0f2f5',
+                      color: selectedTags.includes(tag) ? '#fff' : '#595959',
+                      border: selectedTags.includes(tag)
+                        ? '1px solid #1890ff'
+                        : '1px solid #d9d9d9',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s',
+                      boxShadow: selectedTags.includes(tag)
+                        ? '0 2px 5px rgba(24, 144, 255, 0.3)'
+                        : 'none',
+                    }}
+                  >
+                    {tag}
+                  </CheckableTag>
+                ))}
+              </Space>
+            </Card>
           </ProCard>
         </div>
 

@@ -62,7 +62,7 @@ const FollowNotificationItem: React.FC<Props> = ({ notification }) => {
           </Space>
         }
         description={
-          <Text type="secondary" style={{ fontSize: 12 }} key={notification.gmtCreate}>
+          <Text type="secondary" key={notification.gmtCreate}>
             {dateTimeFormat(notification.gmtCreate)}
           </Text>
         }

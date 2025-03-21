@@ -30,10 +30,15 @@ const ArticlePublisher: React.FC = () => {
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [tagOptions, setTagOptions] = useState([]);
+  const [attachmentUrls, setAttachmentUrls] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
 
   const summaryMaxLength = 200;
+
+  const afterImageUpload = (url: string) => {
+    setAttachmentUrls([...attachmentUrls, url]);
+  };
 
   const loadEditUgcData = async () => {
     try {
@@ -120,6 +125,7 @@ const ArticlePublisher: React.FC = () => {
         tags: selectedTags,
         cover: coverImage,
         drafting,
+        attachmentUrls,
         reqId,
         ugcId,
       });
@@ -166,6 +172,7 @@ const ArticlePublisher: React.FC = () => {
         source={MediaSource.ARTICLE}
         value={content}
         onChange={setContent}
+        afterImageUpload={afterImageUpload}
         placeholder="开始编写..."
       />
 
@@ -210,6 +217,7 @@ const ArticlePublisher: React.FC = () => {
               source={MediaSource.ARTICLE}
               value={coverImage}
               onChange={setCoverImage}
+              afterUpload={afterImageUpload}
             />
             <Typography.Text type="secondary" style={{ fontSize: 12 }}>
               格式：支持JPG、PNG、JPEG（大小：5MB以内）

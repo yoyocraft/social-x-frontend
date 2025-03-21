@@ -15,7 +15,7 @@ const CommentNotificationItem: React.FC<Props> = ({ notification }) => {
     <List.Item
       key={notification.notificationId}
       actions={[
-        <Text type="secondary" style={{ fontSize: 12 }} key={notification.gmtCreate}>
+        <Text type="secondary" key={notification.gmtCreate}>
           {dateTimeFormat(notification.gmtCreate)}
         </Text>,
         <Space size={16} style={{ marginTop: 4 }} key={notification.notificationId}>
@@ -41,7 +41,6 @@ const CommentNotificationItem: React.FC<Props> = ({ notification }) => {
             <Text type="secondary" style={{ fontSize: 15, fontWeight: 'bold' }}>
               {notification.summary}
             </Text>
-            {/* 如果是未读的通知，显示“未读”标记 */}
             {!notification.read && <Badge count="未读" style={{ fontSize: 12 }} />}
           </Space>
         }

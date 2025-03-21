@@ -1,4 +1,5 @@
 import { Footer } from '@/components';
+import MorePageFeature from '@/components/MorePageFeature';
 import PostList from '@/components/Ugc/PostList';
 import PostPublisher from '@/components/Ugc/PostPublisher';
 import UgcHotRank from '@/components/Ugc/UgcHotRank';
@@ -102,12 +103,13 @@ export default function PostPage() {
               }}
             >
               {initialState?.currentUser && <UserCard user={initialState.currentUser} self />}
-              <UgcHotRank ugcType={UgcType.POST} title="帖子榜" />
+              <UgcHotRank ugcType={UgcType.POST} title="大家都在聊什么？" />
               <Footer />
             </div>
           </Col>
         </Row>
       </Content>
+      <MorePageFeature />
     </Layout>
   );
 }

@@ -1,4 +1,5 @@
 import { Footer } from '@/components';
+import MorePageFeature from '@/components/MorePageFeature';
 import { queryUgcStatisticUsingPost } from '@/services/socialx/ugcController';
 import { getUserInfoUsingGet } from '@/services/socialx/userController';
 import { PageContainer, ProCard } from '@ant-design/pro-components';
@@ -85,6 +86,7 @@ const UserCenter: React.FC = () => {
           <Footer />
         </Col>
       </Row>
+      <MorePageFeature />
     </PageContainer>
   );
 };

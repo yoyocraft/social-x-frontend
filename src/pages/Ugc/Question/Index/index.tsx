@@ -1,4 +1,5 @@
 import { Footer } from '@/components';
+import MorePageFeature from '@/components/MorePageFeature';
 import QuestionList from '@/components/Ugc/QuestionList';
 import UgcHotRank from '@/components/Ugc/UgcHotRank';
 import { UgcType } from '@/constants/UgcConstant';
@@ -123,6 +124,7 @@ const QuestionPage: React.FC = () => {
           </Col>
         </Row>
       </Content>
+      <MorePageFeature />
     </Layout>
   );
 };
