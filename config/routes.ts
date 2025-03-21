@@ -1,19 +1,66 @@
-export default [
+// 定义路由配置
+const routes = [
+  // 登录路由 - 无布局
   {
     path: '/user',
     layout: false,
     routes: [{ name: '登录', path: '/user/login', component: './User/Login' }],
   },
 
-  { path: '/', name: '首页', icon: 'home', component: './Ugc/Article/Index' },
-
+  // 主导航路由
   {
-    name: '个人中心',
-    path: '/account/center',
-    icon: 'user',
-    hideInMenu: true,
-    component: './User/Center',
+    path: '/',
+    name: '首页',
+    icon: 'home',
+    component: './Ugc/Article/Index',
   },
+  {
+    path: '/post',
+    name: '动态',
+    icon: 'container',
+    component: './Ugc/Post/Index',
+  },
+  {
+    path: '/question',
+    name: '问答',
+    icon: 'QuestionCircle',
+    component: './Ugc/Question/Index',
+  },
+
+  // 用户中心相关路由
+  {
+    name: '用户相关',
+    path: '/account',
+    hideInMenu: true,
+    routes: [
+      {
+        name: '个人中心',
+        path: '/account/center',
+        icon: 'user',
+        component: './User/Center',
+      },
+      {
+        path: '/account/settings',
+        name: '个人设置',
+        icon: 'setting',
+        component: './User/Settings',
+        routes: [
+          {
+            path: '/account/settings/profile',
+            name: '个人资料',
+            component: './User/Settings/ProfileSettings',
+          },
+          {
+            path: '/account/settings/account',
+            name: '账号资料',
+            component: './User/Settings/AccountSettings',
+          },
+        ],
+      },
+    ],
+  },
+
+  // 用户信息路由
   {
     name: '用户信息',
     path: '/user/:userId',
@@ -21,96 +68,82 @@ export default [
     hideInMenu: true,
     component: './User/Center',
   },
+
+  // 内容相关路由
   {
-    path: '/account/settings',
-    name: '个人设置',
-    icon: 'setting',
-    component: './User/Settings',
+    name: '内容相关',
     hideInMenu: true,
     routes: [
+      // 文章相关
       {
-        path: '/account/settings/profile',
-        name: '个人资料',
-        component: './User/Settings/ProfileSettings',
+        path: '/article/:ugcId',
+        name: '文章详情',
+        component: './Ugc/Article/Detail',
       },
       {
-        path: '/account/settings/account',
-        name: '账号资料',
-        component: './User/Settings/AccountSettings',
+        path: '/article/publish',
+        name: '发布文章',
+        component: './Ugc/Article/Publish',
       },
-      // {
-      //   path: '/account/settings/notification',
-      //   name: '消息设置',
-      //   component: './User/Settings/NotificationSettings',
-      // },
+      {
+        path: '/article/edit/:ugcId',
+        name: '编辑文章',
+        component: './Ugc/Article/Publish',
+      },
+
+      // 动态相关
+      {
+        path: '/post/publish',
+        name: '发布帖子',
+        redirect: '/post',
+      },
+      {
+        path: '/post/:ugcId',
+        name: '帖子详情',
+        component: './Ugc/Post/Detail',
+      },
+
+      // 问答相关
+      {
+        path: '/question/publish',
+        name: '提问题',
+        component: './Ugc/Question/Publish',
+      },
+      {
+        path: '/question/:ugcId',
+        name: '问题详情',
+        component: './Ugc/Question/Detail',
+      },
     ],
   },
 
-  { path: '/post', name: '动态', icon: 'container', component: './Ugc/Post/Index' },
-  { path: '/question', name: '问答', icon: 'container', component: './Ugc/Question/Index' },
+  // 通知相关路由
   {
-    path: '/article/:ugcId',
-    name: '文章详情',
+    name: '通知相关',
     hideInMenu: true,
-    component: './Ugc/Article/Detail',
-  },
-  {
-    path: '/article/publish',
-    name: '发布文章',
-    hideInMenu: true,
-    component: './Ugc/Article/Publish',
-  },
-  {
-    path: '/article/edit/:ugcId',
-    name: '编辑文章',
-    hideInMenu: true,
-    component: './Ugc/Article/Publish',
-  },
-  {
-    path: '/post/publish',
-    name: '发布帖子',
-    hideInMenu: true,
-    redirect: '/post',
-  },
-  {
-    path: '/post/:ugcId',
-    name: '帖子详情',
-    hideInMenu: true,
-    component: './Ugc/Post/Detail',
-  },
-  {
-    path: '/question/publish',
-    name: '提问题',
-    hideInMenu: true,
-    component: './Ugc/Question/Publish',
-  },
-  {
-    path: '/question/:ugcId',
-    name: '问题详情',
-    hideInMenu: true,
-    component: './Ugc/Question/Detail',
+    routes: [
+      {
+        path: '/notification',
+        name: '通知',
+        redirect: '/notification/comment',
+      },
+      {
+        path: '/notification/:type',
+        name: '通知详情',
+        component: './Notification',
+      },
+    ],
   },
 
-  {
-    path: '/notification',
-    name: '通知',
-    hideInMenu: true,
-    redirect: '/notification/comment',
-  },
-
-  {
-    path: '/notification/:type',
-    name: '通知',
-    hideInMenu: true,
-    component: './Notification',
-  },
-
+  // 搜索页面
   {
     path: '/search',
     name: '搜索页',
     hideInMenu: true,
     component: './Search',
   },
+
+  // 管理员路由
   {
     path: '/admin',
     name: '管理页',
@@ -122,5 +155,13 @@ export default [
       { path: '/admin/notification', name: '通知管理', component: './Admin/Notification' },
     ],
   },
-  { path: '*', layout: false, component: './404' },
+
+  // 404页面
+  {
+    path: '*',
+    layout: false,
+    component: './404',
+  },
 ];
+
+export default routes;
