@@ -5,12 +5,13 @@ import utc from 'dayjs/plugin/utc';
 // 扩展时区插件
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.tz.setDefault(dayjs.tz.guess());
 
 const dateTimeFormat = (timestamp: number | undefined): string => {
   if (!timestamp || timestamp < 0) return 'N/A';
 
-  const now = dayjs().utc();
-  const time = dayjs(timestamp).utc();
+  const now = dayjs();
+  const time = dayjs(timestamp);
 
   // 未来时间处理
   if (time.isAfter(now)) return '未来时间';

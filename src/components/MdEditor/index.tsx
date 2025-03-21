@@ -12,6 +12,7 @@ interface Props {
   onChange?: (v: string) => void;
   placeholder?: string;
   source: string;
+  afterImageUpload?: (url: string) => void;
 }
 
 const plugins = [gfm(), highlight()];
@@ -30,6 +31,7 @@ const MdEditor = (props: Props) => {
     );
     const fullPath = res.data?.accessUrl ?? '';
     list.push({ title: files[0].name, url: fullPath });
+    props.afterImageUpload?.(fullPath);
     return Promise.resolve(list);
   };
 

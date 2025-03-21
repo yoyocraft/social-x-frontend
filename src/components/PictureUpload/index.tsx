@@ -7,10 +7,11 @@ interface Props {
   source: string;
   onChange?: (url: string) => void;
   value?: string;
+  afterUpload?: (url: string) => void;
 }
 
 const PictureUploader: React.FC<Props> = (props) => {
-  const { source, value, onChange } = props;
+  const { source, value, onChange, afterUpload } = props;
   const [loading, setLoading] = useState(false);
 
   const uploadProps: UploadProps = {
@@ -29,9 +30,10 @@ const PictureUploader: React.FC<Props> = (props) => {
           {},
           fileObj.file,
         );
-        const fullPath = res.data?.accessUrl;
-        onChange?.(fullPath ?? '');
+        const fullPath = res.data?.accessUrl || '';
+        onChange?.(fullPath);
         fileObj.onSuccess(fullPath);
+        afterUpload?.(fullPath);
       } catch (e: any) {
         message.error('上传失败，' + e.message);
         fileObj.onError(e);

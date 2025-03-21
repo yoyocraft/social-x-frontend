@@ -15,7 +15,7 @@ import {
   StarFilled,
   StarOutlined,
 } from '@ant-design/icons';
-import { Divider, List, message, Skeleton, Space, Typography } from 'antd';
+import { Divider, Image, List, message, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -205,15 +205,12 @@ const ArticleList: React.FC<Props> = ({
             ]}
             extra={
               item.cover && (
-                <img
-                  alt="cover"
+                <Image
+                  width={200}
                   src={item.cover}
                   style={{
-                    width: 200,
-                    height: 120,
+                    height: 150,
                     objectFit: 'cover',
-                    borderRadius: 4,
-                    marginLeft: 24,
                   }}
                 />
               )

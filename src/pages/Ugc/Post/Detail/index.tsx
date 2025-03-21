@@ -1,6 +1,7 @@
 import CommentaryCard from '@/components/Commentary/CommentaryCard';
 import IconText from '@/components/IconText';
 import MdViewer from '@/components/MdViewer';
+import MorePageFeature from '@/components/MorePageFeature';
 import ShareIconText from '@/components/ShareModal';
 import RelatedContentCard from '@/components/Ugc/RelatedContentCard';
 import UserCard from '@/components/User/UserCard';
@@ -125,6 +126,7 @@ const PostCard = (props: Props) => {
           <ShareIconText key="list-vertical-share-o" item={ugc} />
         </Space>
       </Card>
+      <MorePageFeature />
     </div>
   );
 };

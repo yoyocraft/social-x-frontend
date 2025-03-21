@@ -15,7 +15,7 @@ const InteractNotificationItem: React.FC<Props> = ({ notification }) => {
     <List.Item
       key={notification.notificationId}
       actions={[
-        <Text type="secondary" style={{ fontSize: 12 }} key={notification.gmtCreate}>
+        <Text type="secondary" key={notification.gmtCreate}>
           {dateTimeFormat(notification.gmtCreate)}
         </Text>,
         <Space size={16} style={{ marginTop: 4 }} key={notification.notificationId}>

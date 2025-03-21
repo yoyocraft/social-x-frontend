@@ -18,9 +18,11 @@ interface Props {
   userInfo?: API.UserBasicInfoResponse;
   ugcStatistic?: API.UgcStatisticResponse;
 }
+
 const UserSiderBar: React.FC<Props> = ({ userInfo, ugcStatistic = {} }) => {
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+      {/* 关注信息 */}
       <Card bordered={false}>
         <div style={{ display: 'flex', textAlign: 'center' }}>
           <div style={{ flex: 1 }}>
@@ -115,13 +117,17 @@ const UserSiderBar: React.FC<Props> = ({ userInfo, ugcStatistic = {} }) => {
 
       {/* 用户标签 */}
       <Card title="个人标签" bordered={false} size="small">
-        <Space size={[8, 8]} wrap>
-          {userInfo?.personalizedTags?.map((tag, index) => (
-            <Tag key={index} color="blue">
-              {tag}
-            </Tag>
-          )) || <Text type="secondary">暂无标签</Text>}
-        </Space>
+        {userInfo?.personalizedTags?.length ? (
+          <Space size={[8, 8]} wrap>
+            {userInfo.personalizedTags.map((tag, index) => (
+              <Tag key={index} color="blue">
+                {tag}
+              </Tag>
+            ))}
+          </Space>
+        ) : (
+          <Text type="secondary">暂无标签</Text>
+        )}
       </Card>
 
       {/* 用户信息卡片 */}
