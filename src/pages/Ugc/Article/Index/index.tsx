@@ -7,7 +7,7 @@ import SuggestedUserCard from '@/components/User/SuggestedUserCard';
 import { UgcType } from '@/constants/UgcConstant';
 import { queryUgcCategoryUsingGet } from '@/services/socialx/ugcMetadataController';
 import { Affix, Card, Col, Layout, Menu, Row, Tabs } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const { Sider, Content } = Layout;
 
@@ -32,7 +32,6 @@ const ArticleIndex = () => {
   const [categoryId, setCategoryId] = useState('');
   const [activeTab, setActiveTab] = useState('recommended');
   const [viewFollow, setViewFollow] = useState(false);
-  const isFirstLoad = useRef(true);
 
   const loadSideMenu = () => {
     queryUgcCategoryUsingGet().then((res) => {
@@ -49,9 +48,7 @@ const ArticleIndex = () => {
   };
 
   useEffect(() => {
-    Promise.all([loadSideMenu()]).then(() => {
-      isFirstLoad.current = false;
-    });
+    loadSideMenu();
   }, []);
 
   return (

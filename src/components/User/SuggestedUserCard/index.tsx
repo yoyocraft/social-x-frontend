@@ -1,6 +1,6 @@
 import { querySuggestedUsersUsingGet } from '@/services/socialx/userController';
 import { useModel } from '@umijs/max';
-import { Card, Empty, List, message } from 'antd';
+import { Card, Empty, List } from 'antd';
 import { useEffect, useState } from 'react';
 import UserFollowRelationCard from '../UserCard/UserFollowRelationCard';
 
@@ -10,12 +10,9 @@ const SuggestedUserCard = () => {
 
   const loadSuggestedUsers = async () => {
     const reqId = initialState?.currentUser?.userId;
-    try {
-      const res = await querySuggestedUsersUsingGet({ reqId });
+    querySuggestedUsersUsingGet({ reqId }).then((res) => {
       setSuggestedUsers(res.data || []);
-    } catch (error: any) {
-      message.error(error.message);
-    }
+    });
   };
 
   useEffect(() => {
@@ -27,7 +24,7 @@ const SuggestedUserCard = () => {
         itemLayout="horizontal"
         size="large"
         dataSource={suggestedUsers}
-        renderItem={(item) => <UserFollowRelationCard user={item} />}
+        renderItem={(item) => <UserFollowRelationCard btnSize="small" user={item} />}
         locale={{
           emptyText: <Empty description="暂无认识的人，快去认识吧" />,
         }}

@@ -1,4 +1,4 @@
-﻿import type { RequestConfig } from '@umijs/max';
+﻿import { history, type RequestConfig } from '@umijs/max';
 import { ResponseCode } from './constants/ResponseCode';
 
 // 与后端约定的响应数据格式
@@ -28,6 +28,11 @@ export const requestConfig: RequestConfig = {
   responseInterceptors: [
     (response) => {
       const data = response.data as ResponseStructure;
+
+      if (data.code === ResponseCode.NOT_LOGIN) {
+        history.push('/user/login');
+        return response;
+      }
 
       if (data?.code !== ResponseCode.SUCCESS) {
         throw new Error(data.message || '请求失败');
