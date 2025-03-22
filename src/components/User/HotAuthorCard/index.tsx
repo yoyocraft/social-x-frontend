@@ -1,4 +1,5 @@
 import { listHotUserUsingGet } from '@/services/socialx/userController';
+import { FireFilled } from '@ant-design/icons';
 import { Card, Empty, List, message } from 'antd';
 import { useEffect, useState } from 'react';
 import UserFollowRelationCard from '../UserCard/UserFollowRelationCard';
@@ -19,14 +20,20 @@ const HotAuthorCard = () => {
     loadHotUsers();
   }, []);
   return (
-    <Card title="热门作者榜" styles={{ body: { padding: '0' } }}>
+    <Card
+      title={
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <FireFilled style={{ color: '#faad14' }} />
+          <span>{'热门作者榜'}</span>
+        </div>
+      }
+      styles={{ body: { padding: '0' } }}
+    >
       <List
         itemLayout="horizontal"
         size="large"
         dataSource={hotUsers}
-        renderItem={(item) => (
-          <UserFollowRelationCard avatarSize={30} btnSize="small" user={item} />
-        )}
+        renderItem={(item) => <UserFollowRelationCard btnSize="small" user={item} />}
         locale={{
           emptyText: <Empty description="暂无热门作者，快去成为吧" />,
         }}
