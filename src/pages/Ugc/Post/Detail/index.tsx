@@ -159,9 +159,14 @@ const PostDetail: React.FC = () => {
 
   return (
     <div id="ugc-detail" style={{ padding: '24px', backgroundColor: '#f5f7fa' }}>
-      <Row gutter={20}>
+      <Row gutter={[16, 16]}>
         <Col
-          span={18}
+          xs={24}
+          sm={24}
+          md={24}
+          lg={24}
+          xl={18}
+          xxl={18}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -191,13 +196,12 @@ const PostDetail: React.FC = () => {
           </div>
         </Col>
 
-        <Col span={6}>
+        <Col xs={24} sm={24} md={24} lg={24} xl={6} xxl={6}>
           <div
             style={{
-              backgroundColor: '#fff',
-              borderRadius: 8,
-              overflow: 'hidden',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
             }}
           >
             {post.author && (
@@ -207,7 +211,6 @@ const PostDetail: React.FC = () => {
               />
             )}
             <RelatedContentCard
-              style={{ marginTop: 16 }}
               ugcId={post.ugcId || ''}
               ugcType={post.type || ''}
               categoryId={post.categoryId || ''}

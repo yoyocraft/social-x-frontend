@@ -3,7 +3,6 @@ import type React from 'react';
 import { UgcType } from '@/constants/UgcConstant';
 import { listHotUgcUsingPost } from '@/services/socialx/ugcController';
 import { FireOutlined, StarFilled } from '@ant-design/icons';
-import { Link } from '@umijs/max';
 import { Card, Empty, List, Skeleton, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -11,6 +10,8 @@ interface Props {
   ugcType: string;
   title?: string;
 }
+
+const { Link } = Typography;
 
 const UgcHotRank: React.FC<Props> = ({ ugcType, title = '文章榜' }) => {
   const [hotUgcList, setHotUgcList] = useState<API.UgcResponse[]>([]);
@@ -96,7 +97,7 @@ const UgcHotRank: React.FC<Props> = ({ ugcType, title = '文章榜' }) => {
           <List.Item style={{ padding: '12px 0', border: 'none' }}>
             <div style={{ width: '100%' }}>
               <Link
-                to={calculateJumpUrl(item)}
+                href={calculateJumpUrl(item)}
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
