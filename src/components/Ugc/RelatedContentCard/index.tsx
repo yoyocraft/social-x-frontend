@@ -63,7 +63,7 @@ const RelatedContentCard = (props: Props) => {
     loadRelatedUgc();
   }, []);
 
-  if (!ugcId || !ugcType || !tags) {
+  if (!relatedUgc || relatedUgc.length === 0) {
     return (
       <Card title="相关内容" style={props.style}>
         <Empty description="暂无相关内容" />
@@ -88,16 +88,24 @@ const RelatedContentCard = (props: Props) => {
             <Link
               href={calLink(item) || ''}
               style={{
-                display: 'inline-block',
-                maxWidth: 'calc(100% - 38px)',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                verticalAlign: 'middle',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 8,
+                width: '100%',
               }}
               key={item.ugcId}
             >
-              {item.title}
+              <Typography.Text
+                ellipsis
+                style={{
+                  flex: 1,
+                  fontSize: '14px',
+                  color: 'rgba(0, 0, 0, 0.88)',
+                }}
+              >
+                {ugcType === UgcType.POST ? item.content : item.title}
+              </Typography.Text>
             </Link>
           </List.Item>
         )}
