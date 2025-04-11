@@ -4,6 +4,7 @@ import { useModel } from '@umijs/max';
 import { Alert, Card, message, Typography } from 'antd';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import './index.less';
 
 interface AiSummaryProps {
   ugcId: string;
@@ -53,25 +54,46 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
   }, [ugcId]);
 
   return loading ? (
-    <Card className="ai-summary-card" bordered={false}>
+    <Card
+      className="ai-summary-card"
+      bordered={false}
+      style={{
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+        borderRadius: '12px',
+        transition: 'all 0.3s ease',
+      }}
+    >
       <Alert
-        message={<Typography.Title level={4}>智能总结</Typography.Title>}
+        message={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Typography.Title level={4} style={{ margin: 0, color: '#1890ff' }}>
+              智能总结
+            </Typography.Title>
+          </div>
+        }
         description={
-          <>
+          <div style={{ marginTop: '16px' }}>
             {summary && (
               <MarkdownPreview
                 source={summary}
                 style={{
                   backgroundColor: 'transparent',
-                  color: 'black',
+                  color: '#2c3e50',
                   fontSize: 15,
+                  lineHeight: 1.6,
                 }}
                 className="markdown-preview"
               />
             )}
-          </>
+          </div>
         }
         type="info"
+        style={{
+          background: 'transparent',
+          border: 'none',
+          padding: '16px',
+        }}
       />
     </Card>
   ) : null;

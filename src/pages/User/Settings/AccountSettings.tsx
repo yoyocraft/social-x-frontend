@@ -207,21 +207,27 @@ const AccountSettings: React.FC = () => {
       label: '邮箱',
       value: currentUser?.desensitizedEmail || '未绑定',
       action: (
-        <Button type="link" size="large">
-          解绑
+        <Button type="link" size="large" danger>
+          换绑
+        </Button>
+      ),
+    },
+
+    {
+      label: '密码',
+      value: '******',
+      action: (
+        <Button type="link" size="large" onClick={handleResetPwd}>
+          重置
         </Button>
       ),
     },
     {
       label: '手机',
       value: currentUser?.desensitizedMobile || '未绑定',
-      action: currentUser?.desensitizedMobile ? (
-        <Button type="link" size="large">
-          解绑
-        </Button>
-      ) : (
-        <Button type="link" size="large">
-          绑定
+      action: (
+        <Button type="link" size="large" disabled>
+          换绑（暂不支持）
         </Button>
       ),
     },
@@ -240,15 +246,6 @@ const AccountSettings: React.FC = () => {
       action: (
         <Button type="link" size="large" disabled>
           绑定（暂不支持）
-        </Button>
-      ),
-    },
-    {
-      label: '密码',
-      value: '******',
-      action: (
-        <Button type="link" size="large" onClick={handleResetPwd}>
-          重置
         </Button>
       ),
     },
