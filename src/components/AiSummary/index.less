@@ -1,0 +1,46 @@
+.ai-summary-card {
+  animation: fadeIn 0.5s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .markdown-preview {
+    animation: slideIn 0.3s ease-out;
+
+    pre {
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 6px;
+    }
+
+    code {
+      padding: 2px 4px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

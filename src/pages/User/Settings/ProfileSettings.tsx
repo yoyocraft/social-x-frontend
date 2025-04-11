@@ -11,7 +11,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Card, Divider, message, Space, Tag, Typography } from 'antd';
+import { Card, Divider, message, Space, Tag, theme, Typography } from 'antd';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
@@ -20,6 +20,7 @@ const { Text } = Typography;
 const { CheckableTag } = Tag;
 
 const ProfileSettings: React.FC = () => {
+  const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
 
@@ -41,16 +42,12 @@ const ProfileSettings: React.FC = () => {
   useEffect(() => {
     queryUgcInterestTagUsingGet().then((res) => {
       if (res.data && res.data.ugcTagList) {
-        // 按照 priority 排序
         const sortedTags = res.data.ugcTagList.sort(
           (a, b) => (a.priority ?? 0) - (b.priority ?? 0),
         );
-
-        // 提取所有标签
         const allTags = sortedTags
           .map((tag) => tag.tagName)
           .filter((tagName): tagName is string => tagName !== undefined);
-
         setInterestTags(allTags);
       }
     });
@@ -69,7 +66,7 @@ const ProfileSettings: React.FC = () => {
         ...values,
         userId: currentUser?.userId,
         avatar: avatarUrl,
-        personalizedTags: selectedTags, // 使用选中的标签
+        personalizedTags: selectedTags,
       });
       if (resp.code === ResponseCode.SUCCESS) {
         message.success('修改成功！');
@@ -102,7 +99,7 @@ const ProfileSettings: React.FC = () => {
     >
       <div style={{ display: 'flex', gap: '24px' }}>
         <div style={{ flex: 1 }}>
-          <ProCard title="基本信息" bordered={false}>
+          <ProCard title="基本信息" bordered={false} style={{ marginBottom: '24px' }}>
             <ProForm.Group>
               <ProFormText
                 name="nickname"
@@ -130,6 +127,14 @@ const ProfileSettings: React.FC = () => {
                 { label: '后端开发', value: 1 },
                 { label: '前端开发', value: 2 },
                 { label: '全栈开发', value: 3 },
+                { label: '移动开发', value: 4 },
+                { label: 'UI/UX设计', value: 5 },
+                { label: '产品经理', value: 6 },
+                { label: '测试工程师', value: 7 },
+                { label: '运维工程师', value: 8 },
+                { label: '数据分析师', value: 9 },
+                { label: '人工智能', value: 10 },
+                { label: '其他', value: 11 },
               ]}
             />
 
@@ -161,12 +166,12 @@ const ProfileSettings: React.FC = () => {
               fieldProps={{
                 showCount: true,
                 maxLength: 100,
+                autoSize: { minRows: 3, maxRows: 5 },
               }}
             />
           </ProCard>
 
           <ProCard title="兴趣标签管理" bordered={false}>
-            {/* 已选标签区域 */}
             <Card
               title="已选标签"
               style={{ marginBottom: 16 }}
@@ -181,6 +186,11 @@ const ProfileSettings: React.FC = () => {
                       closable
                       color="blue"
                       onClose={() => handleTagChange(tag, false)}
+                      style={{
+                        borderRadius: '16px',
+                        padding: '4px 12px',
+                        fontSize: '14px',
+                      }}
                     >
                       {tag}
                     </Tag>
@@ -193,7 +203,6 @@ const ProfileSettings: React.FC = () => {
 
             <Divider style={{ margin: '16px 0' }} />
 
-            {/* 标签选择区域 */}
             <Card title="选择兴趣标签" styles={{ body: { padding: '12px' } }} bordered={false}>
               <Space size={[8, 8]} wrap>
                 {interestTags.map((tag) => (
@@ -204,16 +213,17 @@ const ProfileSettings: React.FC = () => {
                     style={{
                       borderRadius: '16px',
                       padding: '4px 12px',
-                      backgroundColor: selectedTags.includes(tag) ? '#1890ff' : '#f0f2f5',
+                      backgroundColor: selectedTags.includes(tag) ? token.colorPrimary : '#f0f2f5',
                       color: selectedTags.includes(tag) ? '#fff' : '#595959',
                       border: selectedTags.includes(tag)
-                        ? '1px solid #1890ff'
+                        ? `1px solid ${token.colorPrimary}`
                         : '1px solid #d9d9d9',
                       cursor: 'pointer',
                       transition: 'all 0.3s',
                       boxShadow: selectedTags.includes(tag)
-                        ? '0 2px 5px rgba(24, 144, 255, 0.3)'
+                        ? `0 2px 5px ${token.colorPrimary}33`
                         : 'none',
+                      fontSize: '14px',
                     }}
                   >
                     {tag}
@@ -224,12 +234,23 @@ const ProfileSettings: React.FC = () => {
           </ProCard>
         </div>
 
-        <ProCard style={{ width: 280 }} bordered={false}>
+        <ProCard
+          style={{
+            width: 280,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '16px',
+          }}
+          bordered={false}
+        >
           <PictureUploader source={MediaSource.AVATAR} value={avatarUrl} onChange={setAvatarUrl} />
-          <Text type="secondary" style={{ fontSize: 12 }}>
+          <Text type="secondary" style={{ fontSize: 12, textAlign: 'center' }}>
             格式：支持JPG、PNG、JPEG
             <br />
             大小：5MB以内
+            <br />
+            建议尺寸：200x200像素
           </Text>
         </ProCard>
       </div>

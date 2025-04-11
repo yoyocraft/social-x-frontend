@@ -8,6 +8,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const UserSettings: React.FC = () => {
   const location = useLocation();
+
   useEffect(() => {
     if (location.pathname === '/account/settings') {
       history.push('/account/settings/profile');
@@ -25,11 +26,6 @@ const UserSettings: React.FC = () => {
       icon: <LockOutlined />,
       label: <Link to="/account/settings/account">账号设置</Link>,
     },
-    // {
-    //   key: 'notification',
-    //   icon: <BellOutlined />,
-    //   label: <Link to="/account/settings/notification">消息设置</Link>,
-    // },
   ];
 
   return (
@@ -41,7 +37,7 @@ const UserSettings: React.FC = () => {
             {
               onClick: () => history.push('/account/center'),
               title: (
-                <Space style={{ fontSize: '16px' }}>
+                <Space style={{ fontSize: '16px', cursor: 'pointer' }}>
                   <LeftOutlined />
                   返回个人主页
                 </Space>
@@ -51,17 +47,46 @@ const UserSettings: React.FC = () => {
         },
       }}
     >
-      <div style={{ display: 'flex', gap: '8px', minHeight: '70vh' }}>
-        <ProCard style={{ width: 240, minHeight: '70vh', flex: '0 0 auto' }} bordered={false}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '16px',
+          margin: '0 auto',
+          padding: '0 24px',
+        }}
+      >
+        <ProCard
+          style={{
+            width: 280,
+            minHeight: '70vh',
+            flex: '0 0 auto',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+          }}
+          bordered={false}
+        >
           <Menu
             mode="vertical"
-            selectedKeys={[location.pathname.split('/')[2]]}
+            selectedKeys={[location.pathname.split('/')[3]]}
             items={menuItems}
-            style={{ border: 'none', height: '100%' }}
+            style={{
+              border: 'none',
+              height: '100%',
+              fontSize: '15px',
+              padding: '8px 0',
+            }}
           />
         </ProCard>
 
-        <ProCard headerBordered style={{ flex: 1, minHeight: '70vh' }}>
+        <ProCard
+          headerBordered
+          style={{
+            flex: 1,
+            minHeight: '70vh',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+          }}
+        >
           <Outlet />
         </ProCard>
       </div>
