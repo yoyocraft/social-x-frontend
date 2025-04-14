@@ -221,6 +221,10 @@ const CommentItem: React.FC<{
                   {comment.commentatorNickname || 'Anonymous'}
                 </Text>
 
+                <Tooltip title={dayjs(comment.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}>
+                  <Text type="secondary">{formatTime(comment.gmtCreate)}</Text>
+                </Tooltip>
+
                 {adopted && (
                   <Tag
                     icon={<CheckCircleFilled />}
@@ -252,11 +256,6 @@ const CommentItem: React.FC<{
                   </Tag>
                 )}
               </Space>
-              <Tooltip title={dayjs(comment.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}>
-                <Text type="secondary" style={{ fontSize: '12px' }}>
-                  {formatTime(comment.gmtCreate)}
-                </Text>
-              </Tooltip>
             </div>
 
             {comment.sensitive ? (

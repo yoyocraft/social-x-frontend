@@ -85,7 +85,7 @@ const UserQuestionCard: React.FC<Props> = ({ question, refreshUgcList, collectPa
       }}
       actions={[
         <Space key={question.categoryId} size={[2, 0]} split={<Divider type="vertical" />}>
-          <Text key={question.gmtCreate} type="secondary" style={{ fontSize: 12 }}>
+          <Text key={question.gmtCreate} type="secondary">
             {dateTimeFormat(question.gmtCreate)}
           </Text>
           <IconText
