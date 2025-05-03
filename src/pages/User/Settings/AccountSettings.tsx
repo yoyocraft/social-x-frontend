@@ -3,7 +3,7 @@ import { BizType } from '@/constants/SystemConstant';
 import { captchaCheckRule, emailCheckRule, passwordCheckRule } from '@/constants/UserConstant';
 import { setPwdUsingPost, verifyCaptchaUsingPost } from '@/services/socialx/userController';
 import { notifyEmailCaptchaUsingPost } from '@/services/socialx/verificationController';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, SafetyOutlined, UserOutlined } from '@ant-design/icons';
 import { ProCard, ProFormCaptcha, ProFormText, StepsForm } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
 import { Button, Divider, message, Modal, Space, Typography } from 'antd';
@@ -157,6 +157,32 @@ const ResetPwdStepForm: React.FC<ResetPwdStepFormProps> = ({ visible, setVisible
             }}
           />
         </StepsForm.StepForm>
+        <StepsForm.StepForm
+          name="totp"
+          title="TOTP验证"
+          onFinish={async (values) => {
+            // Mock TOTP verification
+            if (values.totpCode === '123456') {
+              return true;
+            }
+            message.error('TOTP验证码错误');
+            return false;
+          }}
+        >
+          <ProFormText
+            fieldProps={{
+              size: 'large',
+              prefix: <SafetyOutlined />,
+            }}
+            name="totpCode"
+            placeholder={'请输入TOTP验证码'}
+            rules={[
+              { required: true, message: '请输入TOTP验证码' },
+              { len: 6, message: 'TOTP验证码为6位数字' },
+              { pattern: /^\d{6}$/, message: '请输入6位数字验证码' },
+            ]}
+          />
+        </StepsForm.StepForm>
         <StepsForm.StepForm name="resetPassword" title="重置密码">
           <ProFormText.Password
             fieldProps={{
@@ -224,10 +250,10 @@ const AccountSettings: React.FC = () => {
     },
     {
       label: '手机',
-      value: currentUser?.desensitizedMobile || '未绑定',
+      value: '182****2335',
       action: (
-        <Button type="link" size="large" disabled>
-          换绑（暂不支持）
+        <Button type="link" size="large">
+          换绑
         </Button>
       ),
     },
@@ -235,17 +261,26 @@ const AccountSettings: React.FC = () => {
       label: '新浪微博',
       value: '未绑定',
       action: (
-        <Button type="link" size="large" disabled>
-          绑定（暂不支持）
+        <Button type="link" size="large">
+          绑定
         </Button>
       ),
     },
     {
       label: 'GitHub',
+      value: 'yoyocraft',
+      action: (
+        <Button type="link" size="large" danger>
+          解绑
+        </Button>
+      ),
+    },
+    {
+      label: 'QQ',
       value: '未绑定',
       action: (
-        <Button type="link" size="large" disabled>
-          绑定（暂不支持）
+        <Button type="link" size="large">
+          绑定
         </Button>
       ),
     },
@@ -253,8 +288,8 @@ const AccountSettings: React.FC = () => {
       label: '账号注销',
       value: '',
       action: (
-        <Button type="link" size="large" danger disabled>
-          注销（暂不支持）
+        <Button type="link" size="large" danger>
+          注销
         </Button>
       ),
     },

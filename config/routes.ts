@@ -150,7 +150,15 @@ const routes = [
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      { path: '/admin', redirect: '/admin/config' },
+      {
+        path: '/admin',
+        redirect: '/admin/task',
+      },
+      {
+        path: '/admin/task',
+        name: '任务管理',
+        component: './Admin/TaskManagement',
+      },
       { path: '/admin/config', name: '配置管理', component: './Admin/Config' },
       { path: '/admin/notification', name: '通知管理', component: './Admin/Notification' },
     ],

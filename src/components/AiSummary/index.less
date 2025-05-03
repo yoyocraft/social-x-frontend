@@ -11,15 +11,65 @@
 
     pre {
       padding: 12px;
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 6px;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
     }
 
     code {
       padding: 2px 4px;
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 4px;
+      font-size: 0.9em;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 2px;
     }
+
+    blockquote {
+      margin: 0;
+      padding: 0 12px;
+      color: #666;
+      border-left: 4px solid #1890ff;
+    }
+
+    table {
+      width: 100%;
+      margin: 16px 0;
+      border-collapse: collapse;
+
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #e8e8e8;
+      }
+
+      th {
+        background-color: #fafafa;
+      }
+    }
+  }
+
+  .ant-alert {
+    .ant-alert-message {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .ant-alert-description {
+      margin-top: 16px;
+    }
+  }
+
+  .question-input {
+    .ant-input {
+      border-radius: 4px 0 0 4px;
+    }
+
+    .ant-btn {
+      border-radius: 0 4px 4px 0;
+    }
+  }
+
+  .answer-container {
+    animation: fadeIn 0.3s ease-in-out;
   }
 }
 

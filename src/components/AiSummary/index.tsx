@@ -1,7 +1,7 @@
 import { getApiEndpoint } from '@/constants/config';
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import { useModel } from '@umijs/max';
-import { Alert, Card, message, Typography } from 'antd';
+import { Alert, Button, Card, Input, message, Space, Typography } from 'antd';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import './index.less';
@@ -12,13 +12,14 @@ interface AiSummaryProps {
 
 const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
   const [summary, setSummary] = useState<string>('');
+  const [question, setQuestion] = useState<string>('');
+  const [answer, setAnswer] = useState<string>('');
+  const [isAsking, setIsAsking] = useState<boolean>(false);
   const { initialState } = useModel('@@initialState');
-  const [loading, setLoading] = useState<boolean>(false);
 
   const apiEndpoint = getApiEndpoint('AI_SUMMARY');
 
   const fetchSummary = () => {
-    setLoading(true);
     setSummary('');
 
     const reqId = `${initialState?.currentUser?.userId}_${Date.now()}`;
@@ -46,6 +47,37 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
     };
   };
 
+  const handleAskQuestion = async () => {
+    if (!question.trim()) {
+      message.warning('请输入问题');
+      return;
+    }
+
+    setIsAsking(true);
+    setAnswer('');
+
+    // Mock AI response
+    const mockResponses = [
+      '根据文章内容，这个问题可以从以下几个方面来回答...',
+      '文章中提到，这个问题的关键点在于...',
+      '从作者的论述来看，这个问题的答案应该是...',
+      '这是一个很好的问题，文章中的相关论述表明...',
+    ];
+
+    // Simulate typing effect
+    const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+    let currentText = '';
+    for (let i = 0; i < response.length; i++) {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+      currentText += response[i];
+      setAnswer(currentText);
+    }
+
+    setIsAsking(false);
+  };
+
   useEffect(() => {
     if (!ugcId) {
       return;
@@ -53,7 +85,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
     fetchSummary();
   }, [ugcId]);
 
-  return loading ? (
+  return (
     <Card
       className="ai-summary-card"
       bordered={false}
@@ -86,6 +118,40 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
                 className="markdown-preview"
               />
             )}
+            <div style={{ marginTop: '24px' }}>
+              <Typography.Title level={5} style={{ marginBottom: '16px', color: '#1890ff' }}>
+                向AI提问
+              </Typography.Title>
+              <Space.Compact
+                className="question-input"
+                style={{ width: '100%', marginBottom: '16px' }}
+              >
+                <Input
+                  placeholder="输入您的问题..."
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  onPressEnter={handleAskQuestion}
+                  disabled={isAsking}
+                />
+                <Button type="primary" onClick={handleAskQuestion} loading={isAsking}>
+                  提问
+                </Button>
+              </Space.Compact>
+              {answer && (
+                <div className="answer-container">
+                  <MarkdownPreview
+                    source={answer}
+                    style={{
+                      backgroundColor: 'transparent',
+                      color: '#2c3e50',
+                      fontSize: 15,
+                      lineHeight: 1.6,
+                    }}
+                    className="markdown-preview"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         }
         type="info"
@@ -96,7 +162,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ ugcId }) => {
         }}
       />
     </Card>
-  ) : null;
+  );
 };
 
 export default AiSummary;
