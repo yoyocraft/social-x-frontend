@@ -3,7 +3,7 @@ import { BizType } from '@/constants/SystemConstant';
 import { captchaCheckRule, emailCheckRule, passwordCheckRule } from '@/constants/UserConstant';
 import { setPwdUsingPost, verifyCaptchaUsingPost } from '@/services/socialx/userController';
 import { notifyEmailCaptchaUsingPost } from '@/services/socialx/verificationController';
-import { LockOutlined, SafetyOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { ProCard, ProFormCaptcha, ProFormText, StepsForm } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
 import { Button, Divider, message, Modal, Space, Typography } from 'antd';
@@ -155,32 +155,6 @@ const ResetPwdStepForm: React.FC<ResetPwdStepFormProps> = ({ visible, setVisible
               }
               message.success('获取验证码成功！');
             }}
-          />
-        </StepsForm.StepForm>
-        <StepsForm.StepForm
-          name="totp"
-          title="TOTP验证"
-          onFinish={async (values) => {
-            // Mock TOTP verification
-            if (values.totpCode === '123456') {
-              return true;
-            }
-            message.error('TOTP验证码错误');
-            return false;
-          }}
-        >
-          <ProFormText
-            fieldProps={{
-              size: 'large',
-              prefix: <SafetyOutlined />,
-            }}
-            name="totpCode"
-            placeholder={'请输入TOTP验证码'}
-            rules={[
-              { required: true, message: '请输入TOTP验证码' },
-              { len: 6, message: 'TOTP验证码为6位数字' },
-              { pattern: /^\d{6}$/, message: '请输入6位数字验证码' },
-            ]}
           />
         </StepsForm.StepForm>
         <StepsForm.StepForm name="resetPassword" title="重置密码">
